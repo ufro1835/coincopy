@@ -1,0 +1,9 @@
+{
+  "name": "coincopy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "코인 카피트레이딩 대시보드",
+  "engines": {
+    "node": ">=18"
+  }
+}

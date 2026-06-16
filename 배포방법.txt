@@ -1,0 +1,51 @@
+========================================
+COINCOPY 배포 방법 (10분 완성)
+========================================
+
+── 1단계: GitHub에 올리기 ──
+1. github.com 에서 새 Repository 만들기 (coincopy)
+2. 이 폴더 전체를 push:
+   git init
+   git add .
+   git commit -m "init"
+   git remote add origin https://github.com/본인ID/coincopy.git
+   git push -u origin main
+
+── 2단계: Vercel 배포 ──
+1. vercel.com 로그인 (GitHub 계정 연동)
+2. "Add New Project" → GitHub repo 선택
+3. 그냥 Deploy 클릭 (설정 건드릴 필요 없음)
+4. 배포 완료 → URL 확인 (예: coincopy-abc.vercel.app)
+
+── 3단계: Upstash Redis 연결 (급등봇용) ──
+1. upstash.com 가입 (무료, 카드 불필요)
+2. "Create Database" → 리전 Korea 선택
+3. "REST API" 탭에서 아래 두 값 복사:
+   - UPSTASH_REDIS_REST_URL
+   - UPSTASH_REDIS_REST_TOKEN
+4. Vercel → Project → Settings → Environment Variables
+   세 가지 추가:
+   UPSTASH_REDIS_REST_URL = (복사한 값)
+   UPSTASH_REDIS_REST_TOKEN = (복사한 값)
+   BOT_SECRET = 원하는비밀번호
+5. Vercel에서 Redeploy
+
+── 4단계: 텔레그램 봇 실행 ──
+1. @BotFather 에서 봇 생성 → 토큰 받기
+2. PC에서:
+   pip install python-telegram-bot requests
+3. 환경변수 설정 (Windows PowerShell):
+   $env:TELEGRAM_BOT_TOKEN = "봇토큰"
+   $env:TELEGRAM_CHAT_ID   = "채널ID"   ← 채널에서 /getid 봇으로 확인
+   $env:COINCOPY_URL       = "https://coincopy-abc.vercel.app"
+   $env:BOT_SECRET         = "위에서설정한비밀번호"
+4. 실행:
+   python bot/pump_bot.py
+
+── 수정하고 싶을 때 ──
+- 가격 갱신 주기: index.html 맨 아래 setInterval(refreshAll, 10000) 숫자 변경
+- 급등봇 최소 % 기준: pump_bot.py 에서 "if chg < 5" 숫자 변경
+- 카피트레이딩 트레이더 목록: index.html 상단 traders 배열 수정
+- API 엔드포인트 추가: api/ 폴더에 파일 하나 추가하면 /api/파일명 으로 자동 등록
+
+========================================
