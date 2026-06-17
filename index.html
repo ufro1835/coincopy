@@ -8,62 +8,112 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #0a0a0f; font-family: 'IBM Plex Mono', 'Courier New', monospace; color: #e2e8f0; }
+
+  /* ===== 내비 ===== */
   .cc-nav {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 24px; border-bottom: 1px solid #1e2235;
+    padding: 10px 24px; border-bottom: 1px solid #1e2235;
     background: #0d0d16; position: sticky; top: 0; z-index: 100;
   }
-  .cc-logo { font-size: 18px; font-weight: 700; color: #00d4aa; letter-spacing: 2px; text-transform: uppercase; }
+  .cc-logo { font-size: 17px; font-weight: 700; color: #00d4aa; letter-spacing: 2px; text-transform: uppercase; }
   .cc-logo span { color: #7c6fff; }
   .cc-tabs { display: flex; gap: 4px; }
   .cc-tab {
-    padding: 6px 16px; font-size: 12px; font-family: inherit;
+    padding: 5px 14px; font-size: 11px; font-family: inherit;
     border: 1px solid transparent; border-radius: 4px; cursor: pointer;
     color: #8892a4; background: transparent; letter-spacing: 1px;
     text-transform: uppercase; transition: all 0.15s;
   }
   .cc-tab:hover { color: #e2e8f0; border-color: #2a2f45; }
   .cc-tab.active { color: #00d4aa; border-color: #00d4aa; background: rgba(0,212,170,0.08); }
-  .cc-content { padding: 20px 24px; }
+
+  /* ===== 스크롤 티커 ===== */
+  .cc-ticker {
+    background: #0a0a0f; border-bottom: 1px solid #1a1f2e;
+    overflow: hidden; white-space: nowrap; height: 26px;
+    display: flex; align-items: center;
+  }
+  .cc-ticker-track {
+    display: inline-flex;
+    animation: ticker-scroll 50s linear infinite;
+  }
+  .cc-ticker:hover .cc-ticker-track { animation-play-state: paused; }
+  @keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .cc-ticker-item {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 0 18px; font-size: 11px;
+    border-right: 1px solid #1a1f2e; cursor: pointer;
+  }
+  .cc-ticker-item:hover { background: #0f1120; }
+  .cc-ticker-sym { color: #6b7a99; font-weight: 600; }
+  .cc-ticker-price { color: #e2e8f0; font-weight: 700; }
+  .cc-ticker-chg { font-size: 10px; }
+  .cc-ticker-chg.up { color: #00d4aa; }
+  .cc-ticker-chg.down { color: #ff4d6d; }
+
+  /* ===== 컨텐츠 ===== */
+  .cc-content { padding: 14px 20px; }
   .cc-page { display: none; }
   .cc-page.active { display: block; }
-  .cc-top-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
-  .cc-metric { background: #0f1120; border: 1px solid #1e2235; border-radius: 6px; padding: 12px 14px; }
-  .cc-metric-label { font-size: 10px; color: #4a5568; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-  .cc-metric-value { font-size: 20px; font-weight: 700; color: #e2e8f0; }
-  .cc-metric-value.up { color: #00d4aa; }
-  .cc-metric-value.down { color: #ff4d6d; }
-  .cc-metric-sub { font-size: 11px; margin-top: 3px; }
-  .cc-metric-sub.up { color: #00d4aa; }
-  .cc-metric-sub.down { color: #ff4d6d; }
-  .cc-metric-sub.neutral { color: #8892a4; }
-  .cc-chart-section { background: #0f1120; border: 1px solid #1e2235; border-radius: 6px; padding: 16px; margin-bottom: 16px; }
-  .cc-main-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; margin-bottom: 16px; align-items: start; }
-  .cc-main-grid .cc-chart-section { margin-bottom: 0; height: 100%; }
-  .cc-chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-  .cc-chart-title { font-size: 12px; color: #8892a4; letter-spacing: 1px; text-transform: uppercase; }
-  .cc-coin-btns { display: flex; gap: 4px; }
+
+  /* ===== 3단 그리드 (차트·급등·RSI) ===== */
+  .cc-main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+    align-items: start;
+  }
+  .cc-chart-section { background: #0f1120; border: 1px solid #1e2235; border-radius: 6px; padding: 14px; margin-bottom: 14px; }
+  .cc-main-grid .cc-chart-section { margin-bottom: 0; }
+  .cc-chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+  .cc-chart-title { font-size: 11px; color: #8892a4; letter-spacing: 1px; text-transform: uppercase; }
+  .cc-coin-btns { display: flex; gap: 4px; flex-wrap: wrap; }
   .cc-coin-btn {
-    padding: 4px 10px; font-size: 11px; font-family: inherit;
+    padding: 3px 9px; font-size: 11px; font-family: inherit;
     border: 1px solid #1e2235; border-radius: 3px; background: transparent;
     color: #8892a4; cursor: pointer; letter-spacing: 0.5px; transition: all 0.15s;
     text-decoration: none; display: inline-block;
   }
   .cc-coin-btn.active { color: #00d4aa; border-color: #00d4aa; background: rgba(0,212,170,0.08); }
   .cc-coin-btn:hover { color: #e2e8f0; }
-  .cc-bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+  /* 검색 입력창 */
+  .cc-search {
+    display: flex; gap: 4px; margin-bottom: 10px;
+  }
+  .cc-search input {
+    flex: 1; background: #0a0a0f; border: 1px solid #1e2235;
+    color: #e2e8f0; padding: 5px 10px; border-radius: 4px;
+    font-family: inherit; font-size: 12px; text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .cc-search input:focus { outline: none; border-color: #00d4aa; }
+  .cc-search input::placeholder { color: #3a4151; text-transform: none; letter-spacing: 0; }
+  .cc-search button {
+    padding: 5px 12px; background: rgba(0,212,170,0.1); border: 1px solid #00d4aa;
+    color: #00d4aa; border-radius: 4px; font-family: inherit; font-size: 11px;
+    cursor: pointer; letter-spacing: 1px; transition: all 0.15s;
+  }
+  .cc-search button:hover { background: rgba(0,212,170,0.2); }
+
+  /* ===== 하단 그리드 ===== */
+  .cc-bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
   .cc-panel { background: #0f1120; border: 1px solid #1e2235; border-radius: 6px; padding: 14px; }
   .cc-panel-title { font-size: 10px; color: #4a5568; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
   .cc-panel-dot { width: 6px; height: 6px; border-radius: 50%; background: #7c6fff; }
   .cc-fng { display: flex; align-items: center; gap: 16px; }
-  .cc-fng-circle { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #f59e0b; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
-  .cc-fng-num { font-size: 22px; font-weight: 700; color: #f59e0b; }
-  .cc-fng-desc { font-size: 13px; color: #f59e0b; font-weight: 600; }
+  .cc-fng-circle { width: 64px; height: 64px; border-radius: 50%; border: 3px solid #f59e0b; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cc-fng-num { font-size: 20px; font-weight: 700; color: #f59e0b; }
+  .cc-fng-desc { font-size: 12px; color: #f59e0b; font-weight: 600; }
   .cc-fng-sub { font-size: 11px; color: #8892a4; margin-top: 4px; }
-  .cc-kimp-value { font-size: 28px; font-weight: 700; color: #ff4d6d; margin-bottom: 4px; }
+  .cc-kimp-value { font-size: 26px; font-weight: 700; color: #ff4d6d; margin-bottom: 4px; }
   .cc-kimp-row { display: flex; justify-content: space-between; font-size: 11px; color: #8892a4; padding: 4px 0; border-bottom: 1px solid #1e2235; }
   .cc-kimp-row:last-child { border-bottom: none; }
-  .cc-fund-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 12px; border-bottom: 1px solid #1a1f2e; }
+  .cc-fund-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 12px; border-bottom: 1px solid #1a1f2e; }
   .cc-fund-row:last-child { border-bottom: none; }
   .cc-fund-coin { color: #8892a4; }
   .cc-fund-val { font-weight: 600; }
@@ -71,11 +121,11 @@
   .cc-fund-val.neg { color: #ff4d6d; }
   .cc-calc input, .cc-calc select {
     width: 100%; background: #0a0a0f; border: 1px solid #1e2235;
-    color: #e2e8f0; padding: 7px 10px; border-radius: 4px;
-    font-family: inherit; font-size: 12px; margin-bottom: 8px;
+    color: #e2e8f0; padding: 6px 10px; border-radius: 4px;
+    font-family: inherit; font-size: 12px; margin-bottom: 7px;
   }
   .cc-calc-btn {
-    width: 100%; padding: 8px; background: rgba(0,212,170,0.1);
+    width: 100%; padding: 7px; background: rgba(0,212,170,0.1);
     border: 1px solid #00d4aa; color: #00d4aa; border-radius: 4px;
     font-family: inherit; font-size: 12px; cursor: pointer;
     letter-spacing: 1px; text-transform: uppercase; transition: all 0.15s;
@@ -83,23 +133,27 @@
   .cc-calc-btn:hover { background: rgba(0,212,170,0.2); }
   .cc-calc-result { margin-top: 8px; padding: 8px; background: #0a0a0f; border: 1px solid #1e2235; border-radius: 4px; font-size: 12px; color: #8892a4; }
   .cc-calc-result span { color: #ff4d6d; font-weight: 700; }
-  .cc-exchange-tabs { display: flex; gap: 4px; margin-bottom: 16px; }
-  .cc-ex-btn { padding: 6px 14px; font-size: 11px; font-family: inherit; border: 1px solid #1e2235; border-radius: 4px; background: transparent; color: #8892a4; cursor: pointer; letter-spacing: 0.5px; transition: all 0.15s; }
+
+  /* ===== 카피트레이딩 ===== */
+  .cc-exchange-tabs { display: flex; gap: 4px; margin-bottom: 14px; }
+  .cc-ex-btn { padding: 5px 13px; font-size: 11px; font-family: inherit; border: 1px solid #1e2235; border-radius: 4px; background: transparent; color: #8892a4; cursor: pointer; transition: all 0.15s; }
   .cc-ex-btn.active { color: #7c6fff; border-color: #7c6fff; background: rgba(124,111,255,0.08); }
   .cc-filter-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-  .cc-filter-btn { padding: 4px 12px; font-size: 10px; font-family: inherit; border: 1px solid #1e2235; border-radius: 3px; background: transparent; color: #8892a4; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: all 0.15s; }
+  .cc-filter-btn { padding: 4px 11px; font-size: 10px; font-family: inherit; border: 1px solid #1e2235; border-radius: 3px; background: transparent; color: #8892a4; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: all 0.15s; }
   .cc-filter-btn.active { color: #f59e0b; border-color: #f59e0b; background: rgba(245,158,11,0.08); }
   .cc-trader-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   .cc-trader-table th { text-align: left; padding: 8px 10px; color: #4a5568; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #1e2235; font-weight: 400; }
-  .cc-trader-table td { padding: 10px 10px; border-bottom: 1px solid #0f1120; color: #c4cdd9; }
+  .cc-trader-table td { padding: 9px 10px; border-bottom: 1px solid #0f1120; color: #c4cdd9; }
   .cc-trader-table tr:hover td { background: #0f1120; }
   .cc-trader-name { color: #e2e8f0; font-weight: 600; }
   .cc-badge { display: inline-block; padding: 2px 7px; border-radius: 2px; font-size: 9px; letter-spacing: 0.5px; text-transform: uppercase; }
   .cc-badge.scalp { background: rgba(0,212,170,0.15); color: #00d4aa; }
   .cc-badge.swing { background: rgba(124,111,255,0.15); color: #7c6fff; }
   .cc-badge.trend { background: rgba(245,158,11,0.15); color: #f59e0b; }
-  .cc-copy-btn { padding: 4px 10px; font-size: 10px; font-family: inherit; background: rgba(124,111,255,0.1); border: 1px solid #7c6fff; color: #7c6fff; border-radius: 3px; cursor: pointer; letter-spacing: 0.5px; transition: all 0.15s; }
+  .cc-copy-btn { padding: 4px 10px; font-size: 10px; font-family: inherit; background: rgba(124,111,255,0.1); border: 1px solid #7c6fff; color: #7c6fff; border-radius: 3px; cursor: pointer; transition: all 0.15s; }
   .cc-copy-btn:hover { background: rgba(124,111,255,0.2); }
+
+  /* ===== 에어드랍 ===== */
   .cc-airdrop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .cc-airdrop-card { background: #0f1120; border: 1px solid #1e2235; border-radius: 6px; padding: 14px; }
   .cc-airdrop-name { font-size: 14px; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
@@ -112,30 +166,26 @@
   .cc-airdrop-btn:hover { border-color: #7c6fff; color: #7c6fff; }
   .cc-section-label { font-size: 10px; color: #4a5568; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #1e2235; }
 
-  /* ===== 모바일 반응형 ===== */
-  @media (max-width: 720px) {
-    .cc-nav { flex-direction: column; gap: 10px; padding: 12px 14px; }
-    .cc-tabs { width: 100%; justify-content: center; }
-    .cc-tab { flex: 1; text-align: center; padding: 8px 6px; }
-    .cc-content { padding: 14px 12px; }
-    .cc-top-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .cc-main-grid { grid-template-columns: 1fr; gap: 10px; }
-    .cc-bottom-grid { grid-template-columns: 1fr; gap: 10px; }
-    .cc-airdrop-grid { grid-template-columns: 1fr; }
-    .cc-chart-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-    .cc-coin-btns { flex-wrap: wrap; }
-    #tv-chart { height: 320px !important; }
-    .cc-metric-value { font-size: 17px; }
-    .cc-trader-table { font-size: 11px; }
-    .cc-trader-table th, .cc-trader-table td { padding: 7px 5px; }
-    .cc-exchange-tabs, .cc-filter-row { flex-wrap: wrap; }
+  /* ===== 모바일 ===== */
+  @media (max-width: 900px) {
+    .cc-main-grid { grid-template-columns: 1fr 1fr; }
+    .cc-main-grid > .cc-chart-section:first-child { grid-column: 1 / -1; }
   }
-  @media (max-width: 400px) {
-    .cc-top-grid { grid-template-columns: 1fr; }
+  @media (max-width: 640px) {
+    .cc-nav { flex-direction: column; gap: 8px; padding: 10px 14px; }
+    .cc-tabs { width: 100%; justify-content: center; }
+    .cc-tab { flex: 1; text-align: center; padding: 7px 4px; }
+    .cc-content { padding: 12px 12px; }
+    .cc-main-grid { grid-template-columns: 1fr; }
+    .cc-main-grid > .cc-chart-section:first-child { grid-column: auto; }
+    .cc-bottom-grid { grid-template-columns: 1fr; }
+    .cc-airdrop-grid { grid-template-columns: 1fr; }
+    #tv-chart { height: 300px !important; }
   }
 </style>
 </head>
 <body>
+
 <nav class="cc-nav">
   <div class="cc-logo">COIN<span>COPY</span></div>
   <div class="cc-tabs">
@@ -144,18 +194,24 @@
     <button class="cc-tab" onclick="showPage('airdrop',this)">에어드랍</button>
   </div>
 </nav>
+
+<!-- 스크롤 티커 -->
+<div class="cc-ticker">
+  <div class="cc-ticker-track" id="ticker-track">
+    <!-- JS로 채워짐 -->
+    <div class="cc-ticker-item"><span class="cc-ticker-sym">BTC</span><span class="cc-ticker-price">—</span><span class="cc-ticker-chg">로딩…</span></div>
+  </div>
+</div>
+
 <div class="cc-content">
 
-  <!-- 메인 -->
+  <!-- ===== 메인 ===== -->
   <div class="cc-page active" id="page-main">
-    <div class="cc-top-grid">
-      <div class="cc-metric"><div class="cc-metric-label">BTC/USDT</div><div class="cc-metric-value" id="m-BTC">—</div><div class="cc-metric-sub" id="s-BTC">로딩…</div></div>
-      <div class="cc-metric"><div class="cc-metric-label">ETH/USDT</div><div class="cc-metric-value" id="m-ETH">—</div><div class="cc-metric-sub" id="s-ETH">로딩…</div></div>
-      <div class="cc-metric"><div class="cc-metric-label">SOL/USDT</div><div class="cc-metric-value" id="m-SOL">—</div><div class="cc-metric-sub" id="s-SOL">로딩…</div></div>
-      <div class="cc-metric"><div class="cc-metric-label">BNB/USDT</div><div class="cc-metric-value" id="m-BNB">—</div><div class="cc-metric-sub" id="s-BNB">로딩…</div></div>
-      <div class="cc-metric"><div class="cc-metric-label">업데이트</div><div class="cc-metric-value" style="color:#7c6fff;font-size:14px;padding-top:4px" id="last-update">—</div><div class="cc-metric-sub neutral">실시간 10초</div></div>
-    </div>
+
+    <!-- 3단 그리드: 차트 | 급등잡코인 | RSI -->
     <div class="cc-main-grid">
+
+      <!-- 차트 -->
       <div class="cc-chart-section">
         <div class="cc-chart-header">
           <div class="cc-chart-title">가격 차트 · TradingView</div>
@@ -166,43 +222,53 @@
             <button class="cc-coin-btn" onclick="selectCoin('NASDAQ:MSTR',this)">MSTR</button>
           </div>
         </div>
-        <div id="tv-chart" style="height:460px;width:100%;"></div>
+        <!-- 직접 티커 검색 -->
+        <div class="cc-search">
+          <input id="search-input" type="text" placeholder="직접 입력 예: PEPE, GATE:ASTEROID_USDT" onkeydown="if(event.key==='Enter')searchCoin()">
+          <button onclick="searchCoin()">차트 ↗</button>
+        </div>
+        <div id="tv-chart" style="height:440px;width:100%;"></div>
       </div>
-      <!-- 급등 잡코인 (봇 연동) -->
-      <div class="cc-chart-section" style="margin-bottom:16px;">
+
+      <!-- 급등 잡코인 -->
+      <div class="cc-chart-section">
         <div class="cc-chart-header">
-          <div class="cc-chart-title">🚀 급등 잡코인 <span style="font-size:9px;color:#4a5568;font-weight:400">실시간 봇 알림</span></div>
+          <div class="cc-chart-title">🚀 급등 잡코인</div>
           <div class="cc-coin-btns">
-            <span id="pump-status" style="font-size:9px;color:#00d4aa;padding:4px 8px;">● 대기중</span>
+            <span id="pump-status" style="font-size:9px;color:#00d4aa;padding:3px 6px;">● 대기</span>
             <button class="cc-coin-btn" onclick="loadPumpDemo()">데모</button>
           </div>
         </div>
-        <div id="pump-list" style="padding:4px 0;max-height:240px;overflow-y:auto;">
-          <div style="font-size:11px;color:#4a5568;text-align:center;padding:16px;">봇 알림 대기중… (데모 버튼으로 테스트)</div>
+        <div id="pump-list" style="max-height:420px;overflow-y:auto;">
+          <div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">봇 알림 대기중…</div>
         </div>
         <div style="font-size:10px;color:#4a5568;line-height:1.6;padding-top:6px;border-top:1px solid #1a1f2e;margin-top:6px;">
-          💡 티커 클릭 → 위 차트에 표시. 텔레그램 급등봇이 보내는 코인이 여기 실시간으로 쌓입니다.<br>
-          <span style="color:#3a4151;">봇 → <code style="color:#7c6fff;">POST /api/pump</code> → 5초 폴링으로 수신</span>
+          💡 종목 클릭 → 차트 전환<br>
+          <span style="color:#3a4151;">봇 → POST /api/pump → 5초 폴링</span>
         </div>
       </div>
+
       <!-- RSI 스캐너 -->
       <div class="cc-chart-section">
         <div class="cc-chart-header">
-          <div class="cc-chart-title">RSI 스캐너 <span style="font-size:9px;color:#4a5568;font-weight:400">일봉 RSI(14)</span></div>
+          <div class="cc-chart-title">RSI 스캐너 <span style="font-size:9px;color:#4a5568;">일봉 RSI(14)</span></div>
           <div class="cc-coin-btns">
-            <button class="cc-coin-btn active" onclick="setRsiSort('overbought',this)">과매수 ↑</button>
-            <button class="cc-coin-btn" onclick="setRsiSort('oversold',this)">과매도 ↓</button>
+            <button class="cc-coin-btn active" onclick="setRsiSort('overbought',this)">과매수↑</button>
+            <button class="cc-coin-btn" onclick="setRsiSort('oversold',this)">과매도↓</button>
             <button class="cc-coin-btn" onclick="loadRsiScanner()">↻</button>
           </div>
         </div>
-        <div id="rsi-scanner" style="padding:6px 0;">
+        <div id="rsi-scanner" style="max-height:420px;overflow-y:auto;">
           <div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">로딩…</div>
         </div>
-        <div style="font-size:10px;color:#4a5568;line-height:1.6;padding-top:4px;">
-          ※ RSI 70↑ 과매수(빨강)는 단기 차익실현·덤핑 주의. 거래량 줄며 RSI만 높으면 위험. 소액 단타 참고용.
+        <div style="font-size:10px;color:#4a5568;line-height:1.6;padding-top:4px;margin-top:6px;border-top:1px solid #1a1f2e;">
+          💡 종목 클릭 → 차트 전환<br>
+          RSI 70↑ 과매수 · RSI 30↓ 과매도
         </div>
       </div>
+
     </div>
+
     <!-- 청산맵 -->
     <div class="cc-chart-section">
       <div class="cc-chart-header">
@@ -212,10 +278,11 @@
           <a class="cc-coin-btn" href="https://coinank.com/liqHeatMap" target="_blank" rel="noopener">하이퍼리퀴드 맵 ↗</a>
         </div>
       </div>
-      <div style="font-size:11px;color:#8892a4;line-height:1.7;padding:4px 0;">
+      <div style="font-size:11px;color:#8892a4;line-height:1.7;">
         실시간 청산맵은 CoinAnk에서 확인하세요. 위쪽 숏 청산 물량과 아래쪽 롱 청산 물량이 몰린 구간이 가격이 끌려가기 쉬운 자석 구간입니다.
       </div>
     </div>
+
     <div class="cc-bottom-grid">
       <div class="cc-panel">
         <div class="cc-panel-title"><div class="cc-panel-dot" style="background:#f59e0b"></div>공포탐욕지수</div>
@@ -243,7 +310,7 @@
         <div class="cc-fund-row"><span class="cc-fund-coin">BNB</span><span class="cc-fund-val" id="fund-BNB">—</span><span style="font-size:10px;color:#4a5568">바이낸스</span></div>
       </div>
       <div class="cc-panel">
-        <div class="cc-panel-title"><div class="cc-panel-dot"></div>청산가 계산기 <span style="font-size:9px;color:#4a5568;font-weight:400">바이낸스 격리 기준</span></div>
+        <div class="cc-panel-title"><div class="cc-panel-dot"></div>청산가 계산기 <span style="font-size:9px;color:#4a5568;font-weight:400">바이낸스 격리</span></div>
         <div class="cc-calc">
           <select id="calc-sym"><option value="BTC">BTC</option><option value="ETH">ETH</option><option value="SOL">SOL</option></select>
           <input type="number" id="calc-entry" placeholder="진입가 (예: 64000)">
@@ -255,6 +322,7 @@
         </div>
       </div>
     </div>
+
     <div class="cc-panel">
       <div class="cc-panel-title"><div class="cc-panel-dot" style="background:#00d4aa"></div>온체인 시그널</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
@@ -262,20 +330,12 @@
         <a class="cc-coin-btn" href="https://cryptocurrencyalerting.com/whale-alerts.html?coin=MINT" target="_blank" rel="noopener" style="font-size:10px;">💵 스테이블 발행 ↗</a>
         <a class="cc-coin-btn" href="https://defillama.com/unlocks/calendar" target="_blank" rel="noopener" style="font-size:10px;">🔓 언락 캘린더 ↗</a>
       </div>
-      <div style="font-size:10px;color:#4a5568;margin-bottom:6px;letter-spacing:1px;">🐋 Whale Alert 실시간 피드</div>
-      <div style="position:relative;height:280px;border:1px solid #1e2235;border-radius:4px;overflow:hidden;margin-bottom:12px;background:#0a0a0f;">
-        <iframe src="https://t.me/s/whale_alert_io" style="width:100%;height:100%;border:0;filter:invert(0.92) hue-rotate(180deg);" loading="lazy"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='block';"></iframe>
-        <div style="display:none;padding:16px;font-size:11px;color:#8892a4;">텔레그램 피드를 불러올 수 없습니다. 위 <b>고래 이동 ↗</b> 버튼으로 확인하세요.</div>
-      </div>
       <div style="font-size:10px;color:#4a5568;margin-bottom:6px;letter-spacing:1px;">🔓 다가오는 주요 언락 (DefiLlama)</div>
-      <div id="unlock-list">
-        <div style="font-size:11px;color:#4a5568;padding:8px 0;">로딩…</div>
-      </div>
+      <div id="unlock-list"><div style="font-size:11px;color:#4a5568;padding:8px 0;">로딩…</div></div>
     </div>
   </div>
 
-  <!-- 카피트레이딩 -->
+  <!-- ===== 카피트레이딩 ===== -->
   <div class="cc-page" id="page-copy">
     <div class="cc-section-label">거래소 선택</div>
     <div class="cc-exchange-tabs">
@@ -296,10 +356,10 @@
         <tbody id="trader-tbody"></tbody>
       </table>
     </div>
-    <div style="margin-top:12px;font-size:10px;color:#4a5568;letter-spacing:0.5px;">* 데이터는 각 거래소 API 기준 실시간 업데이트. 과거 수익률이 미래를 보장하지 않습니다.</div>
+    <div style="margin-top:12px;font-size:10px;color:#4a5568;">* 과거 수익률이 미래를 보장하지 않습니다.</div>
   </div>
 
-  <!-- 에어드랍 -->
+  <!-- ===== 에어드랍 ===== -->
   <div class="cc-page" id="page-airdrop">
     <div class="cc-section-label">진행중 / 예정 에어드랍</div>
     <div class="cc-airdrop-grid">
@@ -315,7 +375,288 @@
 <script src="https://s3.tradingview.com/tv.js"></script>
 <script>
 // =============================================
-// 카피트레이딩 데이터 (수정하고 싶으면 여기)
+// TradingView 차트
+// =============================================
+let tvWidget;
+function buildTV(symbol) {
+  document.getElementById('tv-chart').innerHTML = '';
+  tvWidget = new TradingView.widget({
+    container_id: 'tv-chart', symbol, interval: 'D', timezone: 'Asia/Seoul',
+    theme: 'dark', style: '1', locale: 'kr', autosize: true,
+    studies: ['MASimple@tv-basicstudies', 'RSI@tv-basicstudies'],
+    backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false
+  });
+}
+
+function selectCoin(symbol, btn) {
+  document.querySelectorAll('.cc-coin-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  buildTV(symbol);
+}
+
+// 직접 검색: PEPE → BINANCE:PEPEUSDT, GATE:ASTEROID_USDT → 그대로
+function searchCoin() {
+  const raw = document.getElementById('search-input').value.trim().toUpperCase();
+  if (!raw) return;
+  // 거래소 prefix 있으면 그대로, 없으면 바이낸스 USDT 붙임
+  const symbol = raw.includes(':') ? raw : `BINANCE:${raw}USDT`;
+  buildTV(symbol);
+  document.getElementById('search-input').value = '';
+}
+
+// 급등·RSI 클릭 시 차트 전환 (거래소 감지)
+function coinToChart(sym, ex) {
+  ex = (ex || '').toLowerCase();
+  let symbol;
+  if (ex.includes('gate'))         symbol = `GATE:${sym}USDT`;
+  else if (ex.includes('bybit'))   symbol = `BYBIT:${sym}USDT`;
+  else if (ex.includes('upbit'))   symbol = `UPBIT:${sym}KRW`;
+  else                              symbol = `BINANCE:${sym}USDT`;
+  buildTV(symbol);
+  document.getElementById('tv-chart').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// =============================================
+// 스크롤 티커
+// =============================================
+const tickerCoins = [
+  {sym:'BTC',fmt:0},{sym:'ETH',fmt:0},{sym:'SOL',fmt:2},
+  {sym:'BNB',fmt:1},{sym:'XRP',fmt:4},{sym:'DOGE',fmt:5},
+  {sym:'ADA',fmt:4},{sym:'AVAX',fmt:2},{sym:'DOT',fmt:3},
+  {sym:'LINK',fmt:3},{sym:'UNI',fmt:3},{sym:'MATIC',fmt:4}
+];
+let tickerData = {};
+
+function renderTicker() {
+  const track = document.getElementById('ticker-track');
+  if (!track) return;
+  const items = tickerCoins.map(c => {
+    const d = tickerData[c.sym] || {};
+    const price = d.price ? Number(d.price).toLocaleString('en-US', {minimumFractionDigits: c.fmt, maximumFractionDigits: c.fmt}) : '—';
+    const chg = d.chg !== undefined ? d.chg : null;
+    const chgStr = chg !== null ? `${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%` : '';
+    const cls = chg === null ? '' : chg >= 0 ? 'up' : 'down';
+    return `<div class="cc-ticker-item" onclick="coinToChart('${c.sym}','Binance')">
+      <span class="cc-ticker-sym">${c.sym}</span>
+      <span class="cc-ticker-price">${price}</span>
+      ${chgStr ? `<span class="cc-ticker-chg ${cls}">${chgStr}</span>` : ''}
+    </div>`;
+  }).join('');
+  // 두 번 반복해서 끊김 없이 스크롤
+  track.innerHTML = items + items;
+}
+
+async function fetchTicker() {
+  try {
+    const syms = tickerCoins.map(c => c.sym + 'USDT');
+    const url = `https://api.binance.com/api/v3/ticker/24hr?symbols=${encodeURIComponent(JSON.stringify(syms))}`;
+    const data = await fetch(url).then(r => r.json());
+    data.forEach(d => {
+      const sym = d.symbol.replace('USDT', '');
+      tickerData[sym] = { price: parseFloat(d.lastPrice), chg: parseFloat(d.priceChangePercent) };
+    });
+    renderTicker();
+  } catch(e) {}
+}
+
+// =============================================
+// 가격 (서버 프록시)
+// =============================================
+async function fetchPrices() {
+  try {
+    const data = await fetch('/api/prices').then(r => r.json());
+    data.forEach(d => {
+      const c = d.symbol.replace('USDT', '');
+      const price = parseFloat(d.lastPrice), chg = parseFloat(d.priceChangePercent);
+      tickerData[c] = { price, chg };
+    });
+    renderTicker();
+    document.getElementById('last-update') && (document.getElementById('last-update').textContent =
+      new Date().toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit',second:'2-digit'}));
+  } catch(e) { console.warn('price err', e); }
+}
+
+async function fetchFunding() {
+  try {
+    const data = await fetch('/api/funding').then(r => r.json());
+    data.forEach(item => {
+      const c = item.symbol.replace('USDT', '');
+      const el = document.getElementById('fund-' + c);
+      if (el) { const f = parseFloat(item.lastFundingRate) * 100; el.textContent = (f >= 0 ? '+' : '') + f.toFixed(4) + '%'; el.className = 'cc-fund-val ' + (f >= 0 ? 'pos' : 'neg'); }
+    });
+  } catch(e) {}
+}
+
+async function fetchFng() {
+  try {
+    const j = await fetch('/api/fng').then(r => r.json());
+    const now = j.data[0], prev = j.data[1];
+    const descMap = {'Extreme Fear':'극도의 공포','Fear':'공포','Neutral':'중립','Greed':'탐욕','Extreme Greed':'극도의 탐욕'};
+    document.getElementById('fng-num').textContent = now.value;
+    document.getElementById('fng-desc').textContent = descMap[now.value_classification] || now.value_classification;
+    document.getElementById('fng-prev').textContent = '전일: ' + prev.value + ' (' + (descMap[prev.value_classification] || '') + ')';
+  } catch(e) {}
+}
+
+async function fetchKimp() {
+  try {
+    const d = await fetch('/api/kimp').then(r => r.json());
+    const kv = document.getElementById('kimp-val');
+    kv.textContent = (d.kimp >= 0 ? '+' : '') + d.kimp.toFixed(2) + '%';
+    kv.style.color = d.kimp >= 0 ? '#00d4aa' : '#ff4d6d';
+    document.getElementById('kimp-upbit').textContent = Math.round(d.upbitKrw).toLocaleString() + ' ₩';
+    document.getElementById('kimp-global').textContent = Math.round(d.globalKrw).toLocaleString() + ' ₩';
+    document.getElementById('kimp-fx').textContent = Math.round(d.usdkrw).toLocaleString() + ' ₩/$';
+  } catch(e) {}
+}
+
+function refreshAll() { fetchPrices(); fetchFunding(); fetchKimp(); fetchTicker(); }
+
+async function fetchUnlocks() {
+  const box = document.getElementById('unlock-list');
+  if (!box) return;
+  try {
+    const items = await fetch('/api/unlocks').then(r => r.json());
+    if (!items.length) { box.innerHTML = '<div style="font-size:11px;color:#4a5568;padding:8px 0;">데이터 없음</div>'; return; }
+    const now = Date.now() / 1000;
+    box.innerHTML = items.map(u => {
+      const days = Math.ceil((u.ts - now) / 86400);
+      const usdStr = u.usd ? (u.usd >= 1e6 ? '$' + (u.usd / 1e6).toFixed(1) + 'M' : '$' + (u.usd / 1e3).toFixed(0) + 'K') : '';
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1a1f2e;font-size:12px;">
+        <span style="color:#e8edf4;font-weight:600;">${u.name}</span>
+        <span><span style="color:#7c6fff;">D-${days}</span> <span style="color:#8892a4;font-size:10px;">${usdStr}</span></span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    box.innerHTML = '<div style="font-size:11px;color:#4a5568;padding:8px 0;">데이터를 불러올 수 없습니다.</div>';
+  }
+}
+
+// =============================================
+// 급등 잡코인
+// =============================================
+let pumpCoins = [];
+let lastPumpCount = 0;
+
+window.addPumpCoin = function(sym, chg, price, ex) {
+  pumpCoins.unshift({ sym, chg, price, ex: ex || '', time: new Date() });
+  pumpCoins = pumpCoins.slice(0, 30);
+  renderPump();
+  flashPumpStatus();
+};
+
+function flashPumpStatus() {
+  const st = document.getElementById('pump-status');
+  if (st) { st.innerHTML = '● 수신'; st.style.color = '#ff4d6d'; setTimeout(() => { st.innerHTML = '● 대기'; st.style.color = '#00d4aa'; }, 2000); }
+}
+
+function renderPump() {
+  const box = document.getElementById('pump-list');
+  if (!box) return;
+  if (!pumpCoins.length) {
+    box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">봇 알림 대기중…</div>';
+    return;
+  }
+  box.innerHTML = pumpCoins.map(c => {
+    const t = (c.time instanceof Date ? c.time : new Date(c.time)).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    return `<div onclick="coinToChart('${c.sym}','${c.ex}')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
+      <div>
+        <span style="font-weight:700;color:#e8edf4;">${c.sym}</span>
+        ${c.ex ? `<span style="font-size:9px;color:#4a5568;margin-left:5px;">${c.ex}</span>` : ''}
+      </div>
+      <div style="text-align:right;">
+        <div style="color:#00d4aa;font-weight:700;">+${Number(c.chg).toFixed(1)}%</div>
+        <div style="font-size:9px;color:#4a5568;">${c.price ? Number(c.price).toLocaleString('en-US', { maximumFractionDigits: c.price < 1 ? 6 : 2 }) : ''} · ${t}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function pollPumpList() {
+  try {
+    const data = await fetch('/api/pump-list').then(r => r.json());
+    if (Array.isArray(data) && data.length > 0) {
+      if (data.length > lastPumpCount && lastPumpCount > 0) flashPumpStatus();
+      lastPumpCount = data.length;
+      pumpCoins = data.map(c => ({ ...c, time: new Date(c.time) }));
+      renderPump();
+    }
+  } catch(e) {}
+}
+
+async function loadPumpDemo() {
+  const st = document.getElementById('pump-status');
+  if (st) { st.innerHTML = '● 로딩'; st.style.color = '#7c6fff'; }
+  try {
+    const tickers = await fetch('/api/ticker-all').then(r => r.json());
+    const excl = /(USDC|FDUSD|TUSD|BUSD|DAI|UP|DOWN|BULL|BEAR)USDT$/;
+    const top = tickers
+      .filter(t => t.symbol.endsWith('USDT') && !excl.test(t.symbol) && parseFloat(t.quoteVolume) > 5000000)
+      .sort((a, b) => parseFloat(b.priceChangePercent) - parseFloat(a.priceChangePercent))
+      .slice(0, 12);
+    pumpCoins = top.map(t => ({ sym: t.symbol.replace('USDT', ''), chg: parseFloat(t.priceChangePercent), price: parseFloat(t.lastPrice), ex: 'Demo', time: new Date() }));
+    renderPump();
+    if (st) { st.innerHTML = '● 데모'; st.style.color = '#7c6fff'; }
+  } catch(e) {
+    if (st) { st.innerHTML = '● 실패'; st.style.color = '#ff4d6d'; }
+  }
+}
+
+// =============================================
+// RSI 스캐너 (종목 클릭 → 차트)
+// =============================================
+let rsiSort = 'overbought';
+let rsiData = [];
+
+function setRsiSort(s, btn) {
+  rsiSort = s;
+  btn.parentElement.querySelectorAll('.cc-coin-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRsi();
+}
+
+async function loadRsiScanner() {
+  const box = document.getElementById('rsi-scanner');
+  box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">로딩…</div>';
+  try {
+    rsiData = await fetch('/api/rsi').then(r => r.json());
+    renderRsi();
+  } catch(e) {
+    box.innerHTML = '<div style="font-size:11px;color:#ff4d6d;text-align:center;padding:20px;">데이터 로드 실패</div>';
+  }
+}
+
+function renderRsi() {
+  const box = document.getElementById('rsi-scanner');
+  if (!rsiData.length) { box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">데이터 없음</div>'; return; }
+  let sorted = [...rsiData];
+  if (rsiSort === 'overbought') sorted.sort((a, b) => b.rsi - a.rsi);
+  else sorted.sort((a, b) => a.rsi - b.rsi);
+  sorted = sorted.slice(0, 10);
+  const fmtVol = v => v >= 1e9 ? (v / 1e9).toFixed(1) + 'B' : (v / 1e6).toFixed(0) + 'M';
+  box.innerHTML = sorted.map(c => {
+    const rsiColor = c.rsi >= 70 ? '#ff4d6d' : c.rsi <= 30 ? '#00d4aa' : '#c4cdd9';
+    const rsiTag = c.rsi >= 70 ? '과매수' : c.rsi <= 30 ? '과매도' : '';
+    const barW = Math.min(100, c.rsi);
+    return `<div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+          <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
+          <span style="color:${c.chg>=0?'#00d4aa':'#ff4d6d'};font-size:10px;">${c.chg>=0?'+':''}${c.chg.toFixed(1)}%</span>
+          ${rsiTag ? `<span style="font-size:9px;color:${rsiColor};">${rsiTag}</span>` : ''}
+        </div>
+        <div style="height:3px;background:#1a1f2e;border-radius:2px;"><div style="height:3px;width:${barW}%;background:${rsiColor};border-radius:2px;"></div></div>
+      </div>
+      <div style="text-align:right;margin-left:10px;">
+        <div style="color:${rsiColor};font-weight:700;font-size:13px;">${c.rsi.toFixed(0)}</div>
+        <div style="font-size:9px;color:#4a5568;">${fmtVol(c.vol)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// =============================================
+// 카피트레이딩
 // =============================================
 const traders = [
   {name:'CryptoWolf_K',type:'scalp',winrate:'78%',roi:'+42.3%',mdd:'8.2%',followers:'12,441',ex:'binance'},
@@ -327,17 +668,17 @@ const traders = [
   {name:'SafeScalp',type:'scalp',winrate:'75%',roi:'+22.8%',mdd:'3.9%',followers:'7,104',ex:'bitget'},
   {name:'DeepSwing_K',type:'swing',winrate:'59%',roi:'+41.2%',mdd:'9.3%',followers:'4,485',ex:'bitget'},
 ];
-const typeLabel = {scalp:'단타',swing:'스윙',trend:'추세'};
-let curEx='binance', curFilter='all';
+const typeLabel = { scalp:'단타', swing:'스윙', trend:'추세' };
+let curEx = 'binance', curFilter = 'all';
 
 function renderTraders() {
   const tbody = document.getElementById('trader-tbody');
-  const filtered = traders.filter(t => t.ex===curEx && (curFilter==='all'||t.type===curFilter));
-  tbody.innerHTML = filtered.map(t=>`<tr><td class="cc-trader-name">${t.name}</td><td><span class="cc-badge ${t.type}">${typeLabel[t.type]}</span></td><td style="color:#00d4aa">${t.winrate}</td><td style="color:#00d4aa">${t.roi}</td><td style="color:#ff4d6d">${t.mdd}</td><td style="color:#8892a4">${t.followers}</td><td><button class="cc-copy-btn">카피 →</button></td></tr>`).join('');
+  const filtered = traders.filter(t => t.ex === curEx && (curFilter === 'all' || t.type === curFilter));
+  tbody.innerHTML = filtered.map(t => `<tr><td class="cc-trader-name">${t.name}</td><td><span class="cc-badge ${t.type}">${typeLabel[t.type]}</span></td><td style="color:#00d4aa">${t.winrate}</td><td style="color:#00d4aa">${t.roi}</td><td style="color:#ff4d6d">${t.mdd}</td><td style="color:#8892a4">${t.followers}</td><td><button class="cc-copy-btn">카피 →</button></td></tr>`).join('');
 }
-function selectEx(ex,btn){curEx=ex;document.querySelectorAll('.cc-ex-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderTraders();}
-function filterTrader(f,btn){curFilter=f;document.querySelectorAll('.cc-filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderTraders();}
-function showPage(page,btn){document.querySelectorAll('.cc-page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.cc-tab').forEach(b=>b.classList.remove('active'));document.getElementById('page-'+page).classList.add('active');btn.classList.add('active');}
+function selectEx(ex, btn) { curEx = ex; document.querySelectorAll('.cc-ex-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderTraders(); }
+function filterTrader(f, btn) { curFilter = f; document.querySelectorAll('.cc-filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderTraders(); }
+function showPage(page, btn) { document.querySelectorAll('.cc-page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.cc-tab').forEach(b => b.classList.remove('active')); document.getElementById('page-' + page).classList.add('active'); btn.classList.add('active'); }
 
 // =============================================
 // 청산가 계산기
@@ -347,276 +688,34 @@ const TIERS = {
   ETH: [[50000,0.005,0],[600000,0.0065,75],[3000000,0.01,2175],[12000000,0.02,32175]],
   SOL: [[10000,0.005,0],[100000,0.01,50],[1000000,0.025,1550],[5000000,0.05,26550]]
 };
-function getTier(sym,notional){
-  const t=TIERS[sym]||TIERS.BTC;
-  for(const row of t){if(notional<=row[0])return {mmr:row[1],cum:row[2]};}
-  const last=t[t.length-1];return {mmr:last[1],cum:last[2]};
+function getTier(sym, notional) {
+  const t = TIERS[sym] || TIERS.BTC;
+  for (const row of t) { if (notional <= row[0]) return { mmr: row[1], cum: row[2] }; }
+  const last = t[t.length - 1]; return { mmr: last[1], cum: last[2] };
 }
-function calcLiq(){
-  const sym=document.getElementById('calc-sym').value;
-  const entry=parseFloat(document.getElementById('calc-entry').value);
-  const lev=parseFloat(document.getElementById('calc-lev').value);
-  let margin=parseFloat(document.getElementById('calc-margin').value);
-  const dir=document.getElementById('calc-dir').value;
-  const res=document.getElementById('calc-result');
-  if(!entry||!lev){res.innerHTML='청산가: <span>진입가·레버리지를 입력하세요</span>';return;}
-  const notionalGuess = margin?margin*lev:1000;
-  const qty = notionalGuess/entry;
-  const notional = entry*qty;
-  if(!margin) margin = notional/lev;
-  const {mmr,cum}=getTier(sym,notional);
-  const maint = notional*mmr;
+function calcLiq() {
+  const sym = document.getElementById('calc-sym').value;
+  const entry = parseFloat(document.getElementById('calc-entry').value);
+  const lev = parseFloat(document.getElementById('calc-lev').value);
+  let margin = parseFloat(document.getElementById('calc-margin').value);
+  const dir = document.getElementById('calc-dir').value;
+  const res = document.getElementById('calc-result');
+  if (!entry || !lev) { res.innerHTML = '청산가: <span>진입가·레버리지를 입력하세요</span>'; return; }
+  const notionalGuess = margin ? margin * lev : 1000;
+  const qty = notionalGuess / entry;
+  const notional = entry * qty;
+  if (!margin) margin = notional / lev;
+  const { mmr } = getTier(sym, notional);
+  const maint = notional * mmr;
   let liq;
-  if(dir==='long') liq = entry - (margin - maint)/qty;
-  else             liq = entry + (margin - maint)/qty;
-  if(liq<0||!isFinite(liq)){res.innerHTML='청산가: <span>청산 없음 (증거금 충분)</span>';return;}
-  const movePct=Math.abs((liq-entry)/entry*100);
-  res.innerHTML=`청산가: <span>${liq.toLocaleString('en-US',{maximumFractionDigits:1})} USDT</span>`
-    +`<div style="margin-top:6px;font-size:11px;color:#8892a4;line-height:1.6">`
-    +`진입가 대비 ${movePct.toFixed(1)}% ${dir==='long'?'하락':'상승'} 시 청산<br>`
-    +`적용 MMR ${(mmr*100).toFixed(2)}% · 명목가 ${notional.toLocaleString('en-US',{maximumFractionDigits:0})} USDT<br>`
-    +`<span style="color:#4a5568;font-size:10px">※ 격리마진 근사치. 펀딩비·수수료·갭은 미반영</span></div>`;
-}
-
-// =============================================
-// TradingView 차트
-// =============================================
-let tvWidget;
-function buildTV(symbol){
-  document.getElementById('tv-chart').innerHTML='';
-  tvWidget=new TradingView.widget({
-    container_id:'tv-chart', symbol:symbol, interval:'D', timezone:'Asia/Seoul',
-    theme:'dark', style:'1', locale:'kr', autosize:true,
-    studies:['MASimple@tv-basicstudies','RSI@tv-basicstudies'],
-    backgroundColor:'#0f1120', gridColor:'#1a1f2e', hide_side_toolbar:false
-  });
-}
-function selectCoin(symbol,btn){
-  document.querySelectorAll('.cc-coin-btns .cc-coin-btn').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  buildTV(symbol);
-}
-
-// =============================================
-// 급등 잡코인 (봇 → 서버 → 5초 폴링)
-// =============================================
-let pumpCoins = [];
-let lastPumpCount = 0;
-
-// 외부에서 직접 추가할 수도 있음 (테스트용)
-window.addPumpCoin = function(sym, chg, price, ex) {
-  pumpCoins.unshift({sym, chg, price, ex: ex||'', time: new Date()});
-  pumpCoins = pumpCoins.slice(0, 30);
-  renderPump();
-  flashPumpStatus();
-};
-
-function flashPumpStatus() {
-  const st = document.getElementById('pump-status');
-  if(st){st.innerHTML='● 수신';st.style.color='#ff4d6d';setTimeout(()=>{st.innerHTML='● 대기중';st.style.color='#00d4aa';},2000);}
-}
-
-function pumpClick(sym){
-  buildTV('BINANCE:'+sym+'USDT');
-  document.getElementById('tv-chart').scrollIntoView({behavior:'smooth',block:'center'});
-}
-
-function renderPump(){
-  const box = document.getElementById('pump-list');
-  if(!box) return;
-  if(!pumpCoins.length){
-    box.innerHTML='<div style="font-size:11px;color:#4a5568;text-align:center;padding:16px;">봇 알림 대기중… (데모 버튼으로 테스트)</div>';
-    return;
-  }
-  box.innerHTML = pumpCoins.map(c => {
-    const t = c.time instanceof Date
-      ? c.time.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})
-      : new Date(c.time).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
-    return `<div onclick="pumpClick('${c.sym}')" style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="font-weight:700;color:#e8edf4;">${c.sym}</span>
-        ${c.ex?`<span style="font-size:9px;color:#4a5568;">${c.ex}</span>`:''}
-      </div>
-      <div style="text-align:right;">
-        <div style="color:#00d4aa;font-weight:700;font-size:13px;">+${Number(c.chg).toFixed(1)}%</div>
-        <div style="font-size:9px;color:#4a5568;">${c.price?Number(c.price).toLocaleString('en-US',{maximumFractionDigits:c.price<1?6:2}):''} · ${t}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// 서버에서 5초마다 pump 목록 폴링
-async function pollPumpList() {
-  try {
-    const data = await fetch('/api/pump-list').then(r => r.json());
-    if(Array.isArray(data) && data.length > 0) {
-      const newCount = data.length;
-      if(newCount > lastPumpCount && lastPumpCount > 0) flashPumpStatus();
-      lastPumpCount = newCount;
-      pumpCoins = data.map(c => ({...c, time: new Date(c.time)}));
-      renderPump();
-    }
-  } catch(e) { /* 서버 미연결 시 무시 */ }
-}
-
-// 데모: 바이낸스 24h 급등률 상위 (서버 프록시 경유)
-async function loadPumpDemo(){
-  const st = document.getElementById('pump-status');
-  if(st){st.innerHTML='● 로딩';st.style.color='#7c6fff';}
-  try{
-    const tickers = await fetch('/api/ticker-all').then(r=>r.json());
-    const excl = /(USDC|FDUSD|TUSD|BUSD|DAI|UP|DOWN|BULL|BEAR)USDT$/;
-    const top = tickers
-      .filter(t=>t.symbol.endsWith('USDT')&&!excl.test(t.symbol)&&parseFloat(t.quoteVolume)>5000000)
-      .sort((a,b)=>parseFloat(b.priceChangePercent)-parseFloat(a.priceChangePercent))
-      .slice(0,12);
-    pumpCoins = top.map(t=>({sym:t.symbol.replace('USDT',''),chg:parseFloat(t.priceChangePercent),price:parseFloat(t.lastPrice),ex:'Demo',time:new Date()}));
-    renderPump();
-    if(st){st.innerHTML='● 데모';st.style.color='#7c6fff';}
-  }catch(e){
-    if(st){st.innerHTML='● 실패';st.style.color='#ff4d6d';}
-  }
-}
-
-// =============================================
-// 실시간 가격 (서버 프록시)
-// =============================================
-const coinFmt = {BTC:0,ETH:0,SOL:2,BNB:1};
-async function fetchPrices(){
-  try{
-    const data = await fetch('/api/prices').then(r=>r.json());
-    data.forEach(d=>{
-      const c = d.symbol.replace('USDT','');
-      const price = parseFloat(d.lastPrice), chg = parseFloat(d.priceChangePercent);
-      const mv = document.getElementById('m-'+c), sv = document.getElementById('s-'+c);
-      if(mv){mv.textContent=price.toLocaleString('en-US',{minimumFractionDigits:coinFmt[c],maximumFractionDigits:coinFmt[c]});mv.className='cc-metric-value '+(chg>=0?'up':'down');}
-      if(sv){sv.textContent=(chg>=0?'+':'')+chg.toFixed(2)+'% '+(chg>=0?'▲':'▼');sv.className='cc-metric-sub '+(chg>=0?'up':'down');}
-    });
-    document.getElementById('last-update').textContent=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  }catch(e){console.warn('price err',e);}
-}
-
-// =============================================
-// 펀딩비 (서버 프록시)
-// =============================================
-async function fetchFunding(){
-  try{
-    const data = await fetch('/api/funding').then(r=>r.json());
-    data.forEach(item=>{
-      const c = item.symbol.replace('USDT','');
-      const el = document.getElementById('fund-'+c);
-      if(el){const f=parseFloat(item.lastFundingRate)*100;el.textContent=(f>=0?'+':'')+f.toFixed(4)+'%';el.className='cc-fund-val '+(f>=0?'pos':'neg');}
-    });
-  }catch(e){console.warn('funding err',e);}
-}
-
-// =============================================
-// 공포탐욕지수 (서버 프록시)
-// =============================================
-async function fetchFng(){
-  try{
-    const j = await fetch('/api/fng').then(r=>r.json());
-    const now = j.data[0], prev = j.data[1];
-    const descMap={'Extreme Fear':'극도의 공포','Fear':'공포','Neutral':'중립','Greed':'탐욕','Extreme Greed':'극도의 탐욕'};
-    document.getElementById('fng-num').textContent=now.value;
-    document.getElementById('fng-desc').textContent=descMap[now.value_classification]||now.value_classification;
-    document.getElementById('fng-prev').textContent='전일: '+prev.value+' ('+(descMap[prev.value_classification]||'')+')';
-  }catch(e){console.warn('fng err',e);}
-}
-
-// =============================================
-// 김치프리미엄 (서버 프록시)
-// =============================================
-async function fetchKimp(){
-  try{
-    const d = await fetch('/api/kimp').then(r=>r.json());
-    const kv = document.getElementById('kimp-val');
-    kv.textContent=(d.kimp>=0?'+':'')+d.kimp.toFixed(2)+'%';
-    kv.style.color=d.kimp>=0?'#00d4aa':'#ff4d6d';
-    document.getElementById('kimp-upbit').textContent=Math.round(d.upbitKrw).toLocaleString()+' ₩';
-    document.getElementById('kimp-global').textContent=Math.round(d.globalKrw).toLocaleString()+' ₩';
-    document.getElementById('kimp-fx').textContent=Math.round(d.usdkrw).toLocaleString()+' ₩/$';
-  }catch(e){console.warn('kimp err',e);}
-}
-
-function refreshAll(){fetchPrices();fetchFunding();fetchKimp();}
-
-// =============================================
-// 토큰 언락 (서버 프록시)
-// =============================================
-async function fetchUnlocks(){
-  const box = document.getElementById('unlock-list');
-  if(!box) return;
-  try{
-    const items = await fetch('/api/unlocks').then(r=>r.json());
-    if(!items.length){box.innerHTML='<div style="font-size:11px;color:#4a5568;padding:8px 0;">언락 데이터 없음</div>';return;}
-    const now = Date.now()/1000;
-    box.innerHTML = items.map(u=>{
-      const days = Math.ceil((u.ts-now)/86400);
-      const usdStr = u.usd?(u.usd>=1e6?'$'+(u.usd/1e6).toFixed(1)+'M':'$'+(u.usd/1e3).toFixed(0)+'K'):'';
-      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1a1f2e;font-size:12px;">
-        <span style="color:#e8edf4;font-weight:600;">${u.name}</span>
-        <span style="text-align:right;"><span style="color:#7c6fff;">D-${days}</span> <span style="color:#8892a4;font-size:10px;">${usdStr}</span></span>
-      </div>`;
-    }).join('');
-  }catch(e){
-    box.innerHTML='<div style="font-size:11px;color:#4a5568;padding:8px 0;">언락 데이터를 불러올 수 없습니다.</div>';
-  }
-}
-
-// =============================================
-// RSI 스캐너 (서버 프록시)
-// =============================================
-let rsiSort = 'overbought';
-let rsiData = [];
-
-function setRsiSort(s,btn){
-  rsiSort=s;
-  btn.parentElement.querySelectorAll('.cc-coin-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderRsi();
-}
-
-async function loadRsiScanner(){
-  const box = document.getElementById('rsi-scanner');
-  box.innerHTML='<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">로딩…</div>';
-  try{
-    rsiData = await fetch('/api/rsi').then(r=>r.json());
-    renderRsi();
-  }catch(e){
-    box.innerHTML='<div style="font-size:11px;color:#ff4d6d;text-align:center;padding:20px;">데이터 로드 실패</div>';
-  }
-}
-
-function renderRsi(){
-  const box = document.getElementById('rsi-scanner');
-  if(!rsiData.length){box.innerHTML='<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">데이터 없음</div>';return;}
-  let sorted = [...rsiData];
-  if(rsiSort==='overbought') sorted.sort((a,b)=>b.rsi-a.rsi);
-  else sorted.sort((a,b)=>a.rsi-b.rsi);
-  sorted = sorted.slice(0,8);
-  const fmtVol = v=>v>=1e9?(v/1e9).toFixed(1)+'B':(v/1e6).toFixed(0)+'M';
-  box.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:12px;">
-    <thead><tr style="color:#4a5568;font-size:10px;text-align:left;">
-      <th style="padding:6px 8px;">코인</th><th style="padding:6px 8px;">RSI</th><th style="padding:6px 8px;">24h</th><th style="padding:6px 8px;">거래량</th><th style="padding:6px 8px;text-align:right;">가격</th>
-    </tr></thead><tbody>`+sorted.map(c=>{
-      const rsiColor=c.rsi>=70?'#ff4d6d':c.rsi<=30?'#00d4aa':'#c4cdd9';
-      const rsiTag=c.rsi>=70?'과매수':c.rsi<=30?'과매도':'';
-      const barW=Math.min(100,c.rsi);
-      return `<tr style="border-top:1px solid #1a1f2e;">
-        <td style="padding:8px;font-weight:700;color:#e8edf4;">${c.sym}</td>
-        <td style="padding:8px;">
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span style="color:${rsiColor};font-weight:700;">${c.rsi.toFixed(0)}</span>
-            ${rsiTag?`<span style="font-size:9px;color:${rsiColor};">${rsiTag}</span>`:''}
-          </div>
-          <div style="height:3px;background:#1a1f2e;border-radius:2px;margin-top:3px;"><div style="height:3px;width:${barW}%;background:${rsiColor};border-radius:2px;"></div></div>
-        </td>
-        <td style="padding:8px;color:${c.chg>=0?'#00d4aa':'#ff4d6d'};">${c.chg>=0?'+':''}${c.chg.toFixed(1)}%</td>
-        <td style="padding:8px;color:#8892a4;">${fmtVol(c.vol)}</td>
-        <td style="padding:8px;text-align:right;color:#c4cdd9;">${c.price.toLocaleString('en-US',{maximumFractionDigits:c.price<1?4:2})}</td>
-      </tr>`;
-    }).join('')+'</tbody></table>';
+  if (dir === 'long') liq = entry - (margin - maint) / qty;
+  else liq = entry + (margin - maint) / qty;
+  if (liq < 0 || !isFinite(liq)) { res.innerHTML = '청산가: <span>청산 없음 (증거금 충분)</span>'; return; }
+  const movePct = Math.abs((liq - entry) / entry * 100);
+  res.innerHTML = `청산가: <span>${liq.toLocaleString('en-US', { maximumFractionDigits: 1 })} USDT</span>
+    <div style="margin-top:6px;font-size:11px;color:#8892a4;line-height:1.6">
+    진입가 대비 ${movePct.toFixed(1)}% ${dir === 'long' ? '하락' : '상승'} 시 청산<br>
+    <span style="color:#4a5568;font-size:10px">※ 격리마진 근사치. 실제 거래소에서 확인</span></div>`;
 }
 
 // =============================================
@@ -625,17 +724,18 @@ function renderRsi(){
 window.addEventListener('load', () => {
   buildTV('BINANCE:BTCUSDT');
   renderTraders();
+  renderTicker();
   refreshAll();
   fetchFng();
   loadRsiScanner();
   fetchUnlocks();
 
-  // 주기적 갱신
-  setInterval(refreshAll, 10000);          // 10초: 가격·펀딩·김프
-  setInterval(fetchFng, 300000);           // 5분: 공포탐욕
-  setInterval(loadRsiScanner, 300000);     // 5분: RSI
-  setInterval(fetchUnlocks, 600000);       // 10분: 언락
-  setInterval(pollPumpList, 5000);         // 5초: 봇 급등코인 폴링
+  setInterval(refreshAll, 10000);
+  setInterval(fetchTicker, 10000);
+  setInterval(fetchFng, 300000);
+  setInterval(loadRsiScanner, 300000);
+  setInterval(fetchUnlocks, 600000);
+  setInterval(pollPumpList, 5000);
 });
 </script>
 </body>
