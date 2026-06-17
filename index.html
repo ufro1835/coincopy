@@ -378,6 +378,7 @@
 // TradingView 차트
 // =============================================
 let tvWidget;
+let currentChartSym = 'BTC';
 function buildTV(symbol) {
   document.getElementById('tv-chart').innerHTML = '';
   tvWidget = new TradingView.widget({
@@ -386,6 +387,28 @@ function buildTV(symbol) {
     studies: ['MASimple@tv-basicstudies', 'RSI@tv-basicstudies'],
     backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false
   });
+  // 계산기 심볼/진입가 자동 업데이트
+  const baseSym = symbol.replace(/.*:/, '').replace('USDT','').replace('KRW','');
+  currentChartSym = baseSym;
+  const sel = document.getElementById('calc-sym');
+  if (sel) {
+    let opt = [...sel.options].find(o => o.value === baseSym);
+    if (!opt) {
+      opt = new Option(baseSym, baseSym);
+      sel.appendChild(opt);
+    }
+    sel.value = baseSym;
+  }
+  // 현재가 가져와서 진입가 자동입력
+  const apiSym = baseSym + 'USDT';
+  fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${apiSym}`)
+    .then(r => r.json())
+    .then(d => {
+      if (d.price) {
+        const entryInput = document.getElementById('calc-entry');
+        if (entryInput) entryInput.value = parseFloat(d.price).toFixed(2);
+      }
+    }).catch(() => {});
 }
 
 function selectCoin(symbol, btn) {
