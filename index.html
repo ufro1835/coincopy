@@ -101,7 +101,8 @@
   .cc-search button:hover { background: rgba(0,212,170,0.2); }
 
   /* ===== 하단 그리드 ===== */
-  .cc-bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .cc-bottom-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  @media (max-width: 900px) { .cc-bottom-grid { grid-template-columns: 1fr 1fr; } }
   .cc-panel { background: #0f1120; border: 1px solid #1e2235; border-radius: 6px; padding: 14px; }
   .cc-panel-title { font-size: 10px; color: #4a5568; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
   .cc-panel-dot { width: 6px; height: 6px; border-radius: 50%; background: #7c6fff; }
@@ -269,20 +270,6 @@
 
     </div>
 
-    <!-- 청산맵 -->
-    <div class="cc-chart-section">
-      <div class="cc-chart-header">
-        <div class="cc-chart-title">청산맵 · 유동성</div>
-        <div class="cc-coin-btns">
-          <a class="cc-coin-btn" href="https://coinank.com/liqMapChart" target="_blank" rel="noopener">청산 히트맵 ↗</a>
-          <a class="cc-coin-btn" href="https://coinank.com/liqHeatMap" target="_blank" rel="noopener">하이퍼리퀴드 맵 ↗</a>
-        </div>
-      </div>
-      <div style="font-size:11px;color:#8892a4;line-height:1.7;">
-        실시간 청산맵은 CoinAnk에서 확인하세요. 위쪽 숏 청산 물량과 아래쪽 롱 청산 물량이 몰린 구간이 가격이 끌려가기 쉬운 자석 구간입니다.
-      </div>
-    </div>
-
     <div class="cc-bottom-grid">
       <div class="cc-panel">
         <div class="cc-panel-title"><div class="cc-panel-dot" style="background:#f59e0b"></div>공포탐욕지수</div>
@@ -324,13 +311,14 @@
     </div>
 
     <div class="cc-panel">
-      <div class="cc-panel-title"><div class="cc-panel-dot" style="background:#00d4aa"></div>온체인 시그널</div>
+      <div class="cc-panel-title"><div class="cc-panel-dot" style="background:#00d4aa"></div>온체인 · 유동성</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
-        <a class="cc-coin-btn" href="https://t.me/s/whale_alert_io" target="_blank" rel="noopener" style="font-size:10px;">🐋 고래 이동 ↗</a>
-        <a class="cc-coin-btn" href="https://cryptocurrencyalerting.com/whale-alerts.html?coin=MINT" target="_blank" rel="noopener" style="font-size:10px;">💵 스테이블 발행 ↗</a>
-        <a class="cc-coin-btn" href="https://defillama.com/unlocks/calendar" target="_blank" rel="noopener" style="font-size:10px;">🔓 언락 캘린더 ↗</a>
+        <a class="cc-coin-btn" href="https://coinank.com/liqMapChart" target="_blank" rel="noopener" style="font-size:10px;">청산 히트맵 ↗</a>
+        <a class="cc-coin-btn" href="https://coinank.com/liqHeatMap" target="_blank" rel="noopener" style="font-size:10px;">하이퍼리퀴드 ↗</a>
+        <a class="cc-coin-btn" href="https://t.me/s/whale_alert_io" target="_blank" rel="noopener" style="font-size:10px;">🐋 고래 ↗</a>
+        <a class="cc-coin-btn" href="https://defillama.com/unlocks/calendar" target="_blank" rel="noopener" style="font-size:10px;">🔓 언락 ↗</a>
       </div>
-      <div style="font-size:10px;color:#4a5568;margin-bottom:6px;letter-spacing:1px;">🔓 다가오는 주요 언락 (DefiLlama)</div>
+      <div style="font-size:10px;color:#4a5568;margin-bottom:6px;letter-spacing:1px;">다가오는 주요 언락</div>
       <div id="unlock-list"><div style="font-size:11px;color:#4a5568;padding:8px 0;">로딩…</div></div>
     </div>
   </div>
