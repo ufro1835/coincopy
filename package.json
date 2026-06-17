@@ -5,5 +5,8 @@
   "description": "코인 카피트레이딩 대시보드",
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
   }
 }
