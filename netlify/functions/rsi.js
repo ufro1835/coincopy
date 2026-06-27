@@ -1,5 +1,4 @@
 const MAJORS = new Set(['BTC','ETH','SOL','BNB','XRP','ADA','DOGE','TRX','TON','AVAX','DOT','MATIC','LTC','LINK','UNI','ATOM','ETC','BCH','APT','NEAR','OP','ARB','SUI','PEPE','SHIB','FLOKI','BONK']);
-const EXCL = /(USDC|FDUSD|TUSD|BUSD|DAI|UP|DOWN|BULL|BEAR|USDT)USDT$/;
 
 function calcRSI(closes, period = 14) {
   if (closes.length < period + 1) return null;
@@ -20,45 +19,47 @@ function calcRSI(closes, period = 14) {
 
 exports.handler = async () => {
   try {
-    const tickers = await fetch('https://api.binance.com/api/v3/ticker/24hr').then(r => r.json());
-    if (!Array.isArray(tickers)) throw new Error('Binance API error: ' + JSON.stringify(tickers).slice(0, 100));
-    const candidates = tickers
-      .filter(t => {
-        if (!t.symbol.endsWith('USDT') || EXCL.test(t.symbol)) return false;
-        const base = t.symbol.replace('USDT', '');
-        if (MAJORS.has(base)) return false;
-        return parseFloat(t.quoteVolume) > 3_000_000;
-      })
-      .sort((a, b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
-      .slice(0, 20);
+    // CoinGecko: 상위 100개 코인 (페이지 1~2)
+    const [p1, p2] = await Promise.all([
+      fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=50&page=1&price_change_percentage=24h').then(r => r.json()),
+      fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=volume_desc&per_page=50&page=2&price_change_percentage=24h').then(r => r.json()),
+    ]);
+    const all = [...(Array.isArray(p1)?p1:[]), ...(Array.isArray(p2)?p2:[])];
 
-    const results = await Promise.all(candidates.map(async t => {
+    const candidates = all.filter(c => {
+      const sym = (c.symbol || '').toUpperCase();
+      return !MAJORS.has(sym) && c.total_volume > 3_000_000;
+    }).slice(0, 20);
+
+    const results = await Promise.all(candidates.map(async c => {
       try {
-        const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${t.symbol}&interval=1d&limit=30`).then(r => r.json());
-        if (!Array.isArray(kl) || kl.length < 16) return null;
-        const closes = kl.map(k => parseFloat(k[4]));
-        const volumes = kl.map(k => parseFloat(k[5]));
+        const sym = c.symbol.toUpperCase();
+        const hist = await fetch(
+          `https://api.coingecko.com/api/v3/coins/${c.id}/market_chart?vs_currency=usd&days=30&interval=daily`
+        ).then(r => r.json());
+        if (!hist.prices || hist.prices.length < 16) return null;
+        const closes = hist.prices.map(p => p[1]);
         const rsi = calcRSI(closes);
         if (rsi === null) return null;
         const low14 = Math.min(...closes.slice(-15, -1));
         const cur = closes[closes.length - 1];
         const riseFromLow = low14 > 0 ? (cur - low14) / low14 * 100 : 0;
-        const vol1 = volumes[volumes.length - 1];
-        const vol7avg = volumes.slice(-8, -1).reduce((a, b) => a + b, 0) / 7;
-        const volChange = vol7avg > 0 ? (vol1 - vol7avg) / vol7avg * 100 : 0;
         return {
-          sym: t.symbol.replace('USDT', ''),
+          sym,
           rsi: Math.round(rsi * 10) / 10,
-          chg: parseFloat(t.priceChangePercent),
-          vol: parseFloat(t.quoteVolume),
-          volChange: Math.round(volChange * 10) / 10,
+          chg: c.price_change_percentage_24h || 0,
+          vol: c.total_volume,
           riseFromLow: Math.round(riseFromLow * 10) / 10,
-          price: parseFloat(t.lastPrice)
+          price: c.current_price
         };
       } catch { return null; }
     }));
 
-    return { statusCode: 200, headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(results.filter(Boolean)) };
+    return {
+      statusCode: 200,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify(results.filter(Boolean))
+    };
   } catch (e) {
     return { statusCode: 502, body: JSON.stringify({ error: e.message }) };
   }
