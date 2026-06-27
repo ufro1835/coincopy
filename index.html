@@ -632,7 +632,7 @@ async function loadPumpScanner() {
         return !PUMP_MAJORS.has(base) && !binanceSyms.has(base) && parseFloat(t.quote_volume) > 200_000;
       })
       .sort((a,b) => parseFloat(b.quote_volume) - parseFloat(a.quote_volume))
-      .slice(0, 80)
+      .slice(0, 150)
       .map(t => ({ sym: t.currency_pair.replace('_USDT',''), pair: t.currency_pair, ex: 'Gate.io', chg: parseFloat(t.change_percentage) }));
 
     const allCandidates = [...binanceCandidates, ...gateCandidates];
