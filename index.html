@@ -449,6 +449,28 @@ const COIN_CATEGORY = {
   BNB:'CEX',OKB:'CEX',CRO:'CEX',
   // Privacy
   XMR:'Privacy',ZEC:'Privacy',SCRT:'Privacy',
+  // RWA/Infra
+  KAITO:'AI',SLX:'DeFi',VELVET:'DeFi',AGLD:'Game',
+  PORTAL:'Game',CITY:'Game',XPL:'Game',RLUSD:'Stbl',
+  PUNDIX:'Infra',ARK:'Infra',JTO:'DeFi',WIF:'Meme',
+  CELO:'L1',FET:'AI',INJ:'L1',
+};
+
+const COIN_CHAIN = {
+  // ETH 기반
+  AAVE:'ETH',UNI:'ETH',LINK:'ETH',COMP:'ETH',SNX:'ETH',MKR:'ETH',LDO:'ETH',
+  CRV:'ETH',BLUR:'ETH','1INCH':'ETH',ENJ:'ETH',MANA:'ETH',SAND:'ETH',
+  IMX:'ETH',DYDX:'ETH',RNDR:'ETH',FET:'ETH',OCEAN:'ETH',AGIX:'ETH',
+  // SOL 기반
+  JTO:'SOL',WIF:'SOL',BOME:'SOL',BONK:'SOL',POPCAT:'SOL',
+  // BNB 기반
+  CAKE:'BNB',
+  // 자체체인
+  INJ:'INJ',SEI:'SEI',TIA:'TIA',SUI:'SUI',APT:'APT',NEAR:'NEAR',
+  ATOM:'ATOM',AVAX:'AVAX',DOT:'DOT',ADA:'ADA',
+  // 게임/기타
+  AGLD:'ETH',PORTAL:'ETH',XPL:'ETH',CITY:'CHZ',
+  KAITO:'SOL',PUNDIX:'ETH',ARK:'ARK',CELO:'CELO',
 };
 let tickerData = {};
 
@@ -707,8 +729,9 @@ async function loadPumpScanner() {
       <div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
         <div>
           <div style="display:flex;align-items:center;gap:5px;">
-            ${COIN_CATEGORY[c.sym] ? `<span style="font-size:8px;color:#3a4151;background:#1a1f2e;padding:1px 4px;border-radius:2px;">${COIN_CATEGORY[c.sym]}</span>` : ''}
             <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
+            ${COIN_CATEGORY[c.sym] ? `<span style="font-size:8px;color:#7c6fff;background:rgba(124,111,255,0.12);padding:1px 4px;border-radius:2px;">${COIN_CATEGORY[c.sym]}</span>` : ''}
+            ${COIN_CHAIN[c.sym] ? `<span style="font-size:8px;color:#4a9eff;background:rgba(74,158,255,0.1);padding:1px 4px;border-radius:2px;">${COIN_CHAIN[c.sym]}</span>` : ''}
           </div>
           <div style="font-size:9px;color:#4a5568;margin-top:2px;">${c.ex} · 급등 +${c.pumpPct}% · 눌림 -${c.dropPct}% · RSI <span style="color:${rsiColor}">${c.rsi}</span></div>
         </div>
@@ -819,9 +842,10 @@ function renderRsi() {
     const rise = c.riseFromLow != null ? `<span style="font-size:9px;color:#f59e0b;">저점↑${c.riseFromLow.toFixed(0)}%</span>` : '';
     return `<div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
       <div style="flex:1;">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-          ${COIN_CATEGORY[c.sym] ? `<span style="font-size:8px;color:#3a4151;background:#1a1f2e;padding:1px 4px;border-radius:2px;">${COIN_CATEGORY[c.sym]}</span>` : ''}
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px;">
           <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
+          ${COIN_CATEGORY[c.sym] ? `<span style="font-size:8px;color:#7c6fff;background:rgba(124,111,255,0.12);padding:1px 4px;border-radius:2px;">${COIN_CATEGORY[c.sym]}</span>` : ''}
+          ${COIN_CHAIN[c.sym] ? `<span style="font-size:8px;color:#4a9eff;background:rgba(74,158,255,0.1);padding:1px 4px;border-radius:2px;">${COIN_CHAIN[c.sym]}</span>` : ''}
           <span style="color:${c.chg>=0?'#00d4aa':'#ff4d6d'};font-size:10px;">${c.chg>=0?'+':''}${c.chg.toFixed(1)}%</span>
           ${rsiTag ? `<span style="font-size:9px;color:${rsiColor};">${rsiTag}</span>` : ''}
           ${rise}
