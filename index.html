@@ -609,10 +609,27 @@ async function loadPumpDemo() {
 }
 
 // =============================================
-// RSI 스캐너
+// RSI 스캐너 (4시간봉, 브라우저에서 Binance 직접 호출)
 // =============================================
 let rsiData = [];
 let rsiSort = 'overbought';
+
+function calcRSI(closes, period = 14) {
+  if (closes.length < period + 1) return null;
+  let gains = 0, losses = 0;
+  for (let i = 1; i <= period; i++) {
+    const d = closes[i] - closes[i - 1];
+    if (d >= 0) gains += d; else losses -= d;
+  }
+  let avgG = gains / period, avgL = losses / period;
+  for (let i = period + 1; i < closes.length; i++) {
+    const d = closes[i] - closes[i - 1];
+    avgG = (avgG * (period - 1) + (d > 0 ? d : 0)) / period;
+    avgL = (avgL * (period - 1) + (d < 0 ? -d : 0)) / period;
+  }
+  if (avgL === 0) return 100;
+  return 100 - 100 / (1 + avgG / avgL);
+}
 
 function setRsiSort(s, btn) {
   rsiSort = s;
@@ -625,7 +642,26 @@ async function loadRsiScanner() {
   const box = document.getElementById('rsi-scanner');
   box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">로딩…</div>';
   try {
-    rsiData = await fetch('/api/rsi').then(r => r.json());
+    // 서버에서 심볼 목록 가져오기
+    const symbols = await fetch('/api/rsi').then(r => r.json());
+    if (!Array.isArray(symbols) || symbols.length === 0) throw new Error('no symbols');
+
+    // 브라우저에서 Binance 4시간봉 직접 호출
+    const results = await Promise.all(symbols.map(async s => {
+      try {
+        const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${s.symbol}&interval=4h&limit=60`).then(r => r.json());
+        if (!Array.isArray(kl) || kl.length < 16) return null;
+        const closes = kl.map(k => parseFloat(k[4]));
+        const rsi = calcRSI(closes);
+        if (rsi === null) return null;
+        const low14 = Math.min(...closes.slice(-15, -1));
+        const cur = closes[closes.length - 1];
+        const riseFromLow = low14 > 0 ? (cur - low14) / low14 * 100 : 0;
+        return { ...s, rsi: Math.round(rsi * 10) / 10, riseFromLow: Math.round(riseFromLow * 10) / 10 };
+      } catch { return null; }
+    }));
+
+    rsiData = results.filter(Boolean);
     renderRsi();
   } catch(e) {
     box.innerHTML = '<div style="font-size:11px;color:#ff4d6d;text-align:center;padding:20px;">데이터 로드 실패</div>';
