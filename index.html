@@ -415,7 +415,7 @@ function searchCoin() {
 function coinToChart(sym, ex) {
   ex = (ex || '').toLowerCase();
   let symbol;
-  if (ex.includes('gate'))         symbol = `GATE:${sym}USDT`;
+  if (ex.includes('gate'))         symbol = `GATE:${sym}USDT.P`;
   else if (ex.includes('bybit'))   symbol = `BYBIT:${sym}USDT`;
   else if (ex.includes('upbit'))   symbol = `UPBIT:${sym}KRW`;
   else                              symbol = `BINANCE:${sym}USDT`;
