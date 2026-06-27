@@ -694,7 +694,10 @@ async function loadPumpScanner() {
       return `
       <div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
         <div>
-          <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
+          <div style="display:flex;align-items:center;gap:5px;">
+            ${COIN_CATEGORY[c.sym] ? `<span style="font-size:8px;color:#3a4151;background:#1a1f2e;padding:1px 4px;border-radius:2px;">${COIN_CATEGORY[c.sym]}</span>` : ''}
+            <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
+          </div>
           <div style="font-size:9px;color:#4a5568;margin-top:2px;">${c.ex} · 급등 +${c.pumpPct}% · 눌림 -${c.dropPct}% · RSI <span style="color:${rsiColor}">${c.rsi}</span></div>
         </div>
         <div style="text-align:right;">
@@ -805,6 +808,7 @@ function renderRsi() {
     return `<div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
       <div style="flex:1;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+          ${COIN_CATEGORY[c.sym] ? `<span style="font-size:8px;color:#3a4151;background:#1a1f2e;padding:1px 4px;border-radius:2px;">${COIN_CATEGORY[c.sym]}</span>` : ''}
           <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
           <span style="color:${c.chg>=0?'#00d4aa':'#ff4d6d'};font-size:10px;">${c.chg>=0?'+':''}${c.chg.toFixed(1)}%</span>
           ${rsiTag ? `<span style="font-size:9px;color:${rsiColor};">${rsiTag}</span>` : ''}
