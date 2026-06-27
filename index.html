@@ -505,9 +505,12 @@ async function fetchPrices() {
 
 async function fetchFunding() {
   try {
-    const data = await fetch('/api/funding').then(r => r.json());
+    const syms = ['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT'];
+    const data = await Promise.all(syms.map(s =>
+      fetch(`https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${s}`).then(r => r.json())
+    ));
     data.forEach(item => {
-      const c = item.symbol.replace('USDT', '');
+      const c = item.symbol.replace('USDT','');
       const el = document.getElementById('fund-' + c);
       if (el) { const f = parseFloat(item.lastFundingRate) * 100; el.textContent = (f >= 0 ? '+' : '') + f.toFixed(4) + '%'; el.className = 'cc-fund-val ' + (f >= 0 ? 'pos' : 'neg'); }
     });
@@ -516,7 +519,7 @@ async function fetchFunding() {
 
 async function fetchFng() {
   try {
-    const j = await fetch('/api/fng').then(r => r.json());
+    const j = await fetch('https://api.alternative.me/fng/?limit=2').then(r => r.json());
     const now = j.data[0], prev = j.data[1];
     const descMap = {'Extreme Fear':'극도의 공포','Fear':'공포','Neutral':'중립','Greed':'탐욕','Extreme Greed':'극도의 탐욕'};
     document.getElementById('fng-num').textContent = now.value;
@@ -527,13 +530,22 @@ async function fetchFng() {
 
 async function fetchKimp() {
   try {
-    const d = await fetch('/api/kimp').then(r => r.json());
+    const [upbitRes, binanceRes, fxRes] = await Promise.all([
+      fetch('https://api.upbit.com/v1/ticker?markets=KRW-BTC').then(r => r.json()),
+      fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT').then(r => r.json()),
+      fetch('https://open.er-api.com/v6/latest/USD').then(r => r.json())
+    ]);
+    const upbitKrw = upbitRes[0].trade_price;
+    const globalUsd = parseFloat(binanceRes.price);
+    const usdkrw = fxRes.rates.KRW;
+    const globalKrw = globalUsd * usdkrw;
+    const kimp = (upbitKrw - globalKrw) / globalKrw * 100;
     const kv = document.getElementById('kimp-val');
-    kv.textContent = (d.kimp >= 0 ? '+' : '') + d.kimp.toFixed(2) + '%';
-    kv.style.color = d.kimp >= 0 ? '#00d4aa' : '#ff4d6d';
-    document.getElementById('kimp-upbit').textContent = Math.round(d.upbitKrw).toLocaleString() + ' ₩';
-    document.getElementById('kimp-global').textContent = Math.round(d.globalKrw).toLocaleString() + ' ₩';
-    document.getElementById('kimp-fx').textContent = Math.round(d.usdkrw).toLocaleString() + ' ₩/$';
+    kv.textContent = (kimp >= 0 ? '+' : '') + kimp.toFixed(2) + '%';
+    kv.style.color = kimp >= 0 ? '#00d4aa' : '#ff4d6d';
+    document.getElementById('kimp-upbit').textContent = Math.round(upbitKrw).toLocaleString() + ' ₩';
+    document.getElementById('kimp-global').textContent = Math.round(globalKrw).toLocaleString() + ' ₩';
+    document.getElementById('kimp-fx').textContent = Math.round(usdkrw).toLocaleString() + ' ₩/$';
   } catch(e) {}
 }
 
@@ -1037,7 +1049,9 @@ window.addEventListener('load', () => {
 
   setInterval(refreshAll, 10000);
   setInterval(fetchTicker, 10000);
-  setInterval(fetchFng, 300000);
+  setInterval(fetchFng, 14400000);    // 4시간
+  setInterval(fetchKimp, 14400000);   // 4시간
+  setInterval(fetchFunding, 14400000); // 4시간 (펀딩비 정산 8시간)
   setInterval(loadRsiScanner, 300000);
   setInterval(fetchUnlocks, 600000);
   setInterval(loadPumpScanner, 3600000); // 1시간마다
