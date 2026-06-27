@@ -639,22 +639,29 @@ function setRsiSort(s, btn) {
 }
 
 async function loadRsiScanner() {
+  const MAJORS = new Set(['BTC','ETH','SOL','BNB','XRP','ADA','DOGE','TRX','TON','AVAX','DOT','MATIC','LTC','LINK','UNI','ATOM','ETC','BCH','APT','NEAR','OP','ARB','SUI','PEPE','SHIB','FLOKI','BONK','USDC','FDUSD','TUSD','BUSD','DAI']);
   const box = document.getElementById('rsi-scanner');
   box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">로딩…</div>';
   try {
-    // 심볼 목록 가져오기
-    const symbols = await fetch('/api/rsi').then(r => r.json());
-    if (!Array.isArray(symbols) || symbols.length === 0) throw new Error('no symbols');
-
-    // 24h 티커 데이터 브라우저에서 직접
+    // 브라우저에서 Binance 거래량 상위 알트코인 자동 선정
+    const tickers = await fetch('https://api.binance.com/api/v3/ticker/24hr').then(r => r.json());
     const tickerMap = {};
-    try {
-      const tickers = await fetch('https://api.binance.com/api/v3/ticker/24hr').then(r => r.json());
-      if (Array.isArray(tickers)) tickers.forEach(t => { tickerMap[t.symbol] = t; });
-    } catch {}
+    tickers.forEach(t => { tickerMap[t.symbol] = t; });
 
-    // 브라우저에서 Binance 4시간봉 직접 호출
-    const results = await Promise.all(symbols.map(async s => {
+    const candidates = tickers
+      .filter(t => {
+        if (!t.symbol.endsWith('USDT')) return false;
+        const base = t.symbol.replace('USDT', '');
+        if (MAJORS.has(base)) return false;
+        if (/(USDC|FDUSD|TUSD|BUSD|DAI|UP|DOWN|BULL|BEAR|USDT)USDT$/.test(t.symbol)) return false;
+        return parseFloat(t.quoteVolume) > 3_000_000;
+      })
+      .sort((a, b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
+      .slice(0, 40)
+      .map(t => ({ sym: t.symbol.replace('USDT',''), symbol: t.symbol }));
+
+    // 4시간봉 RSI 계산
+    const results = await Promise.all(candidates.map(async s => {
       try {
         const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${s.symbol}&interval=4h&limit=60`).then(r => r.json());
         if (!Array.isArray(kl) || kl.length < 16) return null;
