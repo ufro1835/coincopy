@@ -252,19 +252,14 @@
       <!-- RSI 스캐너 -->
       <div class="cc-chart-section">
         <div class="cc-chart-header">
-          <div class="cc-chart-title">RSI 스캐너 <span style="font-size:9px;color:#4a5568;">일봉 RSI(14)</span></div>
+          <div class="cc-chart-title">RSI 히트맵 <span style="font-size:9px;color:#4a5568;">일봉 RSI(14) · 알트코인</span></div>
           <div class="cc-coin-btns">
-            <button class="cc-coin-btn active" onclick="setRsiSort('overbought',this)">과매수↑</button>
-            <button class="cc-coin-btn" onclick="setRsiSort('oversold',this)">과매도↓</button>
+            <span id="rsi-summary" style="font-size:9px;color:#4a5568;padding:3px 6px;"></span>
             <button class="cc-coin-btn" onclick="loadRsiScanner()">↻</button>
           </div>
         </div>
-        <div id="rsi-scanner" style="max-height:420px;overflow-y:auto;">
+        <div id="rsi-scanner" style="position:relative;">
           <div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">로딩…</div>
-        </div>
-        <div style="font-size:10px;color:#4a5568;line-height:1.6;padding-top:4px;margin-top:6px;border-top:1px solid #1a1f2e;">
-          💡 종목 클릭 → 차트 전환<br>
-          RSI 70↑ 과매수 · RSI 30↓ 과매도
         </div>
       </div>
 
@@ -614,56 +609,155 @@ async function loadPumpDemo() {
 }
 
 // =============================================
-// RSI 스캐너 (종목 클릭 → 차트)
+// RSI 히트맵 (scatter plot)
 // =============================================
-let rsiSort = 'overbought';
 let rsiData = [];
-
-function setRsiSort(s, btn) {
-  rsiSort = s;
-  btn.parentElement.querySelectorAll('.cc-coin-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderRsi();
-}
 
 async function loadRsiScanner() {
   const box = document.getElementById('rsi-scanner');
-  box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">로딩…</div>';
+  box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:30px;">로딩 중… (80개 종목 계산 중)</div>';
   try {
     rsiData = await fetch('/api/rsi').then(r => r.json());
-    renderRsi();
+    renderRsiScatter();
   } catch(e) {
     box.innerHTML = '<div style="font-size:11px;color:#ff4d6d;text-align:center;padding:20px;">데이터 로드 실패</div>';
   }
 }
 
-function renderRsi() {
+function renderRsiScatter() {
   const box = document.getElementById('rsi-scanner');
   if (!rsiData.length) { box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">데이터 없음</div>'; return; }
-  let sorted = [...rsiData];
-  if (rsiSort === 'overbought') sorted.sort((a, b) => b.rsi - a.rsi);
-  else sorted.sort((a, b) => a.rsi - b.rsi);
-  sorted = sorted.slice(0, 10);
-  const fmtVol = v => v >= 1e9 ? (v / 1e9).toFixed(1) + 'B' : (v / 1e6).toFixed(0) + 'M';
-  box.innerHTML = sorted.map(c => {
-    const rsiColor = c.rsi >= 70 ? '#ff4d6d' : c.rsi <= 30 ? '#00d4aa' : '#c4cdd9';
-    const rsiTag = c.rsi >= 70 ? '과매수' : c.rsi <= 30 ? '과매도' : '';
-    const barW = Math.min(100, c.rsi);
-    return `<div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
-      <div style="flex:1;">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-          <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
-          <span style="color:${c.chg>=0?'#00d4aa':'#ff4d6d'};font-size:10px;">${c.chg>=0?'+':''}${c.chg.toFixed(1)}%</span>
-          ${rsiTag ? `<span style="font-size:9px;color:${rsiColor};">${rsiTag}</span>` : ''}
-        </div>
-        <div style="height:3px;background:#1a1f2e;border-radius:2px;"><div style="height:3px;width:${barW}%;background:${rsiColor};border-radius:2px;"></div></div>
-      </div>
-      <div style="text-align:right;margin-left:10px;">
-        <div style="color:${rsiColor};font-weight:700;font-size:13px;">${c.rsi.toFixed(0)}</div>
-        <div style="font-size:9px;color:#4a5568;">${fmtVol(c.vol)}</div>
-      </div>
-    </div>`;
-  }).join('');
+
+  const W = 340, H = 420, PL = 28, PR = 8, PT = 12, PB = 20;
+  const cW = W - PL - PR, cH = H - PT - PB;
+
+  // 요약
+  const overbought = rsiData.filter(c => c.rsi >= 70).length;
+  const oversold = rsiData.filter(c => c.rsi <= 30).length;
+  const avgRsi = rsiData.reduce((s, c) => s + c.rsi, 0) / rsiData.length;
+  const summaryEl = document.getElementById('rsi-summary');
+  if (summaryEl) summaryEl.textContent = `${rsiData.length}개 중 과매수 ${overbought} · 과매도 ${oversold}`;
+
+  // 볼륨 스케일 (점 크기)
+  const vols = rsiData.map(c => c.vol);
+  const vMin = Math.min(...vols), vMax = Math.max(...vols);
+  const dotSize = v => 4 + ((v - vMin) / (vMax - vMin + 1)) * 8;
+
+  // X 배치: RSI 그룹별로 분산 + jitter
+  const sorted = [...rsiData].sort((a, b) => a.rsi - b.rsi);
+  const placed = [];
+  function getX(rsi, idx, total) {
+    const seed = (idx * 2654435761) >>> 0;
+    const jitter = ((seed % 1000) / 1000 - 0.5) * cW * 0.85;
+    return PL + cW / 2 + jitter;
+  }
+
+  // 아웃라이어 감지 (RSI가 평균에서 1.5 표준편차 이상)
+  const rsiVals = rsiData.map(c => c.rsi);
+  const std = Math.sqrt(rsiVals.reduce((s, v) => s + (v - avgRsi) ** 2, 0) / rsiVals.length);
+  const isOutlier = c => Math.abs(c.rsi - avgRsi) > std * 1.5;
+
+  const yRsi = rsi => PT + cH - (rsi / 100) * cH;
+  const avgY = yRsi(avgRsi);
+
+  // 점 데이터 (좌표 계산)
+  const dots = sorted.map((c, i) => ({
+    ...c,
+    x: getX(c.rsi, i, sorted.length),
+    y: yRsi(c.rsi),
+    r: dotSize(c.vol),
+    outlier: isOutlier(c)
+  }));
+
+  // SVG 생성
+  const rsiZoneY70 = yRsi(70), rsiZoneY30 = yRsi(30);
+  const gridLines = [20, 40, 60, 80, 100];
+
+  let svgDots = '', svgLabels = '';
+  dots.forEach((d, i) => {
+    const color = d.rsi >= 70 ? '#ff4d6d' : d.rsi <= 30 ? '#00d4aa' : d.outlier ? '#f59e0b' : '#7c6fff';
+    const opacity = d.rsi >= 70 || d.rsi <= 30 || d.outlier ? '1' : '0.7';
+    const stroke = d.outlier && d.rsi > 30 && d.rsi < 70 ? ' stroke="#f59e0b" stroke-width="1.5"' : '';
+    svgDots += `<circle class="rsi-dot" cx="${d.x.toFixed(1)}" cy="${d.y.toFixed(1)}" r="${d.r.toFixed(1)}"
+      fill="${color}" fill-opacity="${opacity}"${stroke}
+      data-sym="${d.sym}" data-rsi="${d.rsi}" data-chg="${d.chg}" data-rise="${d.riseFromLow||0}" data-vc="${d.volChange||0}"
+      style="cursor:pointer;" />`;
+
+    // 라벨: 과매수/과매도/아웃라이어만
+    if (d.rsi >= 70 || d.rsi <= 30 || d.outlier) {
+      const labelY = d.y < PT + 20 ? d.y + d.r + 10 : d.y - d.r - 4;
+      svgLabels += `<text x="${d.x.toFixed(1)}" y="${labelY.toFixed(1)}"
+        text-anchor="middle" font-size="8" fill="${color}" font-family="monospace"
+        style="pointer-events:none;font-weight:700;">${d.sym}</text>`;
+    }
+  });
+
+  const svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:${H}px;display:block;" id="rsi-svg">
+    <defs>
+      <clipPath id="rcp"><rect x="${PL}" y="${PT}" width="${cW}" height="${cH}"/></clipPath>
+    </defs>
+    <!-- 배경 구역 -->
+    <rect x="${PL}" y="${PT}" width="${cW}" height="${(rsiZoneY70 - PT).toFixed(1)}" fill="#ff4d6d" fill-opacity="0.07"/>
+    <rect x="${PL}" y="${rsiZoneY30.toFixed(1)}" width="${cW}" height="${(PT + cH - rsiZoneY30).toFixed(1)}" fill="#00d4aa" fill-opacity="0.07"/>
+    <!-- 격자선 -->
+    ${gridLines.map(v => {
+      const gy = yRsi(v);
+      return `<line x1="${PL}" y1="${gy.toFixed(1)}" x2="${W - PR}" y2="${gy.toFixed(1)}" stroke="#1e2235" stroke-width="1"/>
+        <text x="${(PL-4).toFixed(0)}" y="${(gy+3).toFixed(1)}" text-anchor="end" font-size="8" fill="#3a4151">${v}</text>`;
+    }).join('')}
+    <!-- 과매수/과매도 라인 -->
+    <line x1="${PL}" y1="${rsiZoneY70.toFixed(1)}" x2="${W-PR}" y2="${rsiZoneY70.toFixed(1)}" stroke="#ff4d6d" stroke-width="0.8" stroke-dasharray="3,3"/>
+    <line x1="${PL}" y1="${rsiZoneY30.toFixed(1)}" x2="${W-PR}" y2="${rsiZoneY30.toFixed(1)}" stroke="#00d4aa" stroke-width="0.8" stroke-dasharray="3,3"/>
+    <!-- 평균선 -->
+    <line x1="${PL}" y1="${avgY.toFixed(1)}" x2="${W-PR}" y2="${avgY.toFixed(1)}" stroke="#4a5568" stroke-width="1" stroke-dasharray="4,4"/>
+    <text x="${(W-PR-2).toFixed(0)}" y="${(avgY-3).toFixed(1)}" text-anchor="end" font-size="8" fill="#4a5568">avg ${avgRsi.toFixed(1)}</text>
+    <!-- 점 -->
+    <g clip-path="url(#rcp)">${svgDots}</g>
+    <!-- 라벨 -->
+    <g clip-path="url(#rcp)">${svgLabels}</g>
+    <!-- 툴팁 배경 -->
+    <rect id="rsi-tip-bg" x="0" y="0" width="0" height="0" rx="4" fill="#0f1120" stroke="#1e2235"/>
+    <text id="rsi-tip-t1" x="0" y="0" font-size="10" font-family="monospace" fill="#e2e8f0" font-weight="700"></text>
+    <text id="rsi-tip-t2" x="0" y="0" font-size="9" font-family="monospace" fill="#8892a4"></text>
+    <text id="rsi-tip-t3" x="0" y="0" font-size="9" font-family="monospace" fill="#8892a4"></text>
+  </svg>`;
+
+  box.innerHTML = svg;
+
+  // 이벤트
+  const svgEl = document.getElementById('rsi-svg');
+  const tipBg = document.getElementById('rsi-tip-bg');
+  const tipT1 = document.getElementById('rsi-tip-t1');
+  const tipT2 = document.getElementById('rsi-tip-t2');
+  const tipT3 = document.getElementById('rsi-tip-t3');
+
+  svgEl.querySelectorAll('.rsi-dot').forEach(dot => {
+    dot.addEventListener('mouseenter', function(e) {
+      const sym = this.getAttribute('data-sym');
+      const rsi = this.getAttribute('data-rsi');
+      const chg = parseFloat(this.getAttribute('data-chg'));
+      const rise = this.getAttribute('data-rise');
+      const vc = this.getAttribute('data-vc');
+      const cx = parseFloat(this.getAttribute('cx'));
+      const cy = parseFloat(this.getAttribute('cy'));
+      const tx = cx + 6, ty = cy - 38;
+      const line1 = `${sym}  RSI ${rsi}`;
+      const line2 = `24h ${chg>=0?'+':''}${chg.toFixed(1)}%  저점↑${rise}%`;
+      const line3 = `거래량변화 ${parseFloat(vc)>=0?'+':''}${vc}%`;
+      const bw = Math.max(line1.length, line2.length) * 5.8 + 12;
+      tipBg.setAttribute('x', tx); tipBg.setAttribute('y', ty - 14);
+      tipBg.setAttribute('width', bw); tipBg.setAttribute('height', 46);
+      tipT1.setAttribute('x', tx + 6); tipT1.setAttribute('y', ty); tipT1.textContent = line1;
+      tipT2.setAttribute('x', tx + 6); tipT2.setAttribute('y', ty + 13); tipT2.textContent = line2;
+      tipT3.setAttribute('x', tx + 6); tipT3.setAttribute('y', ty + 26); tipT3.textContent = line3;
+    });
+    dot.addEventListener('mouseleave', () => {
+      tipBg.setAttribute('width', 0); tipT1.textContent = ''; tipT2.textContent = ''; tipT3.textContent = '';
+    });
+    dot.addEventListener('click', function() {
+      coinToChart(this.getAttribute('data-sym'), 'Binance');
+    });
+  });
 }
 
 // =============================================
