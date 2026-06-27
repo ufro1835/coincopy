@@ -231,6 +231,21 @@
         <div id="tv-chart" style="height:440px;width:100%;"></div>
       </div>
 
+      <!-- RSI 스캐너 -->
+      <div class="cc-chart-section">
+        <div class="cc-chart-header">
+          <div class="cc-chart-title">RSI 스캐너 <span style="font-size:9px;color:#4a5568;">4h RSI(14) · 알트</span></div>
+          <div class="cc-coin-btns">
+            <button class="cc-coin-btn active" onclick="setRsiSort('overbought',this)">과매수↑</button>
+            <button class="cc-coin-btn" onclick="setRsiSort('oversold',this)">과매도↓</button>
+            <button class="cc-coin-btn" onclick="loadRsiScanner()">↻</button>
+          </div>
+        </div>
+        <div id="rsi-scanner" style="max-height:420px;overflow-y:auto;">
+          <div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">로딩…</div>
+        </div>
+      </div>
+
       <!-- 급등 후 눌림 스캐너 -->
       <div class="cc-chart-section">
         <div class="cc-chart-header">
@@ -246,21 +261,6 @@
         <div style="font-size:10px;color:#4a5568;line-height:1.6;padding-top:6px;border-top:1px solid #1a1f2e;margin-top:6px;">
           💡 종목 클릭 → 차트 전환<br>
           <span style="color:#3a4151;">24h내 +30%↑ 후 고점 -5~20% 하락</span>
-        </div>
-      </div>
-
-      <!-- RSI 스캐너 -->
-      <div class="cc-chart-section">
-        <div class="cc-chart-header">
-          <div class="cc-chart-title">RSI 스캐너 <span style="font-size:9px;color:#4a5568;">일봉 RSI(14) · 알트</span></div>
-          <div class="cc-coin-btns">
-            <button class="cc-coin-btn active" onclick="setRsiSort('overbought',this)">과매수↑</button>
-            <button class="cc-coin-btn" onclick="setRsiSort('oversold',this)">과매도↓</button>
-            <button class="cc-coin-btn" onclick="loadRsiScanner()">↻</button>
-          </div>
-        </div>
-        <div id="rsi-scanner" style="max-height:420px;overflow-y:auto;">
-          <div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">로딩…</div>
         </div>
       </div>
 
