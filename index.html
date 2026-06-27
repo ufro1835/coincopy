@@ -639,13 +639,13 @@ async function loadPumpScanner() {
   box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">스캔 중… (Binance + Gate.io)</div>';
   if (st) { st.textContent = '스캔 중'; st.style.color = '#7c6fff'; }
   try {
-    // Binance + Gate.io 티커 병렬 호출
+    // Binance 선물 + Gate.io 선물 티커 병렬 호출
     const [binanceTickers, gateTickers] = await Promise.all([
-      fetch('https://api.binance.com/api/v3/ticker/24hr').then(r => r.json()).catch(() => []),
-      fetch('https://api.gateio.ws/api/v4/spot/tickers').then(r => r.json()).catch(() => [])
+      fetch('https://fapi.binance.com/fapi/v1/ticker/24hr').then(r => r.json()).catch(() => []),
+      fetch('https://api.gateio.ws/api/v4/futures/usdt/tickers').then(r => r.json()).catch(() => [])
     ]);
 
-    // Binance 후보
+    // Binance 선물 후보
     const binanceCandidates = (Array.isArray(binanceTickers) ? binanceTickers : [])
       .filter(t => {
         if (!t.symbol.endsWith('USDT') || PUMP_EXCL.test(t.symbol)) return false;
@@ -656,17 +656,17 @@ async function loadPumpScanner() {
       .slice(0, 80)
       .map(t => ({ sym: t.symbol.replace('USDT',''), pair: t.symbol, ex: 'Binance', chg: parseFloat(t.priceChangePercent) }));
 
-    // Gate.io 후보
+    // Gate.io 선물 후보
     const binanceSyms = new Set(binanceCandidates.map(c => c.sym));
     const gateCandidates = (Array.isArray(gateTickers) ? gateTickers : [])
       .filter(t => {
-        if (!t.currency_pair.endsWith('_USDT')) return false;
-        const base = t.currency_pair.replace('_USDT','');
-        return !PUMP_MAJORS.has(base) && !binanceSyms.has(base) && parseFloat(t.quote_volume) > 200_000;
+        if (!t.contract || !t.contract.endsWith('_USDT')) return false;
+        const base = t.contract.replace('_USDT','');
+        return !PUMP_MAJORS.has(base) && !binanceSyms.has(base) && parseFloat(t.volume_24h_quote || 0) > 200_000;
       })
-      .sort((a,b) => parseFloat(b.quote_volume) - parseFloat(a.quote_volume))
+      .sort((a,b) => parseFloat(b.volume_24h_quote||0) - parseFloat(a.volume_24h_quote||0))
       .slice(0, 150)
-      .map(t => ({ sym: t.currency_pair.replace('_USDT',''), pair: t.currency_pair, ex: 'Gate.io', chg: parseFloat(t.change_percentage) }));
+      .map(t => ({ sym: t.contract.replace('_USDT',''), pair: t.contract, ex: 'Gate.io', chg: parseFloat(t.change_percentage||0) }));
 
     const allCandidates = [...binanceCandidates, ...gateCandidates];
     const results = [];
@@ -677,15 +677,15 @@ async function loadPumpScanner() {
         try {
           let closes, volumes;
           if (c.ex === 'Binance') {
-            const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${c.pair}&interval=1h&limit=48`).then(r => r.json());
+            const kl = await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${c.pair}&interval=1h&limit=48`).then(r => r.json());
             if (!Array.isArray(kl) || kl.length < 10) return null;
             closes = kl.map(k => parseFloat(k[4]));
             volumes = kl.map(k => parseFloat(k[5]));
           } else {
-            const kl = await fetch(`https://api.gateio.ws/api/v4/spot/candlesticks?currency_pair=${c.pair}&interval=1h&limit=48`).then(r => r.json());
+            const kl = await fetch(`https://api.gateio.ws/api/v4/futures/usdt/candlesticks?contract=${c.pair}&interval=1h&limit=48`).then(r => r.json());
             if (!Array.isArray(kl) || kl.length < 10) return null;
-            closes = kl.map(k => parseFloat(k[2]));   // close
-            volumes = kl.map(k => parseFloat(k[6]));  // base_volume
+            closes = kl.map(k => parseFloat(k.c));
+            volumes = kl.map(k => parseFloat(k.v));
           }
           const res = await scanPumpCandles(closes, volumes);
           if (!res) return null;
