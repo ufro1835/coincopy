@@ -29,7 +29,7 @@ exports.handler = async () => {
         return parseFloat(t.quoteVolume) > 3_000_000;
       })
       .sort((a, b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
-      .slice(0, 80);
+      .slice(0, 40);
 
     const BATCH = 20;
     const results = [];

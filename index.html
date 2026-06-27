@@ -419,7 +419,6 @@ function coinToChart(sym, ex) {
   else if (ex.includes('upbit'))   symbol = `UPBIT:${sym}KRW`;
   else                              symbol = `BINANCE:${sym}USDT`;
   buildTV(symbol);
-  document.getElementById('tv-chart').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // =============================================
