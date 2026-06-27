@@ -431,6 +431,25 @@ const tickerCoins = [
   {sym:'ADA',fmt:4},{sym:'AVAX',fmt:2},{sym:'DOT',fmt:3},
   {sym:'LINK',fmt:3},{sym:'UNI',fmt:3},{sym:'MATIC',fmt:4}
 ];
+const COIN_CATEGORY = {
+  // Layer1/2
+  BTC:'L1',ETH:'L1',SOL:'L1',BNB:'L1',ADA:'L1',AVAX:'L1',DOT:'L1',ATOM:'L1',NEAR:'L1',APT:'L1',SUI:'L1',TIA:'L1',SEI:'L1',
+  MATIC:'L2',OP:'L2',ARB:'L2',IMX:'L2',
+  // DeFi
+  UNI:'DeFi',AAVE:'DeFi',CRV:'DeFi',COMP:'DeFi',SNX:'DeFi',MKR:'DeFi',LDO:'DeFi',DYDX:'DeFi',GMX:'DeFi','1INCH':'DeFi',CAKE:'DeFi',
+  // AI
+  FET:'AI',AGIX:'AI',OCEAN:'AI',RNDR:'AI',WLD:'AI',TAO:'AI',AIOZ:'AI',NMR:'AI',
+  // Gaming/Metaverse
+  SAND:'Game',MANA:'Game',AXS:'Game',GALA:'Game',ENJ:'Game',CHZ:'Game',MAGIC:'Game',BLUR:'Game',IMX:'Game',
+  // Meme
+  DOGE:'Meme',SHIB:'Meme',PEPE:'Meme',FLOKI:'Meme',BONK:'Meme',WIF:'Meme',BOME:'Meme',NEIRO:'Meme',
+  // Infra/Oracle
+  LINK:'Oracle',BAND:'Oracle',API3:'Oracle',
+  // Exchange
+  BNB:'CEX',OKB:'CEX',CRO:'CEX',
+  // Privacy
+  XMR:'Privacy',ZEC:'Privacy',SCRT:'Privacy',
+};
 let tickerData = {};
 
 function renderTicker() {
@@ -442,8 +461,10 @@ function renderTicker() {
     const chg = d.chg !== undefined ? d.chg : null;
     const chgStr = chg !== null ? `${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%` : '';
     const cls = chg === null ? '' : chg >= 0 ? 'up' : 'down';
+    const cat = COIN_CATEGORY[c.sym];
     return `<div class="cc-ticker-item" onclick="coinToChart('${c.sym}','Binance')">
       <span class="cc-ticker-sym">${c.sym}</span>
+      ${cat ? `<span style="font-size:8px;color:#3a4151;margin-left:2px;">${cat}</span>` : ''}
       <span class="cc-ticker-price">${price}</span>
       ${chgStr ? `<span class="cc-ticker-chg ${cls}">${chgStr}</span>` : ''}
     </div>`;
