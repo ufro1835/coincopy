@@ -581,67 +581,82 @@ function detectDivergence(closes, rsiArr) {
   return { bearish, bullish };
 }
 
+async function scanPumpCandles(closes, volumes) {
+  const recent = closes.slice(-24);
+  const recentVols = volumes.slice(-24);
+  const cur = recent[recent.length - 1];
+  const high = Math.max(...recent);
+  const highIdx = recent.indexOf(high);
+  const lowBeforeHigh = Math.min(...recent.slice(0, highIdx + 1));
+  const pumpPct = lowBeforeHigh > 0 ? (high - lowBeforeHigh) / lowBeforeHigh * 100 : 0;
+  if (pumpPct < 30) return null;
+  const dropPct = (high - cur) / high * 100;
+  if (dropPct < 5 || dropPct > 20) return null;
+  const peakVol = Math.max(...recentVols);
+  const curVol = recentVols[recentVols.length - 1];
+  if (curVol > peakVol * 0.5) return null;
+  if (highIdx < 2) return null;
+  const curRsi = calcRSI(closes) || 50;
+  return { pumpPct: Math.round(pumpPct*10)/10, dropPct: Math.round(dropPct*10)/10, cur, rsi: Math.round(curRsi*10)/10 };
+}
+
 async function loadPumpScanner() {
   const box = document.getElementById('pump-list');
   const st = document.getElementById('pump-status');
-  box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">스캔 중…</div>';
+  box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">스캔 중… (Binance + Gate.io)</div>';
   if (st) { st.textContent = '스캔 중'; st.style.color = '#7c6fff'; }
   try {
-    const tickers = await fetch('https://api.binance.com/api/v3/ticker/24hr').then(r => r.json());
-    const candidates = tickers
+    // Binance + Gate.io 티커 병렬 호출
+    const [binanceTickers, gateTickers] = await Promise.all([
+      fetch('https://api.binance.com/api/v3/ticker/24hr').then(r => r.json()).catch(() => []),
+      fetch('https://api.gateio.ws/api/v4/spot/tickers').then(r => r.json()).catch(() => [])
+    ]);
+
+    // Binance 후보
+    const binanceCandidates = (Array.isArray(binanceTickers) ? binanceTickers : [])
       .filter(t => {
         if (!t.symbol.endsWith('USDT') || PUMP_EXCL.test(t.symbol)) return false;
         const base = t.symbol.replace('USDT','');
-        return !PUMP_MAJORS.has(base) && parseFloat(t.quoteVolume) > 3_000_000;
+        return !PUMP_MAJORS.has(base) && parseFloat(t.quoteVolume) > 500_000;
       })
       .sort((a,b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
-      .slice(0, 100);
+      .slice(0, 80)
+      .map(t => ({ sym: t.symbol.replace('USDT',''), pair: t.symbol, ex: 'Binance', chg: parseFloat(t.priceChangePercent) }));
 
+    // Gate.io 후보
+    const binanceSyms = new Set(binanceCandidates.map(c => c.sym));
+    const gateCandidates = (Array.isArray(gateTickers) ? gateTickers : [])
+      .filter(t => {
+        if (!t.currency_pair.endsWith('_USDT')) return false;
+        const base = t.currency_pair.replace('_USDT','');
+        return !PUMP_MAJORS.has(base) && !binanceSyms.has(base) && parseFloat(t.quote_volume) > 200_000;
+      })
+      .sort((a,b) => parseFloat(b.quote_volume) - parseFloat(a.quote_volume))
+      .slice(0, 80)
+      .map(t => ({ sym: t.currency_pair.replace('_USDT',''), pair: t.currency_pair, ex: 'Gate.io', chg: parseFloat(t.change_percentage) }));
+
+    const allCandidates = [...binanceCandidates, ...gateCandidates];
     const results = [];
-    for (let i = 0; i < candidates.length; i += 20) {
-      const batch = candidates.slice(i, i + 20);
-      const batchRes = await Promise.all(batch.map(async t => {
+
+    for (let i = 0; i < allCandidates.length; i += 20) {
+      const batch = allCandidates.slice(i, i + 20);
+      const batchRes = await Promise.all(batch.map(async c => {
         try {
-          // 48개봉 가져와서 다이버전스 감지 정확도 높임
-          const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${t.symbol}&interval=1h&limit=48`).then(r => r.json());
-          if (!Array.isArray(kl) || kl.length < 10) return null;
-          const closes = kl.map(k => parseFloat(k[4]));
-          const volumes = kl.map(k => parseFloat(k[5]));
-          const recent = closes.slice(-24); // 눌림목은 최근 24h 기준
-          const recentVols = volumes.slice(-24);
-          const cur = recent[recent.length - 1];
-
-          const high = Math.max(...recent);
-          const highIdx = recent.indexOf(high);
-          const lowBeforeHigh = Math.min(...recent.slice(0, highIdx + 1));
-          const pumpPct = lowBeforeHigh > 0 ? (high - lowBeforeHigh) / lowBeforeHigh * 100 : 0;
-          if (pumpPct < 30) return null;
-          const dropPct = (high - cur) / high * 100;
-          if (dropPct < 5 || dropPct > 20) return null;
-          const peakVol = Math.max(...recentVols);
-          const curVol = recentVols[recentVols.length - 1];
-          if (curVol > peakVol * 0.5) return null;
-          if (highIdx < 2) return null;
-
-          // RSI 계산 (48개봉 전체로)
-          const rsiArr = closes.map((_, i) => {
-            if (i < 14) return 50;
-            return calcRSI(closes.slice(0, i + 1)) || 50;
-          });
-
-          // 다이버전스 감지
-          const div = detectDivergence(closes, rsiArr);
-          const curRsi = calcRSI(closes) || 50;
-
-          return {
-            sym: t.symbol.replace('USDT',''),
-            pumpPct: Math.round(pumpPct * 10) / 10,
-            dropPct: Math.round(dropPct * 10) / 10,
-            cur, rsi: Math.round(curRsi * 10) / 10,
-            bearish: div.bearish,
-            bullish: div.bullish,
-            chg: parseFloat(t.priceChangePercent)
-          };
+          let closes, volumes;
+          if (c.ex === 'Binance') {
+            const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${c.pair}&interval=1h&limit=48`).then(r => r.json());
+            if (!Array.isArray(kl) || kl.length < 10) return null;
+            closes = kl.map(k => parseFloat(k[4]));
+            volumes = kl.map(k => parseFloat(k[5]));
+          } else {
+            const kl = await fetch(`https://api.gateio.ws/api/v4/spot/candlesticks?currency_pair=${c.pair}&interval=1h&limit=48`).then(r => r.json());
+            if (!Array.isArray(kl) || kl.length < 10) return null;
+            closes = kl.map(k => parseFloat(k[2]));   // close
+            volumes = kl.map(k => parseFloat(k[6]));  // base_volume
+          }
+          const res = await scanPumpCandles(closes, volumes);
+          if (!res) return null;
+          return { ...c, ...res };
         } catch { return null; }
       }));
       results.push(...batchRes.filter(Boolean));
@@ -659,7 +674,7 @@ async function loadPumpScanner() {
       <div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
         <div>
           <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
-          <div style="font-size:9px;color:#4a5568;margin-top:2px;">급등 +${c.pumpPct}% · 눌림 -${c.dropPct}% · RSI <span style="color:${rsiColor}">${c.rsi}</span></div>
+          <div style="font-size:9px;color:#4a5568;margin-top:2px;">${c.ex} · 급등 +${c.pumpPct}% · 눌림 -${c.dropPct}% · RSI <span style="color:${rsiColor}">${c.rsi}</span></div>
         </div>
         <div style="text-align:right;">
           <div style="color:#f59e0b;font-weight:700;font-size:12px;">-${c.dropPct}%</div>
