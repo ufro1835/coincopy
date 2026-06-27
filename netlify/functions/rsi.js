@@ -21,6 +21,7 @@ function calcRSI(closes, period = 14) {
 exports.handler = async () => {
   try {
     const tickers = await fetch('https://api.binance.com/api/v3/ticker/24hr').then(r => r.json());
+    if (!Array.isArray(tickers)) throw new Error('Binance API error: ' + JSON.stringify(tickers).slice(0, 100));
     const candidates = tickers
       .filter(t => {
         if (!t.symbol.endsWith('USDT') || EXCL.test(t.symbol)) return false;
