@@ -29,42 +29,35 @@ exports.handler = async () => {
         return parseFloat(t.quoteVolume) > 3_000_000;
       })
       .sort((a, b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
-      .slice(0, 40);
+      .slice(0, 20);
 
-    const BATCH = 20;
-    const results = [];
-    for (let i = 0; i < candidates.length; i += BATCH) {
-      const batch = candidates.slice(i, i + BATCH);
-      const batchRes = await Promise.all(batch.map(async t => {
-        try {
-          const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${t.symbol}&interval=1d&limit=30`).then(r => r.json());
-          if (!Array.isArray(kl) || kl.length < 16) return null;
-          const closes = kl.map(k => parseFloat(k[4]));
-          const volumes = kl.map(k => parseFloat(k[5]));
-          const rsi = calcRSI(closes);
-          if (rsi === null) return null;
-          const low14 = Math.min(...closes.slice(-15, -1));
-          const cur = closes[closes.length - 1];
-          const riseFromLow = low14 > 0 ? (cur - low14) / low14 * 100 : 0;
-          const vol1 = volumes[volumes.length - 1];
-          const vol7avg = volumes.slice(-8, -1).reduce((a, b) => a + b, 0) / 7;
-          const volChange = vol7avg > 0 ? (vol1 - vol7avg) / vol7avg * 100 : 0;
-          const sym = t.symbol.replace('USDT', '');
-          return {
-            sym,
-            rsi: Math.round(rsi * 10) / 10,
-            chg: parseFloat(t.priceChangePercent),
-            vol: parseFloat(t.quoteVolume),
-            volChange: Math.round(volChange * 10) / 10,
-            riseFromLow: Math.round(riseFromLow * 10) / 10,
-            price: parseFloat(t.lastPrice)
-          };
-        } catch { return null; }
-      }));
-      results.push(...batchRes.filter(Boolean));
-    }
+    const results = await Promise.all(candidates.map(async t => {
+      try {
+        const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${t.symbol}&interval=1d&limit=30`).then(r => r.json());
+        if (!Array.isArray(kl) || kl.length < 16) return null;
+        const closes = kl.map(k => parseFloat(k[4]));
+        const volumes = kl.map(k => parseFloat(k[5]));
+        const rsi = calcRSI(closes);
+        if (rsi === null) return null;
+        const low14 = Math.min(...closes.slice(-15, -1));
+        const cur = closes[closes.length - 1];
+        const riseFromLow = low14 > 0 ? (cur - low14) / low14 * 100 : 0;
+        const vol1 = volumes[volumes.length - 1];
+        const vol7avg = volumes.slice(-8, -1).reduce((a, b) => a + b, 0) / 7;
+        const volChange = vol7avg > 0 ? (vol1 - vol7avg) / vol7avg * 100 : 0;
+        return {
+          sym: t.symbol.replace('USDT', ''),
+          rsi: Math.round(rsi * 10) / 10,
+          chg: parseFloat(t.priceChangePercent),
+          vol: parseFloat(t.quoteVolume),
+          volChange: Math.round(volChange * 10) / 10,
+          riseFromLow: Math.round(riseFromLow * 10) / 10,
+          price: parseFloat(t.lastPrice)
+        };
+      } catch { return null; }
+    }));
 
-    return { statusCode: 200, headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(results) };
+    return { statusCode: 200, headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(results.filter(Boolean)) };
   } catch (e) {
     return { statusCode: 502, body: JSON.stringify({ error: e.message }) };
   }
