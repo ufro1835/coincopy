@@ -778,7 +778,7 @@ async function loadPumpScanner() {
   try {
     // Binance 선물 + Gate.io 선물 티커 병렬 호출
     const [binanceTickers, gateTickers] = await Promise.all([
-      fetch('https://fapi.binance.com/fapi/v1/ticker/24hr').then(r => r.json()).catch(() => []),
+      fetch('https://api.binance.com/api/v3/ticker/24hr').then(r => r.json()).catch(() => []),
       fetch('https://api.gateio.ws/api/v4/spot/tickers').then(r => r.json()).catch(() => [])
     ]);
 
@@ -791,7 +791,7 @@ async function loadPumpScanner() {
       })
       .sort((a,b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
       .slice(0, 80)
-      .map(t => ({ sym: t.symbol.replace('USDT',''), pair: t.symbol, ex: 'Binance Futures', chg: parseFloat(t.priceChangePercent) }));
+      .map(t => ({ sym: t.symbol.replace('USDT',''), pair: t.symbol, ex: 'Binance', chg: parseFloat(t.priceChangePercent) }));
 
     // Gate.io 선물 후보
     const binanceSyms = new Set(binanceCandidates.map(c => c.sym));
@@ -814,7 +814,7 @@ async function loadPumpScanner() {
         try {
           let closes, volumes;
           if (c.ex === 'Binance') {
-            const kl = await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${c.pair}&interval=1h&limit=48`).then(r => r.json());
+            const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${c.pair}&interval=1h&limit=48`).then(r => r.json());
             if (!Array.isArray(kl) || kl.length < 10) return null;
             closes = kl.map(k => parseFloat(k[4]));
             volumes = kl.map(k => parseFloat(k[5]));
