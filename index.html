@@ -290,6 +290,11 @@
       </div>
       <div class="cc-panel">
         <div class="cc-panel-title"><div class="cc-panel-dot" style="background:#00d4aa"></div>펀딩비 현황</div>
+        <div class="cc-fund-row" id="fund-current-row" style="border-bottom:1px solid #00d4aa22;">
+          <span class="cc-fund-coin" id="fund-current-sym" style="color:#00d4aa">—</span>
+          <span class="cc-fund-val" id="fund-current">—</span>
+          <span style="font-size:10px;color:#4a5568">현재차트</span>
+        </div>
         <div class="cc-fund-row"><span class="cc-fund-coin">BTC</span><span class="cc-fund-val" id="fund-BTC">—</span><span style="font-size:10px;color:#4a5568">바이낸스</span></div>
         <div class="cc-fund-row"><span class="cc-fund-coin">ETH</span><span class="cc-fund-val" id="fund-ETH">—</span><span style="font-size:10px;color:#4a5568">바이낸스</span></div>
         <div class="cc-fund-row"><span class="cc-fund-coin">SOL</span><span class="cc-fund-val" id="fund-SOL">—</span><span style="font-size:10px;color:#4a5568">바이낸스</span></div>
@@ -399,6 +404,8 @@ function buildTV(symbol) {
         if (entryInput) entryInput.value = parseFloat(d.price).toFixed(2);
       }
     }).catch(() => {});
+  // 현재 차트 종목 펀딩비
+  fetchCurrentFunding(baseSym);
 }
 
 function selectCoin(symbol, btn) {
@@ -542,6 +549,18 @@ async function fetchPrices() {
     document.getElementById('last-update') && (document.getElementById('last-update').textContent =
       new Date().toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit',second:'2-digit'}));
   } catch(e) { console.warn('price err', e); }
+}
+
+async function fetchCurrentFunding(sym) {
+  try {
+    const data = await fetch(`https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${sym}USDT`).then(r => r.json());
+    if (!data.lastFundingRate) return;
+    const f = parseFloat(data.lastFundingRate) * 100;
+    const el = document.getElementById('fund-current');
+    const symEl = document.getElementById('fund-current-sym');
+    if (el) { el.textContent = (f >= 0 ? '+' : '') + f.toFixed(4) + '%'; el.className = 'cc-fund-val ' + (f >= 0 ? 'pos' : 'neg'); }
+    if (symEl) symEl.textContent = sym;
+  } catch(e) {}
 }
 
 async function fetchFunding() {
