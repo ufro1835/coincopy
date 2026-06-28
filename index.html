@@ -67,6 +67,8 @@
     margin-bottom: 14px;
     align-items: start;
   }
+  @media (max-width: 1100px) { .cc-main-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px) { .cc-main-grid { grid-template-columns: 1fr; } }
   .cc-chart-section { background: #0f1120; border: 1px solid #1e2235; border-radius: 6px; padding: 14px; margin-bottom: 14px; }
   .cc-main-grid .cc-chart-section { margin-bottom: 0; }
   .cc-chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
@@ -228,7 +230,7 @@
           <input id="search-input" type="text" placeholder="직접 입력 예: PEPE, GATE:ASTEROID_USDT" onkeydown="if(event.key==='Enter')searchCoin()">
           <button onclick="searchCoin()">차트 ↗</button>
         </div>
-        <div id="tv-chart" style="height:440px;width:100%;"></div>
+        <div id="tv-chart" style="height:520px;width:100%;"></div>
       </div>
 
       <!-- RSI 스캐너 -->
@@ -369,9 +371,18 @@ function buildTV(symbol) {
     container_id: 'tv-chart', symbol, interval: '60', timezone: 'Asia/Seoul',
     theme: 'dark', style: '1', locale: 'kr', autosize: true,
     studies: [
-      { id: 'MAExp@tv-basicstudies', inputs: { length: 20 }, overrides: { 'plot.color': '#F5D700', 'plot.linewidth': 2 } },
-      { id: 'MAExp@tv-basicstudies', inputs: { length: 50 }, overrides: { 'plot.color': '#00C853', 'plot.linewidth': 2 } },
-      { id: 'MAExp@tv-basicstudies', inputs: { length: 200 }, overrides: { 'plot.color': '#FF1744', 'plot.linewidth': 2 } },
+      {
+        id: 'MARibbon@tv-basicstudies',
+        inputs: { in_0: 20, in_1: 50, in_2: 200 },
+        overrides: {
+          'MA Ribbon.Plot 0.color': '#F5D700',
+          'MA Ribbon.Plot 0.linewidth': 2,
+          'MA Ribbon.Plot 1.color': '#00C853',
+          'MA Ribbon.Plot 1.linewidth': 2,
+          'MA Ribbon.Plot 2.color': '#FF1744',
+          'MA Ribbon.Plot 2.linewidth': 2,
+        }
+      },
       'RSI@tv-basicstudies',
     ],
     backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false
