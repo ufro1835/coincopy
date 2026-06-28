@@ -449,11 +449,24 @@ const COIN_CATEGORY = {
   BNB:'CEX',OKB:'CEX',CRO:'CEX',
   // Privacy
   XMR:'Privacy',ZEC:'Privacy',SCRT:'Privacy',
-  // RWA/Infra
-  KAITO:'AI',SLX:'DeFi',VELVET:'DeFi',AGLD:'Game',
-  PORTAL:'Game',CITY:'Game',XPL:'Game',RLUSD:'Stbl',
-  PUNDIX:'Infra',ARK:'Infra',JTO:'DeFi',WIF:'Meme',
-  CELO:'L1',FET:'AI',INJ:'L1',
+  // Meme
+  PUMP:'Meme',DOGS:'Meme',HMSTR:'Meme',CATI:'Meme',NEIRO:'Meme',MEW:'Meme',POPCAT:'Meme',SLERF:'Meme',BOME:'Meme',
+  // AI
+  KAITO:'AI',TAO:'AI',AIOZ:'AI',NMR:'AI',VIRTUAL:'AI',GRIFFAIN:'AI',
+  // DeFi
+  SLX:'DeFi',VELVET:'DeFi',JTO:'DeFi',GMX:'DeFi',DYDX:'DeFi',
+  // Game
+  AGLD:'Game',PORTAL:'Game',CITY:'Game',XPL:'Game',MAGIC:'Game',PIXEL:'Game',
+  // Infra
+  PUNDIX:'Infra',ARK:'Infra',HOT:'Infra',ATM:'Infra',
+  // L1
+  CELO:'L1',INJ:'L1',SEI:'L1',
+  // Stablecoin
+  RLUSD:'Stbl',
+  // Social
+  HYPER:'Social',ACT:'Social',
+  // DePIN
+  IOTX:'DePIN',HNT:'DePIN',
 };
 
 const COIN_CHAIN = {
@@ -730,6 +743,7 @@ async function loadPumpScanner() {
         <div>
           <div style="display:flex;align-items:center;gap:5px;">
             <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
+            <span style="color:${c.chg>=0?'#00d4aa':'#ff4d6d'};font-size:10px;">${c.chg>=0?'+':''}${c.chg.toFixed(1)}%</span>
             ${COIN_CATEGORY[c.sym] ? `<span style="font-size:8px;color:#7c6fff;background:rgba(124,111,255,0.12);padding:1px 4px;border-radius:2px;">${COIN_CATEGORY[c.sym]}</span>` : ''}
             ${COIN_CHAIN[c.sym] ? `<span style="font-size:8px;color:#4a9eff;background:rgba(74,158,255,0.1);padding:1px 4px;border-radius:2px;">${COIN_CHAIN[c.sym]}</span>` : ''}
           </div>
@@ -844,9 +858,9 @@ function renderRsi() {
       <div style="flex:1;">
         <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px;">
           <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
+          <span style="color:${c.chg>=0?'#00d4aa':'#ff4d6d'};font-size:10px;">${c.chg>=0?'+':''}${c.chg.toFixed(1)}%</span>
           ${COIN_CATEGORY[c.sym] ? `<span style="font-size:8px;color:#7c6fff;background:rgba(124,111,255,0.12);padding:1px 4px;border-radius:2px;">${COIN_CATEGORY[c.sym]}</span>` : ''}
           ${COIN_CHAIN[c.sym] ? `<span style="font-size:8px;color:#4a9eff;background:rgba(74,158,255,0.1);padding:1px 4px;border-radius:2px;">${COIN_CHAIN[c.sym]}</span>` : ''}
-          <span style="color:${c.chg>=0?'#00d4aa':'#ff4d6d'};font-size:10px;">${c.chg>=0?'+':''}${c.chg.toFixed(1)}%</span>
           ${rsiTag ? `<span style="font-size:9px;color:${rsiColor};">${rsiTag}</span>` : ''}
           ${rise}
         </div>
