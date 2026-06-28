@@ -369,7 +369,6 @@ let currentChartSym = 'BTC';
 let tvReady = false;
 function buildTV(symbol) {
   if (tvWidget && tvReady) {
-    // 위젯 재사용 - 심볼만 변경 (지표 유지)
     tvWidget.activeChart().setSymbol(symbol);
   } else {
     document.getElementById('tv-chart').innerHTML = '';
@@ -381,9 +380,9 @@ function buildTV(symbol) {
         { id: 'MAExp@tv-basicstudies', inputs: { length: 200 } },
         { id: 'RSI@tv-basicstudies' },
       ],
-      backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false
+      backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false,
+      onChartReady: () => { tvReady = true; }
     });
-    tvWidget.onChartReady(() => { tvReady = true; });
   }
   // 계산기 심볼/진입가 자동 업데이트
   const baseSym = symbol.replace(/.*:/, '').replace('USDT','').replace('KRW','');
