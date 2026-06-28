@@ -428,10 +428,11 @@ function searchCoin() {
 function coinToChart(sym, ex) {
   ex = (ex || '').toLowerCase();
   let symbol;
-  if (ex.includes('gate'))         symbol = `GATE:${sym}USDT`;
-  else if (ex.includes('bybit'))   symbol = `BYBIT:${sym}USDT`;
-  else if (ex.includes('upbit'))   symbol = `UPBIT:${sym}KRW`;
-  else                              symbol = `BINANCE:${sym}USDT`;
+  if (ex.includes('gate'))              symbol = `GATE:${sym}USDT`;
+  else if (ex.includes('bybit'))        symbol = `BYBIT:${sym}USDT`;
+  else if (ex.includes('upbit'))        symbol = `UPBIT:${sym}KRW`;
+  else if (ex.includes('futures'))      symbol = `BINANCE:${sym}USDT.P`;
+  else                                   symbol = `BINANCE:${sym}USDT`;
   buildTV(symbol);
 }
 
@@ -790,7 +791,7 @@ async function loadPumpScanner() {
       })
       .sort((a,b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
       .slice(0, 80)
-      .map(t => ({ sym: t.symbol.replace('USDT',''), pair: t.symbol, ex: 'Binance', chg: parseFloat(t.priceChangePercent) }));
+      .map(t => ({ sym: t.symbol.replace('USDT',''), pair: t.symbol, ex: 'Binance Futures', chg: parseFloat(t.priceChangePercent) }));
 
     // Gate.io 선물 후보
     const binanceSyms = new Set(binanceCandidates.map(c => c.sym));
