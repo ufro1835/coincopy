@@ -196,6 +196,7 @@
     <button class="cc-tab" onclick="showPage('copy',this)">카피트레이딩</button>
     <button class="cc-tab" onclick="showPage('airdrop',this)">에어드랍</button>
   </div>
+  <button id="notif-btn" onclick="requestNotificationPermission()" style="padding:4px 11px;font-size:10px;font-family:inherit;border:1px solid #1e2235;border-radius:4px;background:transparent;color:#4a5568;cursor:pointer;letter-spacing:1px;transition:all .15s;" title="눌림목 조건 충족 시 브라우저 알림">🔔 알림</button>
 </nav>
 
 <!-- 스크롤 티커 -->
@@ -370,10 +371,7 @@ function buildTV(symbol) {
   tvWidget = new TradingView.widget({
     container_id: 'tv-chart', symbol, interval: '60', timezone: 'Asia/Seoul',
     theme: 'dark', style: '1', locale: 'kr', autosize: true,
-    studies: [
-      'Moving Average Ribbon@tv-basicstudies',
-      'RSI@tv-basicstudies',
-    ],
+    studies: ['RSI@tv-basicstudies'],
     backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false
   });
   // 계산기 심볼/진입가 자동 업데이트
@@ -617,6 +615,71 @@ async function fetchUnlocks() {
 const PUMP_MAJORS = new Set(['BTC','ETH','SOL','BNB','XRP','ADA','DOGE','TRX','TON','AVAX','DOT','MATIC','LTC','LINK','UNI','ATOM','ETC','BCH','USDC','FDUSD','TUSD','BUSD','DAI']);
 const PUMP_EXCL = /(USDC|FDUSD|TUSD|BUSD|DAI|UP|DOWN|BULL|BEAR|USDT)USDT$/;
 
+// =============================================
+// 브라우저 푸시 알람
+// =============================================
+let notifiedSyms = new Set();
+
+function requestNotificationPermission() {
+  const btn = document.getElementById('notif-btn');
+  if (!('Notification' in window)) { alert('이 브라우저는 알림을 지원하지 않습니다.'); return; }
+  if (Notification.permission === 'granted') {
+    notifiedSyms.clear();
+    btn.textContent = '🔔 알림 ON';
+    btn.style.color = '#00d4aa'; btn.style.borderColor = '#00d4aa';
+    new Notification('COINCOPY 알림 활성화', { body: '눌림목 조건 충족 종목 발견 시 알림을 보냅니다.' });
+    return;
+  }
+  Notification.requestPermission().then(p => {
+    if (p === 'granted') {
+      btn.textContent = '🔔 알림 ON';
+      btn.style.color = '#00d4aa'; btn.style.borderColor = '#00d4aa';
+      new Notification('COINCOPY 알림 활성화', { body: '눌림목 조건 충족 종목 발견 시 알림을 보냅니다.' });
+    } else {
+      btn.textContent = '🔕 알림 거부됨';
+      btn.style.color = '#ff4d6d'; btn.style.borderColor = '#ff4d6d';
+    }
+  });
+}
+
+function sendPumpAlerts(results) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const newOnes = results.filter(c => !notifiedSyms.has(c.sym));
+  newOnes.forEach(c => {
+    notifiedSyms.add(c.sym);
+    const divTag = c.divergence === 'bullish' ? ' 🔁상승다이버전스' : '';
+    new Notification(`📉 눌림목 발견: ${c.sym}${divTag}`, {
+      body: `급등 +${c.pumpPct}% → 눌림 -${c.dropPct}% | RSI ${c.rsi}`,
+    });
+  });
+  // 30분 후 알림 캐시 해제 (재알림 허용)
+  if (newOnes.length > 0) {
+    setTimeout(() => newOnes.forEach(c => notifiedSyms.delete(c.sym)), 1800000);
+  }
+}
+
+// =============================================
+// RSI 시계열 배열 생성
+// =============================================
+function calcRSISeries(closes, period = 14) {
+  const result = new Array(closes.length).fill(null);
+  if (closes.length < period + 1) return result;
+  let gains = 0, losses = 0;
+  for (let i = 1; i <= period; i++) {
+    const d = closes[i] - closes[i - 1];
+    if (d >= 0) gains += d; else losses -= d;
+  }
+  let avgG = gains / period, avgL = losses / period;
+  result[period] = avgL === 0 ? 100 : 100 - 100 / (1 + avgG / avgL);
+  for (let i = period + 1; i < closes.length; i++) {
+    const d = closes[i] - closes[i - 1];
+    avgG = (avgG * (period - 1) + (d > 0 ? d : 0)) / period;
+    avgL = (avgL * (period - 1) + (d < 0 ? -d : 0)) / period;
+    result[i] = avgL === 0 ? 100 : 100 - 100 / (1 + avgG / avgL);
+  }
+  return result;
+}
+
 // 스윙 고점/저점 찾기 (좌우 n개보다 높으면 고점)
 function findSwings(arr, n = 2) {
   const highs = [], lows = [];
@@ -628,27 +691,34 @@ function findSwings(arr, n = 2) {
   return { highs, lows };
 }
 
-// 다이버전스 감지
-function detectDivergence(closes, rsiArr) {
-  const { highs, lows } = findSwings(closes);
-  const { highs: rsiHighs, lows: rsiLows } = findSwings(rsiArr);
+// RSI 다이버전스 감지 (피벗 포인트 기반)
+function detectDivergence(closes, rsiSeries) {
+  // null 제거 후 유효한 인덱스만 사용
+  const validIdx = rsiSeries.map((v, i) => v !== null ? i : -1).filter(i => i >= 0);
+  if (validIdx.length < 10) return { bearish: false, bullish: false };
+
+  const validCloses = validIdx.map(i => closes[i]);
+  const validRsi = validIdx.map(i => rsiSeries[i]);
+
+  const { highs: pH, lows: pL } = findSwings(validCloses, 3);
+  const { highs: rH, lows: rL } = findSwings(validRsi, 3);
 
   let bearish = false, bullish = false;
 
   // 하락 다이버전스: 가격 고점↑ + RSI 고점↓
-  if (highs.length >= 2 && rsiHighs.length >= 2) {
-    const [ph1, ph2] = highs.slice(-2);
-    const rh1 = rsiHighs.find(r => Math.abs(r.idx - ph1.idx) <= 3);
-    const rh2 = rsiHighs.find(r => Math.abs(r.idx - ph2.idx) <= 3);
-    if (rh1 && rh2 && ph2.val > ph1.val && rh2.val < rh1.val) bearish = true;
+  if (pH.length >= 2 && rH.length >= 2) {
+    const [ph1, ph2] = pH.slice(-2);
+    const rh1 = rH.find(r => Math.abs(r.idx - ph1.idx) <= 4);
+    const rh2 = rH.find(r => Math.abs(r.idx - ph2.idx) <= 4);
+    if (rh1 && rh2 && ph2.val > ph1.val * 1.01 && rh2.val < rh1.val * 0.99) bearish = true;
   }
 
   // 상승 다이버전스: 가격 저점↓ + RSI 저점↑
-  if (lows.length >= 2 && rsiLows.length >= 2) {
-    const [pl1, pl2] = lows.slice(-2);
-    const rl1 = rsiLows.find(r => Math.abs(r.idx - pl1.idx) <= 3);
-    const rl2 = rsiLows.find(r => Math.abs(r.idx - pl2.idx) <= 3);
-    if (rl1 && rl2 && pl2.val < pl1.val && rl2.val > rl1.val) bullish = true;
+  if (pL.length >= 2 && rL.length >= 2) {
+    const [pl1, pl2] = pL.slice(-2);
+    const rl1 = rL.find(r => Math.abs(r.idx - pl1.idx) <= 4);
+    const rl2 = rL.find(r => Math.abs(r.idx - pl2.idx) <= 4);
+    if (rl1 && rl2 && pl2.val < pl1.val * 0.99 && rl2.val > rl1.val * 1.01) bullish = true;
   }
 
   return { bearish, bullish };
@@ -670,7 +740,11 @@ async function scanPumpCandles(closes, volumes) {
   if (curVol > peakVol * 0.5) return null;
   if (highIdx < 2) return null;
   const curRsi = calcRSI(closes) || 50;
-  return { pumpPct: Math.round(pumpPct*10)/10, dropPct: Math.round(dropPct*10)/10, cur, rsi: Math.round(curRsi*10)/10 };
+  // RSI 다이버전스 감지
+  const rsiSeries = calcRSISeries(closes);
+  const { bullish, bearish } = detectDivergence(closes, rsiSeries);
+  const divergence = bullish ? 'bullish' : bearish ? 'bearish' : null;
+  return { pumpPct: Math.round(pumpPct*10)/10, dropPct: Math.round(dropPct*10)/10, cur, rsi: Math.round(curRsi*10)/10, divergence };
 }
 
 async function loadPumpScanner() {
@@ -741,16 +815,23 @@ async function loadPumpScanner() {
       return;
     }
     results.sort((a,b) => b.pumpPct - a.pumpPct);
+    sendPumpAlerts(results);
     box.innerHTML = results.map(c => {
       const rsiColor = c.rsi >= 70 ? '#ff4d6d' : c.rsi <= 30 ? '#00d4aa' : '#8892a4';
+      const divBadge = c.divergence === 'bullish'
+        ? `<span style="font-size:8px;color:#00d4aa;background:rgba(0,212,170,0.12);padding:1px 5px;border-radius:2px;border:1px solid rgba(0,212,170,0.3);">🔁상승다이버전스</span>`
+        : c.divergence === 'bearish'
+        ? `<span style="font-size:8px;color:#ff4d6d;background:rgba(255,77,109,0.12);padding:1px 5px;border-radius:2px;border:1px solid rgba(255,77,109,0.3);">🔁하락다이버전스</span>`
+        : '';
       return `
-      <div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
+      <div onclick="coinToChart('${c.sym}','${c.ex}')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
         <div>
-          <div style="display:flex;align-items:center;gap:5px;">
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
             <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
             <span style="color:${c.chg>=0?'#00d4aa':'#ff4d6d'};font-size:10px;">${c.chg>=0?'+':''}${c.chg.toFixed(1)}%</span>
             ${COIN_CATEGORY[c.sym] ? `<span style="font-size:8px;color:#f5d76e;background:rgba(245,215,110,0.1);padding:1px 4px;border-radius:2px;">${COIN_CATEGORY[c.sym]}</span>` : ''}
             ${COIN_CHAIN[c.sym] ? `<span style="font-size:8px;color:#4a9eff;background:rgba(74,158,255,0.1);padding:1px 4px;border-radius:2px;">${COIN_CHAIN[c.sym]}</span>` : ''}
+            ${divBadge}
           </div>
           <div style="font-size:9px;color:#4a5568;margin-top:2px;">${c.ex} · 급등 +${c.pumpPct}% · 눌림 -${c.dropPct}% · RSI <span style="color:${rsiColor}">${c.rsi}</span></div>
         </div>
@@ -1097,7 +1178,7 @@ window.addEventListener('load', () => {
   setInterval(fetchFunding, 14400000); // 4시간 (펀딩비 정산 8시간)
   setInterval(loadRsiScanner, 300000);
   setInterval(fetchUnlocks, 600000);
-  setInterval(loadPumpScanner, 3600000); // 1시간마다
+  setInterval(loadPumpScanner, 300000);  // 5분마다
 });
 </script>
 </body>
