@@ -754,7 +754,7 @@ async function scanPumpCandles(closes, volumes) {
   const highIdx = recent.indexOf(high);
   const lowBeforeHigh = Math.min(...recent.slice(0, highIdx + 1));
   const pumpPct = lowBeforeHigh > 0 ? (high - lowBeforeHigh) / lowBeforeHigh * 100 : 0;
-  if (pumpPct < 30) return null;
+  if (pumpPct < 20) return null;
   const dropPct = (high - cur) / high * 100;
   if (dropPct < 5 || dropPct > 20) return null;
   const peakVol = Math.max(...recentVols);
