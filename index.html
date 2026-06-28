@@ -368,7 +368,12 @@ function buildTV(symbol) {
   tvWidget = new TradingView.widget({
     container_id: 'tv-chart', symbol, interval: '60', timezone: 'Asia/Seoul',
     theme: 'dark', style: '1', locale: 'kr', autosize: true,
-    studies: ['MASimple@tv-basicstudies', 'RSI@tv-basicstudies'],
+    studies: [
+      { id: 'MAExp@tv-basicstudies', inputs: { length: 20 }, overrides: { 'plot.color': '#F5D700', 'plot.linewidth': 2 } },
+      { id: 'MAExp@tv-basicstudies', inputs: { length: 50 }, overrides: { 'plot.color': '#00C853', 'plot.linewidth': 2 } },
+      { id: 'MAExp@tv-basicstudies', inputs: { length: 200 }, overrides: { 'plot.color': '#FF1744', 'plot.linewidth': 2 } },
+      'RSI@tv-basicstudies',
+    ],
     backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false
   });
   // 계산기 심볼/진입가 자동 업데이트
