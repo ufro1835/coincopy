@@ -957,7 +957,7 @@ function renderRsi() {
   let sorted = [...rsiData];
   if (rsiSort === 'overbought') sorted.sort((a, b) => b.rsi - a.rsi);
   else sorted.sort((a, b) => a.rsi - b.rsi);
-  sorted = sorted.slice(0, 10);
+  sorted = sorted.slice(0, 14);
   box.innerHTML = sorted.map(c => {
     const rsiColor = c.rsi >= 70 ? '#ff4d6d' : c.rsi <= 30 ? '#00d4aa' : '#3a4151';
     const rsiTag = c.rsi >= 70 ? '과매수' : c.rsi <= 30 ? '과매도' : '';
