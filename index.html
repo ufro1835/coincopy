@@ -371,18 +371,7 @@ function buildTV(symbol) {
     container_id: 'tv-chart', symbol, interval: '60', timezone: 'Asia/Seoul',
     theme: 'dark', style: '1', locale: 'kr', autosize: true,
     studies: [
-      {
-        id: 'MARibbon@tv-basicstudies',
-        inputs: { in_0: 20, in_1: 50, in_2: 200 },
-        overrides: {
-          'MA Ribbon.Plot 0.color': '#F5D700',
-          'MA Ribbon.Plot 0.linewidth': 2,
-          'MA Ribbon.Plot 1.color': '#00C853',
-          'MA Ribbon.Plot 1.linewidth': 2,
-          'MA Ribbon.Plot 2.color': '#FF1744',
-          'MA Ribbon.Plot 2.linewidth': 2,
-        }
-      },
+      'Moving Average Ribbon@tv-basicstudies',
       'RSI@tv-basicstudies',
     ],
     backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false
