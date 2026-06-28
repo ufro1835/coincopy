@@ -21,8 +21,8 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
 )
 
-BOT_TOKEN    = os.environ.get("TELEGRAM_BOT_TOKEN", "8858417256:AAGGn1lD0ihSAb8SF6uY3WLFM6TCf5YYNiY")
-CHAT_ID      = int(os.environ.get("TELEGRAM_CHAT_ID", "519064532"))
+BOT_TOKEN    = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+CHAT_ID      = int(os.environ.get("TELEGRAM_CHAT_ID", "0"))
 COINCOPY_URL = os.environ.get("COINCOPY_URL", "http://localhost:3000")
 BOT_SECRET   = os.environ.get("BOT_SECRET", "changeme")
 
