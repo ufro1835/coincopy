@@ -371,7 +371,7 @@ function buildTV(symbol) {
   tvWidget = new TradingView.widget({
     container_id: 'tv-chart', symbol, interval: '60', timezone: 'Asia/Seoul',
     theme: 'dark', style: '1', locale: 'kr', autosize: true,
-    studies: ['RSI@tv-basicstudies'],
+    studies: ['MARibbon@tv-basicstudies', 'RSI@tv-basicstudies'],
     backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false
   });
   // 계산기 심볼/진입가 자동 업데이트
