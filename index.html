@@ -366,13 +366,18 @@
 // =============================================
 let tvWidget;
 let currentChartSym = 'BTC';
-let tvReady = false;
 function buildTV(symbol) {
-  if (tvWidget && tvReady) {
-    tvWidget.activeChart().setSymbol(symbol);
+  if (tvWidget) {
+    try {
+      tvWidget.activeChart().setSymbol(symbol);
+    } catch(e) {
+      // 아직 로드 안 됐으면 대기 후 재시도
+      setTimeout(() => {
+        try { tvWidget.activeChart().setSymbol(symbol); } catch(e2) {}
+      }, 1000);
+    }
   } else {
     document.getElementById('tv-chart').innerHTML = '';
-    tvReady = false;
     tvWidget = new TradingView.widget({
       container_id: 'tv-chart', symbol, interval: '60', timezone: 'Asia/Seoul',
       theme: 'dark', style: '1', locale: 'kr', autosize: true,
@@ -380,8 +385,7 @@ function buildTV(symbol) {
         { id: 'MAExp@tv-basicstudies', inputs: { length: 200 } },
         { id: 'RSI@tv-basicstudies' },
       ],
-      backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false,
-      onChartReady: () => { tvReady = true; }
+      backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false
     });
   }
   // 계산기 심볼/진입가 자동 업데이트
