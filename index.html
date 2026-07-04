@@ -377,15 +377,9 @@ function buildTV(symbol) {
     container_id: 'tv-chart', symbol, interval: '60', timezone: 'Asia/Seoul',
     theme: 'dark', style: '1', locale: 'kr', autosize: true,
     studies: [
-      {
-        id: 'MAR@tv-basicstudies',
-        inputs: { in_0: 20, in_1: 50, in_2: 200 },
-        overrides: {
-          'plot_0.color': '#eab308', 'plot_0.linewidth': 1,
-          'plot_1.color': '#22c55e', 'plot_1.linewidth': 1,
-          'plot_2.color': '#ef4444', 'plot_2.linewidth': 2,
-        }
-      },
+      { id: 'MAExp@tv-basicstudies', inputs: { length: 20 } },
+      { id: 'MAExp@tv-basicstudies', inputs: { length: 50 } },
+      { id: 'MAExp@tv-basicstudies', inputs: { length: 200 } },
       { id: 'RSI@tv-basicstudies' },
     ],
     backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false,
