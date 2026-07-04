@@ -377,12 +377,13 @@ function buildTV(symbol) {
     container_id: 'tv-chart', symbol, interval: '60', timezone: 'Asia/Seoul',
     theme: 'dark', style: '1', locale: 'kr', autosize: true,
     studies: [
-      { id: 'MAExp@tv-basicstudies', inputs: { length: 200 }, overrides: { 'Plot.color': '#ef4444' } },
-      { id: 'MAExp@tv-basicstudies', inputs: { length: 50 },  overrides: { 'Plot.color': '#22c55e' } },
-      { id: 'MAExp@tv-basicstudies', inputs: { length: 20 },  overrides: { 'Plot.color': '#eab308' } },
+      { id: 'MAExp@tv-basicstudies', inputs: { length: 200 }, overrides: { 'MA.color': '#ef4444', 'MA.linewidth': 2 } },
+      { id: 'MAExp@tv-basicstudies', inputs: { length: 50 },  overrides: { 'MA.color': '#22c55e', 'MA.linewidth': 1 } },
+      { id: 'MAExp@tv-basicstudies', inputs: { length: 20 },  overrides: { 'MA.color': '#eab308', 'MA.linewidth': 1 } },
       { id: 'RSI@tv-basicstudies' },
     ],
-    backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false
+    backgroundColor: '#0f1120', gridColor: '#1a1f2e', hide_side_toolbar: false,
+    onChartReady: function() { tvReady = true; }
   });
   // 계산기 심볼/진입가 자동 업데이트
   const baseSym = symbol.replace(/.*:/, '').replace('USDT','').replace('KRW','');
@@ -918,6 +919,7 @@ async function loadRsiScanner() {
         const base = t.symbol.replace('USDT', '');
         if (MAJORS.has(base)) return false;
         if (/(USDC|FDUSD|TUSD|BUSD|DAI|UP|DOWN|BULL|BEAR|USDT)USDT$/.test(t.symbol)) return false;
+        if (!/^[A-Z0-9]+USDT$/.test(t.symbol)) return false;
         return parseFloat(t.quoteVolume) > 3_000_000;
       })
       .sort((a, b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
