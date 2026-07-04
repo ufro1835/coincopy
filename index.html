@@ -772,11 +772,17 @@ async function scanPumpCandles(closes, volumes) {
   const pumpPct = lowBeforeHigh > 0 ? (high - lowBeforeHigh) / lowBeforeHigh * 100 : 0;
   if (pumpPct < 20) return null;
   const dropPct = (high - cur) / high * 100;
-  if (dropPct < 5 || dropPct > 20) return null;
+  if (dropPct < 10 || dropPct > 50) return null;
   const peakVol = Math.max(...recentVols);
   const curVol = recentVols[recentVols.length - 1];
   if (curVol > peakVol * 0.5) return null;
   if (highIdx < 2) return null;
+  // EMA20 또는 EMA50 터치 확인 (현재가 ±5% 이내)
+  const ema20 = calcEMA(closes, 20);
+  const ema50 = calcEMA(closes, 50);
+  const near20 = ema20 && Math.abs(cur - ema20) / ema20 < 0.05;
+  const near50 = ema50 && Math.abs(cur - ema50) / ema50 < 0.05;
+  if (!near20 && !near50) return null;
   const curRsi = calcRSI(closes) || 50;
   // RSI 다이버전스 감지
   const rsiSeries = calcRSISeries(closes);
@@ -890,6 +896,14 @@ async function loadPumpScanner() {
 // =============================================
 let rsiData = [];
 let rsiSort = 'overbought';
+
+function calcEMA(closes, period) {
+  if (closes.length < period) return null;
+  const k = 2 / (period + 1);
+  let ema = closes.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  for (let i = period; i < closes.length; i++) ema = closes[i] * k + ema * (1 - k);
+  return ema;
+}
 
 function calcRSI(closes, period = 14) {
   if (closes.length < period + 1) return null;
