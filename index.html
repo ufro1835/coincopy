@@ -1359,17 +1359,17 @@ window.addEventListener('load', () => {
   fetchFng();
   loadRsiScanner();
   fetchUnlocks();
-  loadPumpScanner();
+  setTimeout(loadPumpScanner, 5000);        // 5초 후
+  setTimeout(loadSignalScanner, 10000);     // 10초 후
 
   setInterval(refreshAll, 10000);
   setInterval(fetchTicker, 10000);
-  setInterval(fetchFng, 14400000);    // 4시간
-  setInterval(fetchKimp, 14400000);   // 4시간
-  setInterval(fetchFunding, 14400000); // 4시간 (펀딩비 정산 8시간)
+  setInterval(fetchFng, 14400000);
+  setInterval(fetchKimp, 14400000);
+  setInterval(fetchFunding, 14400000);
   setInterval(loadRsiScanner, 300000);
   setInterval(fetchUnlocks, 600000);
-  setInterval(loadPumpScanner, 300000);  // 5분마다
-  loadSignalScanner();
+  setInterval(loadPumpScanner, 300000);
   setInterval(loadSignalScanner, 300000);
 });
 </script>
