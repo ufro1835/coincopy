@@ -267,6 +267,20 @@
         </div>
       </div>
 
+      <!-- 신호 스캐너 -->
+      <div class="cc-chart-section">
+        <div class="cc-chart-header">
+          <div class="cc-chart-title">🎯 신호 스캐너 <span style="font-size:9px;color:#4a5568;">고점돌파다이버전스 · 이탈리테스트</span></div>
+          <div class="cc-coin-btns">
+            <span id="signal-status" style="font-size:9px;color:#4a5568;padding:3px 6px;">대기중</span>
+            <button class="cc-coin-btn" onclick="loadSignalScanner()">↻</button>
+          </div>
+        </div>
+        <div id="signal-list" style="max-height:420px;overflow-y:auto;">
+          <div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">스캔 대기중…</div>
+        </div>
+      </div>
+
     </div>
 
     <div class="cc-bottom-grid">
@@ -693,6 +707,129 @@ function sendPumpAlerts(results) {
   // 30분 후 알림 캐시 해제 (재알림 허용)
   if (newOnes.length > 0) {
     setTimeout(() => newOnes.forEach(c => notifiedSyms.delete(c.sym)), 1800000);
+  }
+}
+
+// =============================================
+// 신호 스캐너: 고점돌파+하락다이버전스 / 이탈후 리테스트
+// =============================================
+let signalNotifiedSyms = new Set();
+
+function sendSignalAlert(sym, type) {
+  if (!notifEnabled || !('Notification' in window) || Notification.permission !== 'granted') return;
+  const key = sym + '_' + type;
+  if (signalNotifiedSyms.has(key)) return;
+  signalNotifiedSyms.add(key);
+  const msg = type === 'div' ? `${sym} 고점돌파 + RSI 하락다이버전스` : `${sym} 레벨 이탈 후 첫 리테스트`;
+  new Notification('🎯 신호 감지: ' + sym, { body: msg });
+  setTimeout(() => signalNotifiedSyms.delete(key), 1800000);
+}
+
+// 조건1: 고점 돌파 + 하락 다이버전스
+function scanDivBreakout(closes) {
+  if (closes.length < 40) return false;
+  const cur = closes[closes.length - 1];
+  const prevHigh = Math.max(...closes.slice(-40, -3));
+  if (cur < prevHigh * 0.99) return false; // 고점 돌파 안됨
+  const rsiSeries = calcRSISeries(closes);
+  const { bearish } = detectDivergence(closes, rsiSeries);
+  return bearish;
+}
+
+// 조건2: 레벨 이탈 후 첫 리테스트
+// - 최근 48봉 내 스윙고점(저항) 또는 스윙저점(지지) 찾기
+// - 이탈 확인 (최근 6봉 내 돌파)
+// - 현재가가 그 레벨로 복귀 (±2%)
+function scanBreakoutRetest(closes) {
+  if (closes.length < 50) return null;
+  const n = closes.length;
+  const lookback = closes.slice(-50, -2); // 이탈 전 기준 구간
+  const recent = closes.slice(-6);        // 최근 6봉 (이탈 구간)
+  const cur = closes[n - 1];
+
+  // 저항 돌파 후 리테스트 (상향 이탈)
+  const resistance = Math.max(...lookback.slice(-30));
+  const brokeUp = recent.some(c => c > resistance * 1.02);
+  const retestUp = brokeUp && Math.abs(cur - resistance) / resistance < 0.02;
+
+  // 지지 이탈 후 리테스트 (하향 이탈)
+  const support = Math.min(...lookback.slice(-30));
+  const brokeDown = recent.some(c => c < support * 0.98);
+  const retestDown = brokeDown && Math.abs(cur - support) / support < 0.02;
+
+  if (retestUp) return 'up';
+  if (retestDown) return 'down';
+  return null;
+}
+
+async function loadSignalScanner() {
+  const box = document.getElementById('signal-list');
+  const st = document.getElementById('signal-status');
+  box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">스캔 중…</div>';
+  if (st) { st.textContent = '스캔 중'; st.style.color = '#7c6fff'; }
+
+  try {
+    const tickers = await fetch('https://api.binance.com/api/v3/ticker/24hr').then(r => r.json());
+    const MAJORS = new Set(['BTC','ETH','SOL','BNB','XRP','ADA','DOGE','TRX','TON','AVAX','DOT','MATIC','LTC','LINK','UNI','ATOM','ETC','BCH','APT','NEAR','OP','ARB','SUI']);
+    const candidates = tickers
+      .filter(t => {
+        if (!t.symbol.endsWith('USDT')) return false;
+        if (!/^[A-Z0-9]+USDT$/.test(t.symbol)) return false;
+        const base = t.symbol.replace('USDT','');
+        if (MAJORS.has(base)) return false;
+        if (PUMP_EXCL.test(t.symbol)) return false;
+        return parseFloat(t.quoteVolume) > 3_000_000;
+      })
+      .sort((a,b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
+      .slice(0, 60)
+      .map(t => ({ sym: t.symbol.replace('USDT',''), symbol: t.symbol, chg: parseFloat(t.priceChangePercent) }));
+
+    const results = [];
+    for (let i = 0; i < candidates.length; i += 15) {
+      const batch = candidates.slice(i, i + 15);
+      const batchRes = await Promise.all(batch.map(async c => {
+        try {
+          const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${c.symbol}&interval=4h&limit=60`).then(r => r.json());
+          if (!Array.isArray(kl) || kl.length < 40) return null;
+          const closes = kl.map(k => parseFloat(k[4]));
+          const signals = [];
+          if (scanDivBreakout(closes)) signals.push('div');
+          const rt = scanBreakoutRetest(closes);
+          if (rt) signals.push(rt === 'up' ? 'retest_up' : 'retest_down');
+          if (!signals.length) return null;
+          signals.forEach(s => sendSignalAlert(c.sym, s));
+          return { ...c, signals };
+        } catch { return null; }
+      }));
+      results.push(...batchRes.filter(Boolean));
+    }
+
+    if (st) { st.textContent = `${results.length}개 신호`; st.style.color = results.length > 0 ? '#f59e0b' : '#4a5568'; }
+    if (!results.length) {
+      box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">신호 없음</div>';
+      return;
+    }
+    box.innerHTML = results.map(c => {
+      const badges = c.signals.map(s => {
+        if (s === 'div') return `<span style="font-size:8px;color:#ff4d6d;background:rgba(255,77,109,0.12);padding:1px 5px;border-radius:2px;border:1px solid rgba(255,77,109,0.3);">고점돌파+다이버전스</span>`;
+        if (s === 'retest_up') return `<span style="font-size:8px;color:#00d4aa;background:rgba(0,212,170,0.12);padding:1px 5px;border-radius:2px;border:1px solid rgba(0,212,170,0.3);">↑이탈 리테스트</span>`;
+        return `<span style="font-size:8px;color:#f59e0b;background:rgba(245,158,11,0.12);padding:1px 5px;border-radius:2px;border:1px solid rgba(245,158,11,0.3);">↓이탈 리테스트</span>`;
+      }).join(' ');
+      const cat = COIN_CATEGORY[c.sym] ? `<span style="font-size:8px;color:#f5d76e;background:rgba(245,215,110,0.1);padding:1px 4px;border-radius:2px;">${COIN_CATEGORY[c.sym]}</span>` : '';
+      const chain = COIN_CHAIN[c.sym] ? `<span style="font-size:8px;color:#4a9eff;background:rgba(74,158,255,0.1);padding:1px 4px;border-radius:2px;">${COIN_CHAIN[c.sym]}</span>` : '';
+      return `<div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:3px;">
+            <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
+            <span style="color:${c.chg>=0?'#00d4aa':'#ff4d6d'};font-size:10px;">${c.chg>=0?'+':''}${c.chg.toFixed(1)}%</span>
+            ${cat}${chain}
+          </div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;">${badges}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    box.innerHTML = '<div style="font-size:11px;color:#ff4d6d;text-align:center;padding:20px;">로드 실패</div>';
   }
 }
 
@@ -1232,6 +1369,8 @@ window.addEventListener('load', () => {
   setInterval(loadRsiScanner, 300000);
   setInterval(fetchUnlocks, 600000);
   setInterval(loadPumpScanner, 300000);  // 5분마다
+  loadSignalScanner();
+  setInterval(loadSignalScanner, 300000);
 });
 </script>
 </body>
