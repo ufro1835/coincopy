@@ -267,20 +267,6 @@
         </div>
       </div>
 
-      <!-- 신호 스캐너 -->
-      <div class="cc-chart-section">
-        <div class="cc-chart-header">
-          <div class="cc-chart-title">🎯 신호 스캐너 <span style="font-size:9px;color:#4a5568;">고점돌파다이버전스 · 이탈리테스트</span></div>
-          <div class="cc-coin-btns">
-            <span id="signal-status" style="font-size:9px;color:#4a5568;padding:3px 6px;">대기중</span>
-            <button class="cc-coin-btn" onclick="loadSignalScanner()">↻</button>
-          </div>
-        </div>
-        <div id="signal-list" style="max-height:420px;overflow-y:auto;">
-          <div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">스캔 대기중…</div>
-        </div>
-      </div>
-
     </div>
 
     <div class="cc-bottom-grid">
@@ -1101,13 +1087,20 @@ async function loadRsiScanner() {
         const cur = closes[closes.length - 1];
         const riseFromLow = low14 > 0 ? (cur - low14) / low14 * 100 : 0;
         const t = tickerMap[s.symbol] || {};
+        // 신호 감지
+        const signals = [];
+        if (scanDivBreakout(closes)) signals.push('div');
+        const rt = scanBreakoutRetest(closes);
+        if (rt) signals.push(rt === 'up' ? 'retest_up' : 'retest_down');
+        signals.forEach(sg => sendSignalAlert(s.sym, sg));
         return {
           ...s,
           chg: parseFloat(t.priceChangePercent || 0),
           vol: parseFloat(t.quoteVolume || 0),
           price: parseFloat(t.lastPrice || cur),
           rsi: Math.round(rsi * 10) / 10,
-          riseFromLow: Math.round(riseFromLow * 10) / 10
+          riseFromLow: Math.round(riseFromLow * 10) / 10,
+          signals
         };
       } catch { return null; }
     }));
@@ -1139,6 +1132,9 @@ function renderRsi() {
           ${COIN_CHAIN[c.sym] ? `<span style="font-size:8px;color:#4a9eff;background:rgba(74,158,255,0.1);padding:1px 4px;border-radius:2px;">${COIN_CHAIN[c.sym]}</span>` : ''}
           ${rsiTag ? `<span style="font-size:9px;color:${rsiColor};">${rsiTag}</span>` : ''}
           ${rise}
+          ${(c.signals||[]).includes('div') ? `<span style="font-size:8px;color:#ff4d6d;background:rgba(255,77,109,0.12);padding:1px 4px;border-radius:2px;border:1px solid rgba(255,77,109,0.3);">📉다이버전스</span>` : ''}
+          ${(c.signals||[]).includes('retest_up') ? `<span style="font-size:8px;color:#00d4aa;background:rgba(0,212,170,0.12);padding:1px 4px;border-radius:2px;border:1px solid rgba(0,212,170,0.3);">↑리테스트</span>` : ''}
+          ${(c.signals||[]).includes('retest_down') ? `<span style="font-size:8px;color:#f59e0b;background:rgba(245,158,11,0.12);padding:1px 4px;border-radius:2px;border:1px solid rgba(245,158,11,0.3);">↓리테스트</span>` : ''}
         </div>
         <div style="height:3px;background:#1a1f2e;border-radius:2px;"><div style="height:3px;width:${Math.min(100,c.rsi)}%;background:${rsiColor};border-radius:2px;"></div></div>
       </div>
@@ -1360,7 +1356,6 @@ window.addEventListener('load', () => {
   loadRsiScanner();
   fetchUnlocks();
   setTimeout(loadPumpScanner, 5000);        // 5초 후
-  setTimeout(loadSignalScanner, 10000);     // 10초 후
 
   setInterval(refreshAll, 10000);
   setInterval(fetchTicker, 10000);
@@ -1370,7 +1365,6 @@ window.addEventListener('load', () => {
   setInterval(loadRsiScanner, 300000);
   setInterval(fetchUnlocks, 600000);
   setInterval(loadPumpScanner, 300000);
-  setInterval(loadSignalScanner, 300000);
 });
 </script>
 </body>
