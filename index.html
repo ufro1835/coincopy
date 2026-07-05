@@ -729,25 +729,32 @@ function scanDivBreakout(closes) {
 }
 
 // 조건2: 레벨 이탈 후 첫 리테스트
-// - 최근 48봉 내 스윙고점(저항) 또는 스윙저점(지지) 찾기
-// - 이탈 확인 (최근 6봉 내 돌파)
-// - 현재가가 그 레벨로 복귀 (±2%)
+// - 기준 구간(base)에서 이전 스윙고점/저점(레벨) 산출
+// - 그 이후 이탈 구간(breakout)에서 레벨을 유의미하게(3%+) 돌파했는지 확인
+// - 최근 3봉(retest)에서 그 레벨로 되돌아왔는지 확인
+// base/breakout/retest 세 구간은 서로 겹치지 않아야 함 (겹치면 "진행 중인 급등의 눌림"이
+// "돌파 후 리테스트"로 오인식됨 — 실사용 중 VANRY 사례에서 확인된 버그)
 function scanBreakoutRetest(closes) {
   if (closes.length < 50) return null;
   const n = closes.length;
-  const lookback = closes.slice(-50, -2); // 이탈 전 기준 구간
-  const recent = closes.slice(-6);        // 최근 6봉 (이탈 구간)
   const cur = closes[n - 1];
+  const base = closes.slice(n - 50, n - 20);       // 기준 레벨 산출 구간 (30봉)
+  const breakoutZone = closes.slice(n - 20, n - 3); // 이탈 확인 구간 (17봉)
+  const retestZone = closes.slice(n - 3);           // 리테스트 확인 구간 (최근 3봉, 현재가 포함)
 
   // 저항 돌파 후 리테스트 (상향 이탈)
-  const resistance = Math.max(...lookback.slice(-30));
-  const brokeUp = recent.some(c => c > resistance * 1.02);
-  const retestUp = brokeUp && Math.abs(cur - resistance) / resistance < 0.02;
+  const resistance = Math.max(...base);
+  const brokeUp = breakoutZone.some(c => c > resistance * 1.03);
+  const retestUp = brokeUp
+    && retestZone.some(c => Math.abs(c - resistance) / resistance < 0.015)
+    && cur > resistance * 0.98;
 
   // 지지 이탈 후 리테스트 (하향 이탈)
-  const support = Math.min(...lookback.slice(-30));
-  const brokeDown = recent.some(c => c < support * 0.98);
-  const retestDown = brokeDown && Math.abs(cur - support) / support < 0.02;
+  const support = Math.min(...base);
+  const brokeDown = breakoutZone.some(c => c < support * 0.97);
+  const retestDown = brokeDown
+    && retestZone.some(c => Math.abs(c - support) / support < 0.015)
+    && cur < support * 1.02;
 
   if (retestUp) return 'up';
   if (retestDown) return 'down';
