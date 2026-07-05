@@ -265,19 +265,18 @@
           💡 종목 클릭 → 차트 전환<br>
           <span style="color:#3a4151;">24h내 +30%↑ 후 고점 -5~20% 하락</span>
         </div>
+        <div style="padding-top:8px;border-top:1px solid #1a1f2e;margin-top:8px;">
+          <div style="font-size:9px;color:#4a5568;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">종목 제외 (RSI·눌림목 공통)</div>
+          <div class="cc-search" style="margin-bottom:6px;">
+            <input id="excluded-input" type="text" placeholder="제외할 종목 예: HOT" onkeydown="if(event.key==='Enter')addExcludedSym()">
+            <button onclick="addExcludedSym()">+ 제외</button>
+          </div>
+          <div id="excluded-tags" style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span style="font-size:10px;color:#4a5568;">제외된 종목 없음</span>
+          </div>
+        </div>
       </div>
 
-    </div>
-
-    <div class="cc-panel" style="margin-bottom:14px;">
-      <div class="cc-panel-title"><div class="cc-panel-dot" style="background:#ff4d6d"></div>종목 제외 목록 <span style="font-size:9px;color:#4a5568;font-weight:400;text-transform:none;letter-spacing:0;">RSI 스캐너 · 눌림목 스캐너에서 안 보이게</span></div>
-      <div class="cc-search" style="margin-bottom:8px;">
-        <input id="excluded-input" type="text" placeholder="제외할 종목 예: HOT" onkeydown="if(event.key==='Enter')addExcludedSym()">
-        <button onclick="addExcludedSym()">+ 제외</button>
-      </div>
-      <div id="excluded-tags" style="display:flex;gap:6px;flex-wrap:wrap;">
-        <span style="font-size:10px;color:#4a5568;">제외된 종목 없음</span>
-      </div>
     </div>
 
     <div class="cc-bottom-grid">
