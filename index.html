@@ -646,33 +646,65 @@ async function fetchUnlocks() {
 }
 
 // =============================================
-// 종목 제외 목록 (RSI + 눌림목 스캐너 공통)
+// 종목 제외 목록 (RSI + 눌림목 스캐너 공통, 30일 후 자동 만료)
 // =============================================
-let excludedSyms = new Set(JSON.parse(localStorage.getItem('cc_excluded_syms') || '[]'));
+const EXCLUDE_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 30일
+
+let excludedSyms = new Map(); // sym -> expiresAt(ms)
+try {
+  const raw = localStorage.getItem('cc_excluded_syms');
+  const now = Date.now();
+  if (raw) {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      // 예전 형식(배열, 만료 없음) 마이그레이션 → 30일 새로 부여
+      parsed.forEach(sym => excludedSyms.set(sym, now + EXCLUDE_DURATION_MS));
+    } else {
+      Object.entries(parsed).forEach(([sym, expiresAt]) => {
+        if (expiresAt > now) excludedSyms.set(sym, expiresAt);
+      });
+    }
+    localStorage.setItem('cc_excluded_syms', JSON.stringify(Object.fromEntries(excludedSyms)));
+  }
+} catch {}
 
 function saveExcludedSyms() {
-  localStorage.setItem('cc_excluded_syms', JSON.stringify([...excludedSyms]));
+  const obj = {};
+  excludedSyms.forEach((exp, sym) => { obj[sym] = exp; });
+  localStorage.setItem('cc_excluded_syms', JSON.stringify(obj));
+}
+
+function isExcluded(sym) {
+  const exp = excludedSyms.get(sym);
+  if (exp == null) return false;
+  if (exp < Date.now()) { excludedSyms.delete(sym); saveExcludedSyms(); return false; }
+  return true;
 }
 
 function renderExcludedTags() {
   const box = document.getElementById('excluded-tags');
   if (!box) return;
+  const now = Date.now();
+  [...excludedSyms.entries()].forEach(([sym, exp]) => { if (exp < now) excludedSyms.delete(sym); });
   if (!excludedSyms.size) {
     box.innerHTML = '<span style="font-size:10px;color:#4a5568;">제외된 종목 없음</span>';
     return;
   }
-  box.innerHTML = [...excludedSyms].map(sym => `
-    <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 8px;font-size:11px;border:1px solid #1e2235;border-radius:3px;color:#e2e8f0;">
+  box.innerHTML = [...excludedSyms.entries()].map(([sym, exp]) => {
+    const daysLeft = Math.max(1, Math.ceil((exp - now) / 86400000));
+    return `
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 8px;font-size:11px;border:1px solid #1e2235;border-radius:3px;color:#e2e8f0;" title="${daysLeft}일 후 자동 해제">
       ${sym}
       <span style="cursor:pointer;color:#ff4d6d;" onclick="removeExcludedSym('${sym}')">×</span>
-    </span>`).join('');
+    </span>`;
+  }).join('');
 }
 
 function addExcludedSym() {
   const input = document.getElementById('excluded-input');
   const sym = input.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
   if (!sym) return;
-  excludedSyms.add(sym);
+  excludedSyms.set(sym, Date.now() + EXCLUDE_DURATION_MS);
   saveExcludedSyms();
   renderExcludedTags();
   input.value = '';
@@ -1082,7 +1114,7 @@ async function loadPumpScanner() {
       .filter(t => {
         if (!t.symbol.endsWith('USDT') || PUMP_EXCL.test(t.symbol)) return false;
         const base = t.symbol.replace('USDT','');
-        if (excludedSyms.has(base)) return false;
+        if (isExcluded(base)) return false;
         return !PUMP_MAJORS.has(base) && parseFloat(t.quoteVolume) > 500_000;
       })
       .sort((a,b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
@@ -1095,7 +1127,7 @@ async function loadPumpScanner() {
       .filter(t => {
         if (!t.currency_pair || !t.currency_pair.endsWith('_USDT')) return false;
         const base = t.currency_pair.replace('_USDT','');
-        if (excludedSyms.has(base)) return false;
+        if (isExcluded(base)) return false;
         return !PUMP_MAJORS.has(base) && !binanceSyms.has(base) && parseFloat(t.quote_volume || 0) > 200_000;
       })
       .sort((a,b) => parseFloat(b.quote_volume||0) - parseFloat(a.quote_volume||0))
@@ -1219,7 +1251,7 @@ async function loadRsiScanner() {
         if (!t.symbol.endsWith('USDT')) return false;
         const base = t.symbol.replace('USDT', '');
         if (MAJORS.has(base)) return false;
-        if (excludedSyms.has(base)) return false;
+        if (isExcluded(base)) return false;
         if (/(USDC|FDUSD|TUSD|BUSD|DAI|UP|DOWN|BULL|BEAR|USDT)USDT$/.test(t.symbol)) return false;
         if (!/^[A-Z0-9]+USDT$/.test(t.symbol)) return false;
         return parseFloat(t.quoteVolume) > 3_000_000;
