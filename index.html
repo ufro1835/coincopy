@@ -701,19 +701,37 @@ function requestNotificationPermission() {
 }
 
 // =============================================
+// 텔레그램 알림 (폰으로 전송, Vercel 서버리스 함수 경유)
+// =============================================
+const TELEGRAM_ENDPOINT = 'https://coincopy-1sf1.vercel.app/api/telegram-notify';
+const TELEGRAM_SECRET = 'coincopy-notify-2026'; // Vercel 환경변수 NOTIFY_SECRET과 동일해야 함
+
+function sendTelegramAlert(sym, type) {
+  if (!TELEGRAM_ENDPOINT) return;
+  fetch(TELEGRAM_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TELEGRAM_SECRET}` },
+    body: JSON.stringify({ sym, type }),
+  }).catch(() => {});
+}
+
+// =============================================
 // 신호 스캐너: 고점돌파+하락다이버전스 / 이탈후 리테스트
 // =============================================
 let signalNotifiedSyms = new Set();
 
 function sendSignalAlert(sym, type) {
-  if (!notifEnabled || !('Notification' in window) || Notification.permission !== 'granted') return;
+  if (!notifEnabled) return;
   const key = sym + '_' + type;
   if (signalNotifiedSyms.has(key)) return;
   signalNotifiedSyms.add(key);
   const msg = type === 'div' ? `${sym} 고점돌파 + RSI 하락다이버전스`
     : type === 'div_bull' ? `${sym} 저점돌파 + RSI 상승다이버전스`
     : `${sym} 레벨 이탈 후 첫 리테스트`;
-  new Notification('🎯 신호 감지: ' + sym, { body: msg });
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('🎯 신호 감지: ' + sym, { body: msg });
+  }
+  sendTelegramAlert(sym, type);
   setTimeout(() => signalNotifiedSyms.delete(key), 1800000);
 }
 
@@ -802,10 +820,13 @@ function toggleManualAlert(sym, btn, evt) {
 }
 
 function sendManualBreakoutAlert(sym, high, cur) {
-  if (!notifEnabled || !('Notification' in window) || Notification.permission !== 'granted') return;
+  if (!notifEnabled) return;
   if (manualAlertNotified.has(sym)) return;
   manualAlertNotified.add(sym);
-  new Notification(`🚀 신고점 돌파: ${sym}`, { body: `이전 고점 ${high} → 현재가 ${cur}` });
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(`🚀 신고점 돌파: ${sym}`, { body: `이전 고점 ${high} → 현재가 ${cur}` });
+  }
+  sendTelegramAlert(sym, 'breakout');
   setTimeout(() => manualAlertNotified.delete(sym), 1800000);
 }
 
