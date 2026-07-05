@@ -1228,10 +1228,10 @@ async function loadRsiScanner() {
       .slice(0, 40)
       .map(t => ({ sym: t.symbol.replace('USDT',''), symbol: t.symbol }));
 
-    // 4시간봉 RSI 계산 (limit 300: EMA200 손익비 계산에 필요한 만큼 여유있게 확보)
+    // 4시간봉 RSI 계산 (손익비용 EMA는 별도로 1시간봉을 받아옴)
     const results = await Promise.all(candidates.map(async s => {
       try {
-        const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${s.symbol}&interval=4h&limit=300`).then(r => r.json());
+        const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${s.symbol}&interval=4h&limit=60`).then(r => r.json());
         if (!Array.isArray(kl) || kl.length < 16) return null;
         const closes = kl.map(k => parseFloat(k[4]));
         const rsi = calcRSI(closes);
@@ -1250,20 +1250,31 @@ async function loadRsiScanner() {
         if (signals.includes('div')) sendSignalAlert(s.sym, 'div');
         if (signals.includes('div_bull')) sendSignalAlert(s.sym, 'div_bull');
 
-        // 손익비 (과매수 종목만): 손절 = 최근 50봉 스윙고점(최근 3봉 제외), 익절 = EMA200
+        // 손익비 (과매수 종목만, 1시간봉 기준): 손절 = 최근 50봉 스윙고점(최근 3봉 제외)
+        // 익절 = EMA50/EMA200 중 현재가에 더 가까운 쪽 (단타 특성상 짧은 목표가 현실적)
         let riskReward = null, stopPrice = null, targetPrice = null;
         if (rsi >= 70) {
-          const ema200 = calcEMA(closes, 200);
-          const swingHigh = Math.max(...closes.slice(-53, -3));
-          if (ema200 != null && swingHigh > cur && cur > ema200) {
-            const reward = cur - ema200;
-            const risk = swingHigh - cur;
-            if (risk > 0) {
-              riskReward = Math.round((reward / risk) * 100) / 100;
-              stopPrice = swingHigh;
-              targetPrice = ema200;
+          try {
+            const kl1h = await fetch(`https://api.binance.com/api/v3/klines?symbol=${s.symbol}&interval=1h&limit=250`).then(r => r.json());
+            if (Array.isArray(kl1h) && kl1h.length >= 60) {
+              const closes1h = kl1h.map(k => parseFloat(k[4]));
+              const cur1h = closes1h[closes1h.length - 1];
+              const ema50 = calcEMA(closes1h, 50);
+              const ema200 = calcEMA(closes1h, 200);
+              const swingHigh = Math.max(...closes1h.slice(-53, -3));
+              const targets = [ema50, ema200].filter(v => v != null && v < cur1h);
+              if (targets.length && swingHigh > cur1h) {
+                const target = targets.reduce((a, b) => (cur1h - a) < (cur1h - b) ? a : b);
+                const reward = cur1h - target;
+                const risk = swingHigh - cur1h;
+                if (risk > 0) {
+                  riskReward = Math.round((reward / risk) * 100) / 100;
+                  stopPrice = swingHigh;
+                  targetPrice = target;
+                }
+              }
             }
-          }
+          } catch {}
         }
 
         return {
@@ -1305,7 +1316,7 @@ function renderRsi() {
         : rr < 2 ? ['🟡', '#f5d76e', '참고']
         : rr < 3 ? ['🟢', '#00d4aa', '진입고려']
         : ['🔵', '#4a9eff', '좋은자리'];
-      rrBadge = `<span style="font-size:9px;color:${rrColor};" title="숏 기준 · 손절(스윙고점) ${fmtPrice(c.stopPrice)} / 익절(EMA200) ${fmtPrice(c.targetPrice)} — 참고용, 최종 판단은 직접">${icon} 손익비 1:${rr.toFixed(1)} ${rrLabel}</span>`;
+      rrBadge = `<span style="font-size:9px;color:${rrColor};" title="숏 기준 · 1시간봉 · 손절(스윙고점) ${fmtPrice(c.stopPrice)} / 익절(EMA50·200 중 근접) ${fmtPrice(c.targetPrice)} — 참고용, 최종 판단은 직접">${icon} 손익비 1:${rr.toFixed(1)} ${rrLabel}</span>`;
     }
     return `<div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
       <div style="flex:1;">
