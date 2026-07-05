@@ -646,34 +646,56 @@ const PUMP_EXCL = /(USDC|FDUSD|TUSD|BUSD|DAI|UP|DOWN|BULL|BEAR|USDT)USDT$/;
 // =============================================
 let notifEnabled = false;
 
-function requestNotificationPermission() {
+function updateNotifBtnUI(state) {
   const btn = document.getElementById('notif-btn');
+  if (!btn) return;
+  if (state === 'on') {
+    btn.textContent = '🔔 알림 ON';
+    btn.style.color = '#00d4aa'; btn.style.borderColor = '#00d4aa';
+  } else if (state === 'denied') {
+    btn.textContent = '🔕 알림 거부됨';
+    btn.style.color = '#ff4d6d'; btn.style.borderColor = '#ff4d6d';
+  } else {
+    btn.textContent = '🔔 알림';
+    btn.style.color = '#4a5568'; btn.style.borderColor = '#1e2235';
+  }
+}
+
+// 새로고침해도 알림 ON 상태 유지 (브라우저 알림 권한이 살아있을 때만)
+function restoreNotifState() {
+  if (!('Notification' in window)) return;
+  if (localStorage.getItem('cc_notif_enabled') === 'true' && Notification.permission === 'granted') {
+    notifEnabled = true;
+    updateNotifBtnUI('on');
+  }
+}
+
+function requestNotificationPermission() {
   if (!('Notification' in window)) { alert('이 브라우저는 알림을 지원하지 않습니다.'); return; }
 
   // 이미 ON 상태면 OFF로 토글
   if (notifEnabled) {
     notifEnabled = false;
-    btn.textContent = '🔔 알림';
-    btn.style.color = '#4a5568'; btn.style.borderColor = '#1e2235';
+    localStorage.setItem('cc_notif_enabled', 'false');
+    updateNotifBtnUI('off');
     return;
   }
 
   if (Notification.permission === 'granted') {
     notifEnabled = true;
-    btn.textContent = '🔔 알림 ON';
-    btn.style.color = '#00d4aa'; btn.style.borderColor = '#00d4aa';
+    localStorage.setItem('cc_notif_enabled', 'true');
+    updateNotifBtnUI('on');
     new Notification('COINCOPY 알림 활성화', { body: 'RSI 다이버전스 신호 및 등록한 종목 고점돌파 시 알림을 보냅니다.' });
     return;
   }
   Notification.requestPermission().then(p => {
     if (p === 'granted') {
       notifEnabled = true;
-      btn.textContent = '🔔 알림 ON';
-      btn.style.color = '#00d4aa'; btn.style.borderColor = '#00d4aa';
+      localStorage.setItem('cc_notif_enabled', 'true');
+      updateNotifBtnUI('on');
       new Notification('COINCOPY 알림 활성화', { body: 'RSI 다이버전스 신호 및 등록한 종목 고점돌파 시 알림을 보냅니다.' });
     } else {
-      btn.textContent = '🔕 알림 거부됨';
-      btn.style.color = '#ff4d6d'; btn.style.borderColor = '#ff4d6d';
+      updateNotifBtnUI('denied');
     }
   });
 }
@@ -1400,6 +1422,7 @@ function calcLiq() {
 // 초기화
 // =============================================
 window.addEventListener('load', () => {
+  restoreNotifState();
   buildTV('BINANCE:BTCUSDT');
   renderTraders();
   renderTicker();
