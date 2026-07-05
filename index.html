@@ -1172,10 +1172,10 @@ async function loadRsiScanner() {
       .slice(0, 40)
       .map(t => ({ sym: t.symbol.replace('USDT',''), symbol: t.symbol }));
 
-    // 4시간봉 RSI 계산
+    // 4시간봉 RSI 계산 (limit 300: EMA200 손익비 계산에 필요한 만큼 여유있게 확보)
     const results = await Promise.all(candidates.map(async s => {
       try {
-        const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${s.symbol}&interval=4h&limit=60`).then(r => r.json());
+        const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${s.symbol}&interval=4h&limit=300`).then(r => r.json());
         if (!Array.isArray(kl) || kl.length < 16) return null;
         const closes = kl.map(k => parseFloat(k[4]));
         const rsi = calcRSI(closes);
@@ -1193,6 +1193,23 @@ async function loadRsiScanner() {
         // 자동 알림은 다이버전스 신호만 (리테스트 배지는 표시만 하고 알림은 안 보냄)
         if (signals.includes('div')) sendSignalAlert(s.sym, 'div');
         if (signals.includes('div_bull')) sendSignalAlert(s.sym, 'div_bull');
+
+        // 손익비 (과매수 종목만): 손절 = 최근 50봉 스윙고점(최근 3봉 제외), 익절 = EMA200
+        let riskReward = null, stopPrice = null, targetPrice = null;
+        if (rsi >= 70) {
+          const ema200 = calcEMA(closes, 200);
+          const swingHigh = Math.max(...closes.slice(-53, -3));
+          if (ema200 != null && swingHigh > cur && cur > ema200) {
+            const reward = cur - ema200;
+            const risk = swingHigh - cur;
+            if (risk > 0) {
+              riskReward = Math.round((reward / risk) * 100) / 100;
+              stopPrice = swingHigh;
+              targetPrice = ema200;
+            }
+          }
+        }
+
         return {
           ...s,
           chg: parseFloat(t.priceChangePercent || 0),
@@ -1200,7 +1217,8 @@ async function loadRsiScanner() {
           price: parseFloat(t.lastPrice || cur),
           rsi: Math.round(rsi * 10) / 10,
           riseFromLow: Math.round(riseFromLow * 10) / 10,
-          signals
+          signals,
+          riskReward, stopPrice, targetPrice
         };
       } catch { return null; }
     }));
@@ -1223,9 +1241,19 @@ function renderRsi() {
     const rsiColor = c.rsi >= 70 ? '#ff4d6d' : c.rsi <= 30 ? '#00d4aa' : '#3a4151';
     const rsiTag = c.rsi >= 70 ? '과매수' : c.rsi <= 30 ? '과매도' : '';
     const rise = c.riseFromLow != null ? `<span style="font-size:9px;color:#f59e0b;">저점↑${c.riseFromLow.toFixed(0)}%</span>` : '';
+    const fmtPrice = v => v < 1 ? v.toFixed(6) : v.toFixed(4);
+    let rrBadge = '';
+    if (c.riskReward != null) {
+      const rr = c.riskReward;
+      const [icon, rrColor, rrLabel] = rr < 1 ? ['🔴', '#ff4d6d', '비추천']
+        : rr < 2 ? ['🟡', '#f5d76e', '참고']
+        : rr < 3 ? ['🟢', '#00d4aa', '진입고려']
+        : ['🔵', '#4a9eff', '좋은자리'];
+      rrBadge = `<span style="font-size:9px;color:${rrColor};" title="숏 기준 · 손절(스윙고점) ${fmtPrice(c.stopPrice)} / 익절(EMA200) ${fmtPrice(c.targetPrice)} — 참고용, 최종 판단은 직접">${icon} 손익비 1:${rr.toFixed(1)} ${rrLabel}</span>`;
+    }
     return `<div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
       <div style="flex:1;">
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px;">
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px;flex-wrap:wrap;">
           <span style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</span>
           <span style="color:${c.chg>=0?'#00d4aa':'#ff4d6d'};font-size:10px;">${c.chg>=0?'+':''}${c.chg.toFixed(1)}%</span>
           ${COIN_CATEGORY[c.sym] ? `<span style="font-size:8px;color:#f5d76e;background:rgba(245,215,110,0.1);padding:1px 4px;border-radius:2px;">${COIN_CATEGORY[c.sym]}</span>` : ''}
@@ -1237,6 +1265,7 @@ function renderRsi() {
           ${(c.signals||[]).includes('retest_up') ? `<span style="font-size:8px;color:#00d4aa;background:rgba(0,212,170,0.12);padding:1px 4px;border-radius:2px;border:1px solid rgba(0,212,170,0.3);">↑리테스트</span>` : ''}
           ${(c.signals||[]).includes('retest_down') ? `<span style="font-size:8px;color:#f59e0b;background:rgba(245,158,11,0.12);padding:1px 4px;border-radius:2px;border:1px solid rgba(245,158,11,0.3);">↓리테스트</span>` : ''}
         </div>
+        ${rrBadge ? `<div style="margin-bottom:2px;">${rrBadge}</div>` : ''}
         <div style="height:3px;background:#1a1f2e;border-radius:2px;"><div style="height:3px;width:${Math.min(100,c.rsi)}%;background:${rsiColor};border-radius:2px;"></div></div>
       </div>
       <div style="text-align:right;margin-left:10px;display:flex;align-items:center;gap:6px;">
