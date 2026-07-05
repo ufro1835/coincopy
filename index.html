@@ -644,7 +644,6 @@ const PUMP_EXCL = /(USDC|FDUSD|TUSD|BUSD|DAI|UP|DOWN|BULL|BEAR|USDT)USDT$/;
 // =============================================
 // 브라우저 푸시 알람
 // =============================================
-let notifiedSyms = new Set();
 let notifEnabled = false;
 
 function requestNotificationPermission() {
@@ -661,10 +660,9 @@ function requestNotificationPermission() {
 
   if (Notification.permission === 'granted') {
     notifEnabled = true;
-    notifiedSyms.clear();
     btn.textContent = '🔔 알림 ON';
     btn.style.color = '#00d4aa'; btn.style.borderColor = '#00d4aa';
-    new Notification('COINCOPY 알림 활성화', { body: '눌림목 조건 충족 종목 발견 시 알림을 보냅니다.' });
+    new Notification('COINCOPY 알림 활성화', { body: 'RSI 다이버전스 신호 및 등록한 종목 고점돌파 시 알림을 보냅니다.' });
     return;
   }
   Notification.requestPermission().then(p => {
@@ -672,28 +670,12 @@ function requestNotificationPermission() {
       notifEnabled = true;
       btn.textContent = '🔔 알림 ON';
       btn.style.color = '#00d4aa'; btn.style.borderColor = '#00d4aa';
-      new Notification('COINCOPY 알림 활성화', { body: '눌림목 조건 충족 종목 발견 시 알림을 보냅니다.' });
+      new Notification('COINCOPY 알림 활성화', { body: 'RSI 다이버전스 신호 및 등록한 종목 고점돌파 시 알림을 보냅니다.' });
     } else {
       btn.textContent = '🔕 알림 거부됨';
       btn.style.color = '#ff4d6d'; btn.style.borderColor = '#ff4d6d';
     }
   });
-}
-
-function sendPumpAlerts(results) {
-  if (!notifEnabled || !('Notification' in window) || Notification.permission !== 'granted') return;
-  const newOnes = results.filter(c => !notifiedSyms.has(c.sym));
-  newOnes.forEach(c => {
-    notifiedSyms.add(c.sym);
-    const divTag = c.divergence === 'bullish' ? ' 🔁상승다이버전스' : '';
-    new Notification(`📉 눌림목 발견: ${c.sym}${divTag}`, {
-      body: `급등 +${c.pumpPct}% → 눌림 -${c.dropPct}% | RSI ${c.rsi}`,
-    });
-  });
-  // 30분 후 알림 캐시 해제 (재알림 허용)
-  if (newOnes.length > 0) {
-    setTimeout(() => newOnes.forEach(c => notifiedSyms.delete(c.sym)), 1800000);
-  }
 }
 
 // =============================================
@@ -759,6 +741,53 @@ function scanDivBreakdown(closes) {
   const rsiSeries = calcRSISeries(closes);
   const { bullish } = detectDivergence(closes, rsiSeries);
   return bullish;
+}
+
+// =============================================
+// 수동 등록: RSI 스캐너 종목별 고점돌파 알림 (🔔 버튼, 다이버전스 조건 없음)
+// =============================================
+let manualAlertSyms = new Set(JSON.parse(localStorage.getItem('cc_manual_alerts') || '[]'));
+let manualAlertNotified = new Set();
+
+function saveManualAlerts() {
+  localStorage.setItem('cc_manual_alerts', JSON.stringify([...manualAlertSyms]));
+}
+
+function toggleManualAlert(sym, btn, evt) {
+  evt.stopPropagation();
+  if (manualAlertSyms.has(sym)) {
+    manualAlertSyms.delete(sym);
+    btn.classList.remove('active');
+  } else {
+    manualAlertSyms.add(sym);
+    btn.classList.add('active');
+    scanManualBreakout(sym);
+  }
+  saveManualAlerts();
+}
+
+function sendManualBreakoutAlert(sym, high, cur) {
+  if (!notifEnabled || !('Notification' in window) || Notification.permission !== 'granted') return;
+  if (manualAlertNotified.has(sym)) return;
+  manualAlertNotified.add(sym);
+  new Notification(`🚀 신고점 돌파: ${sym}`, { body: `이전 고점 ${high} → 현재가 ${cur}` });
+  setTimeout(() => manualAlertNotified.delete(sym), 1800000);
+}
+
+// 1시간봉 기준, 최근 3봉을 제외한 구간의 고점을 현재가가 돌파하는 순간 감지 (다이버전스 무관)
+async function scanManualBreakout(sym) {
+  try {
+    const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${sym}USDT&interval=1h&limit=100`).then(r => r.json());
+    if (!Array.isArray(kl) || kl.length < 30) return;
+    const highs = kl.map(k => parseFloat(k[2]));
+    const cur = parseFloat(kl[kl.length - 1][4]);
+    const prevHigh = Math.max(...highs.slice(0, -3));
+    if (cur > prevHigh) sendManualBreakoutAlert(sym, prevHigh, cur);
+  } catch (e) {}
+}
+
+function scanManualAlerts() {
+  manualAlertSyms.forEach(scanManualBreakout);
 }
 
 async function loadSignalScanner() {
@@ -995,7 +1024,6 @@ async function loadPumpScanner() {
       return;
     }
     results.sort((a,b) => b.pumpPct - a.pumpPct);
-    sendPumpAlerts(results);
     box.innerHTML = results.map(c => {
       const rsiColor = c.rsi >= 70 ? '#ff4d6d' : c.rsi <= 30 ? '#00d4aa' : '#8892a4';
       const divBadge = c.divergence === 'bullish'
@@ -1106,7 +1134,9 @@ async function loadRsiScanner() {
         if (scanDivBreakdown(closes)) signals.push('div_bull');
         const rt = scanBreakoutRetest(closes);
         if (rt) signals.push(rt === 'up' ? 'retest_up' : 'retest_down');
-        signals.forEach(sg => sendSignalAlert(s.sym, sg));
+        // 자동 알림은 다이버전스 신호만 (리테스트 배지는 표시만 하고 알림은 안 보냄)
+        if (signals.includes('div')) sendSignalAlert(s.sym, 'div');
+        if (signals.includes('div_bull')) sendSignalAlert(s.sym, 'div_bull');
         return {
           ...s,
           chg: parseFloat(t.priceChangePercent || 0),
@@ -1153,7 +1183,8 @@ function renderRsi() {
         </div>
         <div style="height:3px;background:#1a1f2e;border-radius:2px;"><div style="height:3px;width:${Math.min(100,c.rsi)}%;background:${rsiColor};border-radius:2px;"></div></div>
       </div>
-      <div style="text-align:right;margin-left:10px;">
+      <div style="text-align:right;margin-left:10px;display:flex;align-items:center;gap:6px;">
+        <button class="cc-alert-bell${manualAlertSyms.has(c.sym) ? ' active' : ''}" title="고점돌파 시 알림" onclick="toggleManualAlert('${c.sym}', this, event)" style="background:none;border:1px solid ${manualAlertSyms.has(c.sym) ? '#00d4aa' : '#2a2f45'};color:${manualAlertSyms.has(c.sym) ? '#00d4aa' : '#4a5568'};border-radius:3px;padding:2px 5px;font-size:11px;cursor:pointer;line-height:1;">🔔</button>
         <div style="color:${rsiColor};font-weight:700;font-size:13px;">${c.rsi.toFixed(0)}</div>
       </div>
     </div>`;
@@ -1371,6 +1402,7 @@ window.addEventListener('load', () => {
   loadRsiScanner();
   fetchUnlocks();
   setTimeout(loadPumpScanner, 5000);        // 5초 후
+  setTimeout(scanManualAlerts, 8000);       // 8초 후
 
   setInterval(refreshAll, 10000);
   setInterval(fetchTicker, 10000);
@@ -1380,6 +1412,7 @@ window.addEventListener('load', () => {
   setInterval(loadRsiScanner, 300000);
   setInterval(fetchUnlocks, 600000);
   setInterval(loadPumpScanner, 300000);
+  setInterval(scanManualAlerts, 300000);
 });
 </script>
 </body>
