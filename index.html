@@ -271,9 +271,8 @@
             <input id="excluded-input" type="text" placeholder="제외할 종목 예: HOT" onkeydown="if(event.key==='Enter')addExcludedSym()">
             <button onclick="addExcludedSym()">+ 제외</button>
           </div>
-          <div id="excluded-tags" style="display:flex;gap:6px;flex-wrap:wrap;">
-            <span style="font-size:10px;color:#4a5568;">제외된 종목 없음</span>
-          </div>
+          <div id="excluded-summary" onclick="toggleExcludedTags()" style="font-size:10px;color:#4a5568;cursor:pointer;">제외 0개 ▾</div>
+          <div id="excluded-tags" style="display:none;gap:6px;flex-wrap:wrap;margin-top:6px;"></div>
         </div>
       </div>
 
@@ -681,13 +680,23 @@ function isExcluded(sym) {
   return true;
 }
 
+let excludedTagsOpen = false;
+
+function toggleExcludedTags() {
+  excludedTagsOpen = !excludedTagsOpen;
+  renderExcludedTags();
+}
+
 function renderExcludedTags() {
+  const summary = document.getElementById('excluded-summary');
   const box = document.getElementById('excluded-tags');
-  if (!box) return;
+  if (!box || !summary) return;
   const now = Date.now();
   [...excludedSyms.entries()].forEach(([sym, exp]) => { if (exp < now) excludedSyms.delete(sym); });
+  summary.textContent = `제외 ${excludedSyms.size}개 ${excludedTagsOpen ? '▴' : '▾'}`;
+  box.style.display = excludedTagsOpen ? 'flex' : 'none';
   if (!excludedSyms.size) {
-    box.innerHTML = '<span style="font-size:10px;color:#4a5568;">제외된 종목 없음</span>';
+    box.innerHTML = '';
     return;
   }
   box.innerHTML = [...excludedSyms.entries()].map(([sym, exp]) => {
