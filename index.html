@@ -706,7 +706,9 @@ function sendSignalAlert(sym, type) {
   const key = sym + '_' + type;
   if (signalNotifiedSyms.has(key)) return;
   signalNotifiedSyms.add(key);
-  const msg = type === 'div' ? `${sym} 고점돌파 + RSI 하락다이버전스` : `${sym} 레벨 이탈 후 첫 리테스트`;
+  const msg = type === 'div' ? `${sym} 고점돌파 + RSI 하락다이버전스`
+    : type === 'div_bull' ? `${sym} 저점돌파 + RSI 상승다이버전스`
+    : `${sym} 레벨 이탈 후 첫 리테스트`;
   new Notification('🎯 신호 감지: ' + sym, { body: msg });
   setTimeout(() => signalNotifiedSyms.delete(key), 1800000);
 }
@@ -746,6 +748,17 @@ function scanBreakoutRetest(closes) {
   if (retestUp) return 'up';
   if (retestDown) return 'down';
   return null;
+}
+
+// 조건3: 저점 돌파 + 상승 다이버전스 (과매도 반전 신호, scanDivBreakout의 대칭)
+function scanDivBreakdown(closes) {
+  if (closes.length < 40) return false;
+  const cur = closes[closes.length - 1];
+  const prevLow = Math.min(...closes.slice(-40, -3));
+  if (cur > prevLow * 1.01) return false; // 저점 돌파 안됨
+  const rsiSeries = calcRSISeries(closes);
+  const { bullish } = detectDivergence(closes, rsiSeries);
+  return bullish;
 }
 
 async function loadSignalScanner() {
@@ -1090,6 +1103,7 @@ async function loadRsiScanner() {
         // 신호 감지
         const signals = [];
         if (scanDivBreakout(closes)) signals.push('div');
+        if (scanDivBreakdown(closes)) signals.push('div_bull');
         const rt = scanBreakoutRetest(closes);
         if (rt) signals.push(rt === 'up' ? 'retest_up' : 'retest_down');
         signals.forEach(sg => sendSignalAlert(s.sym, sg));
@@ -1132,7 +1146,8 @@ function renderRsi() {
           ${COIN_CHAIN[c.sym] ? `<span style="font-size:8px;color:#4a9eff;background:rgba(74,158,255,0.1);padding:1px 4px;border-radius:2px;">${COIN_CHAIN[c.sym]}</span>` : ''}
           ${rsiTag ? `<span style="font-size:9px;color:${rsiColor};">${rsiTag}</span>` : ''}
           ${rise}
-          ${(c.signals||[]).includes('div') ? `<span style="font-size:8px;color:#ff4d6d;background:rgba(255,77,109,0.12);padding:1px 4px;border-radius:2px;border:1px solid rgba(255,77,109,0.3);">📉다이버전스</span>` : ''}
+          ${(c.signals||[]).includes('div') ? `<span style="font-size:8px;color:#ff4d6d;background:rgba(255,77,109,0.12);padding:1px 4px;border-radius:2px;border:1px solid rgba(255,77,109,0.3);">📉고점돌파+다이버전스</span>` : ''}
+          ${(c.signals||[]).includes('div_bull') ? `<span style="font-size:8px;color:#00d4aa;background:rgba(0,212,170,0.12);padding:1px 4px;border-radius:2px;border:1px solid rgba(0,212,170,0.3);">📈저점돌파+다이버전스</span>` : ''}
           ${(c.signals||[]).includes('retest_up') ? `<span style="font-size:8px;color:#00d4aa;background:rgba(0,212,170,0.12);padding:1px 4px;border-radius:2px;border:1px solid rgba(0,212,170,0.3);">↑리테스트</span>` : ''}
           ${(c.signals||[]).includes('retest_down') ? `<span style="font-size:8px;color:#f59e0b;background:rgba(245,158,11,0.12);padding:1px 4px;border-radius:2px;border:1px solid rgba(245,158,11,0.3);">↓리테스트</span>` : ''}
         </div>
