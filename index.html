@@ -269,6 +269,17 @@
 
     </div>
 
+    <div class="cc-panel" style="margin-bottom:14px;">
+      <div class="cc-panel-title"><div class="cc-panel-dot" style="background:#ff4d6d"></div>종목 제외 목록 <span style="font-size:9px;color:#4a5568;font-weight:400;text-transform:none;letter-spacing:0;">RSI 스캐너 · 눌림목 스캐너에서 안 보이게</span></div>
+      <div class="cc-search" style="margin-bottom:8px;">
+        <input id="excluded-input" type="text" placeholder="제외할 종목 예: HOT" onkeydown="if(event.key==='Enter')addExcludedSym()">
+        <button onclick="addExcludedSym()">+ 제외</button>
+      </div>
+      <div id="excluded-tags" style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="font-size:10px;color:#4a5568;">제외된 종목 없음</span>
+      </div>
+    </div>
+
     <div class="cc-bottom-grid">
       <div class="cc-panel">
         <div class="cc-panel-title"><div class="cc-panel-dot" style="background:#f59e0b"></div>공포탐욕지수</div>
@@ -633,6 +644,49 @@ async function fetchUnlocks() {
   } catch(e) {
     box.innerHTML = '<div style="font-size:11px;color:#4a5568;padding:8px 0;">데이터를 불러올 수 없습니다.</div>';
   }
+}
+
+// =============================================
+// 종목 제외 목록 (RSI + 눌림목 스캐너 공통)
+// =============================================
+let excludedSyms = new Set(JSON.parse(localStorage.getItem('cc_excluded_syms') || '[]'));
+
+function saveExcludedSyms() {
+  localStorage.setItem('cc_excluded_syms', JSON.stringify([...excludedSyms]));
+}
+
+function renderExcludedTags() {
+  const box = document.getElementById('excluded-tags');
+  if (!box) return;
+  if (!excludedSyms.size) {
+    box.innerHTML = '<span style="font-size:10px;color:#4a5568;">제외된 종목 없음</span>';
+    return;
+  }
+  box.innerHTML = [...excludedSyms].map(sym => `
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 8px;font-size:11px;border:1px solid #1e2235;border-radius:3px;color:#e2e8f0;">
+      ${sym}
+      <span style="cursor:pointer;color:#ff4d6d;" onclick="removeExcludedSym('${sym}')">×</span>
+    </span>`).join('');
+}
+
+function addExcludedSym() {
+  const input = document.getElementById('excluded-input');
+  const sym = input.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (!sym) return;
+  excludedSyms.add(sym);
+  saveExcludedSyms();
+  renderExcludedTags();
+  input.value = '';
+  loadRsiScanner();
+  loadPumpScanner();
+}
+
+function removeExcludedSym(sym) {
+  excludedSyms.delete(sym);
+  saveExcludedSyms();
+  renderExcludedTags();
+  loadRsiScanner();
+  loadPumpScanner();
 }
 
 // =============================================
@@ -1029,6 +1083,7 @@ async function loadPumpScanner() {
       .filter(t => {
         if (!t.symbol.endsWith('USDT') || PUMP_EXCL.test(t.symbol)) return false;
         const base = t.symbol.replace('USDT','');
+        if (excludedSyms.has(base)) return false;
         return !PUMP_MAJORS.has(base) && parseFloat(t.quoteVolume) > 500_000;
       })
       .sort((a,b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
@@ -1041,6 +1096,7 @@ async function loadPumpScanner() {
       .filter(t => {
         if (!t.currency_pair || !t.currency_pair.endsWith('_USDT')) return false;
         const base = t.currency_pair.replace('_USDT','');
+        if (excludedSyms.has(base)) return false;
         return !PUMP_MAJORS.has(base) && !binanceSyms.has(base) && parseFloat(t.quote_volume || 0) > 200_000;
       })
       .sort((a,b) => parseFloat(b.quote_volume||0) - parseFloat(a.quote_volume||0))
@@ -1164,6 +1220,7 @@ async function loadRsiScanner() {
         if (!t.symbol.endsWith('USDT')) return false;
         const base = t.symbol.replace('USDT', '');
         if (MAJORS.has(base)) return false;
+        if (excludedSyms.has(base)) return false;
         if (/(USDC|FDUSD|TUSD|BUSD|DAI|UP|DOWN|BULL|BEAR|USDT)USDT$/.test(t.symbol)) return false;
         if (!/^[A-Z0-9]+USDT$/.test(t.symbol)) return false;
         return parseFloat(t.quoteVolume) > 3_000_000;
@@ -1480,6 +1537,7 @@ function calcLiq() {
 // =============================================
 window.addEventListener('load', () => {
   restoreNotifState();
+  renderExcludedTags();
   buildTV('BINANCE:BTCUSDT');
   renderTraders();
   renderTicker();
