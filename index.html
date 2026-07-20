@@ -249,21 +249,20 @@
         </div>
       </div>
 
-      <!-- 급등 후 눌림 스캐너 -->
+      <!-- 관심종목 (급등 후 눌림목은 보류 - loadPumpScanner()/scanPumpCandles() 등 코드는 그대로 남겨둠, 나중에 재사용 가능) -->
       <div class="cc-chart-section">
         <div class="cc-chart-header">
-          <div class="cc-chart-title">📉 급등 후 눌림목 <span style="font-size:9px;color:#4a5568;">1h봉 자동스캔</span></div>
+          <div class="cc-chart-title">⭐ 관심종목 <span style="font-size:9px;color:#4a5568;">RSI 스캐너에서 핑한 종목</span></div>
           <div class="cc-coin-btns">
-            <span id="pump-status" style="font-size:9px;color:#4a5568;padding:3px 6px;">대기중</span>
-            <button class="cc-coin-btn" onclick="loadPumpScanner()">↻</button>
+            <span id="watchlist-status" style="font-size:9px;color:#4a5568;padding:3px 6px;">0개</span>
+            <button class="cc-coin-btn" onclick="loadWatchlist()">↻</button>
           </div>
         </div>
-        <div id="pump-list" style="max-height:420px;overflow-y:auto;">
-          <div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">스캔 대기중…</div>
+        <div id="watchlist-list" style="max-height:420px;overflow-y:auto;">
+          <div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">RSI 스캐너에서 ⭐ 눌러서 추가</div>
         </div>
         <div style="font-size:10px;color:#4a5568;line-height:1.6;padding-top:6px;border-top:1px solid #1a1f2e;margin-top:6px;">
-          💡 종목 클릭 → 차트 전환<br>
-          <span style="color:#3a4151;">24h내 +30%↑ 후 고점 -5~20% 하락</span>
+          💡 종목 클릭 → 차트 전환 · × 눌러서 제거
         </div>
         <div style="padding-top:8px;border-top:1px solid #1a1f2e;margin-top:8px;">
           <div style="font-size:9px;color:#4a5568;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">종목 제외 (RSI·눌림목 공통)</div>
@@ -718,7 +717,7 @@ function addExcludedSym() {
   renderExcludedTags();
   input.value = '';
   loadRsiScanner();
-  loadPumpScanner();
+  // loadPumpScanner(); // 급등 후 눌림목 보류 중 (관심종목으로 교체됨)
 }
 
 function removeExcludedSym(sym) {
@@ -726,7 +725,75 @@ function removeExcludedSym(sym) {
   saveExcludedSyms();
   renderExcludedTags();
   loadRsiScanner();
-  loadPumpScanner();
+  // loadPumpScanner(); // 급등 후 눌림목 보류 중 (관심종목으로 교체됨)
+}
+
+// =============================================
+// 관심종목 (RSI 스캐너에서 ⭐ 핑 → 과열 식어서 스캐너에서 빠져도 계속 추적)
+// =============================================
+let pinnedSyms = new Set(JSON.parse(localStorage.getItem('cc_pinned_syms') || '[]'));
+
+function savePinnedSyms() {
+  localStorage.setItem('cc_pinned_syms', JSON.stringify([...pinnedSyms]));
+}
+
+function togglePinSym(sym, btn, evt) {
+  evt.stopPropagation();
+  if (pinnedSyms.has(sym)) {
+    pinnedSyms.delete(sym);
+    btn.textContent = '☆';
+    btn.style.color = '#4a5568';
+  } else {
+    pinnedSyms.add(sym);
+    btn.textContent = '⭐';
+    btn.style.color = '#f5d76e';
+  }
+  savePinnedSyms();
+  loadWatchlist();
+}
+
+async function loadWatchlist() {
+  const box = document.getElementById('watchlist-list');
+  const st = document.getElementById('watchlist-status');
+  if (!box) return;
+  if (st) st.textContent = `${pinnedSyms.size}개`;
+  if (!pinnedSyms.size) {
+    box.innerHTML = '<div style="font-size:11px;color:#4a5568;text-align:center;padding:20px;">RSI 스캐너에서 ⭐ 눌러서 추가</div>';
+    return;
+  }
+  const results = await Promise.all([...pinnedSyms].map(async sym => {
+    try {
+      const [t, kl] = await Promise.all([
+        fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${sym}USDT`).then(r => r.json()),
+        fetch(`https://api.binance.com/api/v3/klines?symbol=${sym}USDT&interval=4h&limit=20`).then(r => r.json()),
+      ]);
+      if (!t || t.code) return { sym, price: null, chg: null, rsi: null };
+      const closes = Array.isArray(kl) ? kl.map(k => parseFloat(k[4])) : [];
+      const rsi = calcRSI(closes);
+      return { sym, price: parseFloat(t.lastPrice), chg: parseFloat(t.priceChangePercent), rsi: rsi != null ? Math.round(rsi * 10) / 10 : null };
+    } catch { return { sym, price: null, chg: null, rsi: null }; }
+  }));
+
+  box.innerHTML = results.map(c => {
+    const rsiColor = c.rsi == null ? '#4a5568' : c.rsi >= 70 ? '#ff4d6d' : c.rsi <= 30 ? '#00d4aa' : '#8892a4';
+    return `<div onclick="coinToChart('${c.sym}','Binance')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #1a1f2e;cursor:pointer;border-radius:4px;transition:background .15s;" onmouseover="this.style.background='#1a1f2e'" onmouseout="this.style.background='transparent'">
+      <div>
+        <div style="font-weight:700;color:#e8edf4;font-size:12px;">${c.sym}</div>
+        <div style="font-size:10px;color:#8892a4;">${c.price != null ? c.price : '—'} <span style="color:${c.chg>=0?'#00d4aa':'#ff4d6d'};">${c.chg!=null ? (c.chg>=0?'+':'')+c.chg.toFixed(1)+'%' : ''}</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="color:${rsiColor};font-weight:700;font-size:13px;">${c.rsi != null ? c.rsi.toFixed(0) : '—'}</span>
+        <span style="cursor:pointer;color:#ff4d6d;font-size:12px;" onclick="event.stopPropagation();unpinSym('${c.sym}')">×</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function unpinSym(sym) {
+  pinnedSyms.delete(sym);
+  savePinnedSyms();
+  loadWatchlist();
+  renderRsi();
 }
 
 // =============================================
@@ -1377,6 +1444,7 @@ function renderRsi() {
         <div style="height:3px;background:#1a1f2e;border-radius:2px;"><div style="height:3px;width:${Math.min(100,c.rsi)}%;background:${rsiColor};border-radius:2px;"></div></div>
       </div>
       <div style="text-align:right;margin-left:10px;display:flex;align-items:center;gap:6px;">
+        <button title="관심종목 등록" onclick="togglePinSym('${c.sym}', this, event)" style="background:none;border:none;cursor:pointer;font-size:13px;line-height:1;color:${pinnedSyms.has(c.sym) ? '#f5d76e' : '#4a5568'};">${pinnedSyms.has(c.sym) ? '⭐' : '☆'}</button>
         <button class="cc-alert-bell" title="고점돌파 시 알림" onclick="toggleManualAlert('${c.sym}', this, event)" style="background:${manualAlertSyms.has(c.sym) ? 'rgba(0,212,170,0.12)' : 'none'};border:1px solid ${manualAlertSyms.has(c.sym) ? '#00d4aa' : '#2a2f45'};border-radius:3px;padding:2px 5px;font-size:11px;cursor:pointer;line-height:1;">${manualAlertSyms.has(c.sym) ? '🔔' : '🔕'}</button>
         <div style="color:${rsiColor};font-weight:700;font-size:13px;">${c.rsi.toFixed(0)}</div>
       </div>
@@ -1596,8 +1664,9 @@ window.addEventListener('load', () => {
   fetchFng();
   loadRsiScanner();
   fetchUnlocks();
-  setTimeout(loadPumpScanner, 5000);        // 5초 후
+  setTimeout(loadWatchlist, 5000);          // 5초 후
   setTimeout(scanManualAlerts, 8000);       // 8초 후
+  // setTimeout(loadPumpScanner, 5000);     // 급등 후 눌림목 보류 중 (관심종목으로 교체됨)
 
   setInterval(refreshAll, 10000);
   setInterval(fetchTicker, 10000);
@@ -1606,8 +1675,9 @@ window.addEventListener('load', () => {
   setInterval(fetchFunding, 14400000);
   setInterval(loadRsiScanner, 300000);
   setInterval(fetchUnlocks, 600000);
-  setInterval(loadPumpScanner, 300000);
+  setInterval(loadWatchlist, 300000);
   setInterval(scanManualAlerts, 300000);
+  // setInterval(loadPumpScanner, 300000);  // 급등 후 눌림목 보류 중 (관심종목으로 교체됨)
 });
 </script>
 </body>
