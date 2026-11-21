@@ -169,6 +169,43 @@
   .cc-airdrop-btn:hover { border-color: #7c6fff; color: #7c6fff; }
   .cc-section-label { font-size: 10px; color: #4a5568; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #1e2235; }
 
+  /* ===== ETF 코인 ===== */
+  .etf-summary { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .etf-stat { background: #0f1120; border: 1px solid #1e2235; border-radius: 6px; padding: 8px 14px; font-size: 10px; color: #4a5568; letter-spacing: 1px; text-transform: uppercase; min-width: 96px; }
+  .etf-stat b { display: block; font-size: 18px; color: #e2e8f0; letter-spacing: 0; margin-top: 2px; }
+  .etf-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  .etf-toolbar .cc-filter-row { margin: 0; }
+  .etf-toolbar select { background: #0a0a0f; border: 1px solid #1e2235; color: #e2e8f0; padding: 5px 8px; border-radius: 4px; font-family: inherit; font-size: 11px; }
+  .etf-toolbar .cc-search { margin: 0; flex: 0 1 190px; }
+  .etf-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1010px; }
+  .etf-table th { text-align: left; padding: 8px 10px; color: #4a5568; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #1e2235; font-weight: 400; white-space: nowrap; }
+  .etf-table td { padding: 9px 10px; border-bottom: 1px solid #0f1120; color: #c4cdd9; vertical-align: top; }
+  .etf-table .num { text-align: right; white-space: nowrap; }
+  .etf-row { cursor: pointer; }
+  .etf-row:hover td { background: #0f1120; }
+  .etf-row.open td { background: #0f1120; }
+  .etf-sym { color: #e2e8f0; font-weight: 700; }
+  .etf-sub { display: block; font-size: 10px; color: #4a5568; margin-top: 2px; }
+  .etf-badge { display: inline-block; padding: 2px 7px; border-radius: 2px; font-size: 9px; letter-spacing: 0.5px; margin-right: 4px; white-space: nowrap; }
+  .etf-badge.listed { background: rgba(0,212,170,0.15); color: #00d4aa; }
+  .etf-badge.pending { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .etf-badge.kr { background: rgba(124,111,255,0.15); color: #7c6fff; }
+  .etf-badge.off { background: #151828; color: #3a4151; }
+  .etf-tag { display: inline-block; font-size: 10px; color: #8892a4; border: 1px solid #1e2235; border-radius: 3px; padding: 1px 6px; margin: 0 4px 3px 0; }
+  .etf-up { color: #00d4aa; }
+  .etf-down { color: #ff4d6d; }
+  .etf-detail > td { background: #0b0d1a; padding: 14px 16px; white-space: normal; }
+  .etf-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .etf-box-title { font-size: 10px; color: #4a5568; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #1a1f2e; }
+  .etf-box { font-size: 11px; color: #8892a4; line-height: 1.7; }
+  .etf-box b { color: #c4cdd9; font-weight: 600; }
+  .etf-box a { color: #7c6fff; text-decoration: none; }
+  .etf-box a:hover { text-decoration: underline; }
+  .etf-prod { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .etf-prod th { text-align: left; padding: 3px 6px; color: #4a5568; font-size: 9px; font-weight: 400; letter-spacing: 0.5px; }
+  .etf-prod td { padding: 3px 6px; border-bottom: 1px solid #14182a; color: #c4cdd9; }
+  .etf-note { font-size: 11px; color: #8892a4; margin-bottom: 10px; line-height: 1.6; }
+
   /* ===== 모바일 ===== */
   @media (max-width: 900px) {
     .cc-main-grid { grid-template-columns: 1fr 1fr; }
@@ -177,7 +214,7 @@
   @media (max-width: 640px) {
     .cc-nav { flex-direction: column; gap: 8px; padding: 10px 14px; }
     .cc-tabs { width: 100%; justify-content: center; }
-    .cc-tab { flex: 1; text-align: center; padding: 7px 4px; }
+    .cc-tab { flex: 1; text-align: center; padding: 7px 2px; font-size: 10px; letter-spacing: 0; white-space: nowrap; }
     .cc-content { padding: 12px 12px; }
     .cc-main-grid { grid-template-columns: 1fr; }
     .cc-main-grid > .cc-chart-section:first-child { grid-column: auto; }
@@ -193,6 +230,7 @@
   <div class="cc-logo">COIN<span>COPY</span></div>
   <div class="cc-tabs">
     <button class="cc-tab active" onclick="showPage('main',this)">대시보드</button>
+    <button class="cc-tab" onclick="showPage('etf',this)">ETF 코인</button>
     <button class="cc-tab" onclick="showPage('copy',this)">카피트레이딩</button>
     <button class="cc-tab" onclick="showPage('airdrop',this)">에어드랍</button>
   </div>
@@ -368,6 +406,36 @@
       <div class="cc-airdrop-card"><div class="cc-airdrop-name">Berachain Season 2</div><span class="cc-airdrop-status soon">예정</span><div class="cc-airdrop-row">체인: <span>Berachain</span></div><div class="cc-airdrop-row">조건: <span>유동성 공급</span></div><div class="cc-airdrop-row">마감: <span>2026 Q3</span></div><div class="cc-airdrop-row">예상: <span style="color:#f59e0b">$200~800</span></div><button class="cc-airdrop-btn">알림 설정 →</button></div>
       <div class="cc-airdrop-card"><div class="cc-airdrop-name">ZkSync Season 3</div><span class="cc-airdrop-status soon">예정</span><div class="cc-airdrop-row">체인: <span>zkSync Era</span></div><div class="cc-airdrop-row">조건: <span>브리지 + 스왑</span></div><div class="cc-airdrop-row">마감: <span>미정</span></div><div class="cc-airdrop-row">예상: <span style="color:#f59e0b">$100~500</span></div><button class="cc-airdrop-btn">알림 설정 →</button></div>
     </div>
+  </div>
+
+  <!-- ===== ETF 코인 ===== -->
+  <div class="cc-page" id="page-etf">
+    <div class="etf-summary" id="etf-summary"></div>
+    <div class="etf-toolbar">
+      <div class="cc-filter-row">
+        <button class="cc-filter-btn active" onclick="etfSetFilter('all',this)">전체</button>
+        <button class="cc-filter-btn" onclick="etfSetFilter('listed',this)">ETF 상장</button>
+        <button class="cc-filter-btn" onclick="etfSetFilter('pending',this)">ETF 대기</button>
+      </div>
+      <select id="etf-sector" onchange="etfSetSector(this.value)"><option value="all">섹터 전체</option></select>
+      <select id="etf-sort" onchange="etfSetSort(this.value)">
+        <option value="mcap">정렬: 시총</option>
+        <option value="chg">정렬: 24h 상승률</option>
+        <option value="athdrop">정렬: 고점 대비 낙폭</option>
+        <option value="etf">정렬: ETF 상품 수</option>
+        <option value="name">정렬: 이름</option>
+      </select>
+      <div class="cc-search"><input id="etf-q" type="text" placeholder="코인 검색" oninput="etfSetQ(this.value)"></div>
+      <button class="cc-coin-btn" onclick="etfRefresh()">↻</button>
+      <span id="etf-status" style="font-size:10px;color:#4a5568;"></span>
+    </div>
+    <div class="cc-panel" style="padding:0;overflow-x:auto;">
+      <table class="etf-table">
+        <thead><tr><th>#</th><th>코인</th><th>ETF</th><th>섹터</th><th class="num">가격</th><th class="num">24h</th><th class="num">시총</th><th class="num">고점 (ATH)</th><th class="num">저점 (ATL)</th><th class="num">펀딩비</th><th>한국</th></tr></thead>
+        <tbody id="etf-tbody"><tr><td colspan="11" style="padding:20px;color:#4a5568;font-size:11px;text-align:center;">로딩…</td></tr></tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;font-size:10px;color:#4a5568;line-height:1.7;" id="etf-foot"></div>
   </div>
 
 </div>
@@ -1611,7 +1679,249 @@ function renderTraders() {
 }
 function selectEx(ex, btn) { curEx = ex; document.querySelectorAll('.cc-ex-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderTraders(); }
 function filterTrader(f, btn) { curFilter = f; document.querySelectorAll('.cc-filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderTraders(); }
-function showPage(page, btn) { document.querySelectorAll('.cc-page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.cc-tab').forEach(b => b.classList.remove('active')); document.getElementById('page-' + page).classList.add('active'); btn.classList.add('active'); }
+function showPage(page, btn) { document.querySelectorAll('.cc-page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.cc-tab').forEach(b => b.classList.remove('active')); document.getElementById('page-' + page).classList.add('active'); btn.classList.add('active'); if (page === 'etf') etfOnShow(); }
+
+// =============================================
+// ETF 코인 탭
+//  - 정적: /etf-coins.json (ETF 상태·섹터·투자사·홍보 주체·리스크 등, 공개 자료 수동 조사)
+//  - 실시간: /api/etf-markets (CoinGecko: 가격·시총·ATH/ATL), 바이낸스 선물(펀딩비·미결제약정), 바이낸스 일봉(ETF 전후 가격)
+// =============================================
+const ETF = { data: null, market: {}, fund: {}, deriv: {}, effect: {}, filter: 'all', sector: 'all', q: '', sort: 'mcap', open: null, last: 0, lastFund: 0, err: false, loadErr: false };
+const ETF_FLOW_SLUG = { SOL:'solana', XRP:'xrp', DOGE:'dogecoin', LTC:'litecoin', HBAR:'hedera', LINK:'chainlink', AVAX:'avalanche', DOT:'polkadot', NEAR:'near', TRX:'tron', HYPE:'hype', SUI:'sui', BNB:'bnb', ZEC:'zcash' };
+const ETF_FUT_SYM = { PEPE: '1000PEPEUSDT' };
+const ETF_TYPE_KO = { spot: '현물', staking: '스테이킹', '40act': '40법 펀드' };
+
+const etfEsc = s => String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]));
+const etfUrl = u => /^https?:\/\//i.test(u || '') ? etfEsc(u) : '';
+const etfLink = (u, t) => etfUrl(u) ? `<a href="${etfUrl(u)}" target="_blank" rel="noopener">${etfEsc(t || '↗')}</a>` : '';
+function etfPrice(p) {
+  if (p == null || !isFinite(p)) return '—';
+  if (p >= 1000) return '$' + p.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  if (p >= 1) return '$' + p.toFixed(2);
+  const dec = Math.min(10, 2 - Math.floor(Math.log10(p)));
+  return '$' + p.toFixed(dec);
+}
+function etfBig(n) {
+  if (n == null || !isFinite(n)) return '—';
+  if (n >= 1e12) return '$' + (n / 1e12).toFixed(2) + 'T';
+  if (n >= 1e9) return '$' + (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
+  return '$' + Math.round(n).toLocaleString('en-US');
+}
+function etfPct(p, d) {
+  if (p == null || !isFinite(p)) return '—';
+  return (p > 0 ? '+' : '') + p.toFixed(d == null ? 1 : d) + '%';
+}
+const etfCls = p => (p > 0 ? 'etf-up' : (p < 0 ? 'etf-down' : ''));
+const etfDay = s => (s ? String(s).slice(0, 10) : '—');
+
+async function etfInit() {
+  try {
+    const r = await fetch('/etf-coins.json', { cache: 'no-cache' });
+    if (!r.ok) throw new Error(r.status);
+    ETF.data = await r.json();
+    if (!ETF.data || !Array.isArray(ETF.data.coins)) throw new Error('bad json');
+  } catch (e) { ETF.data = null; ETF.loadErr = true; }
+  etfBuildSectors();
+  etfRender();
+}
+function etfBuildSectors() {
+  if (!ETF.data) return;
+  const set = new Set();
+  ETF.data.coins.forEach(c => (c.sector || []).forEach(s => set.add(s)));
+  const sel = document.getElementById('etf-sector');
+  sel.innerHTML = '<option value="all">섹터 전체</option>' + [...set].sort().map(s => `<option value="${etfEsc(s)}">${etfEsc(s)}</option>`).join('');
+}
+function etfOnShow() {
+  if (Date.now() - ETF.last > 30000) etfLoadMarkets();
+  if (Date.now() - ETF.lastFund > 120000) etfLoadFunding();
+}
+function etfRefresh() { etfLoadMarkets(); etfLoadFunding(); }
+async function etfLoadMarkets() {
+  if (!ETF.data) return;
+  const ids = ETF.data.coins.map(c => c.id).join(',');
+  try {
+    const r = await fetch('/api/etf-markets?ids=' + encodeURIComponent(ids));
+    if (!r.ok) throw new Error(r.status);
+    const arr = await r.json();
+    if (!Array.isArray(arr)) throw new Error('bad');
+    arr.forEach(m => { ETF.market[m.id] = m; });
+    ETF.last = Date.now();
+    ETF.err = false;
+  } catch (e) { ETF.err = true; }
+  etfRender();
+}
+async function etfLoadFunding() {
+  try {
+    const arr = await fetch('https://fapi.binance.com/fapi/v1/premiumIndex').then(r => r.json());
+    if (!Array.isArray(arr)) throw new Error('bad');
+    const f = {};
+    arr.forEach(x => { f[x.symbol] = { rate: parseFloat(x.lastFundingRate), mark: parseFloat(x.markPrice) }; });
+    ETF.fund = f;
+    ETF.lastFund = Date.now();
+    etfRender();
+  } catch (e) { /* 선물 API 접근 불가 시 펀딩비는 — 로 표시 */ }
+}
+async function etfLoadDeriv(c) {
+  const fs = ETF_FUT_SYM[c.symbol] || c.symbol + 'USDT';
+  const f = ETF.fund[fs];
+  let oi = null;
+  try {
+    const j = await fetch('https://fapi.binance.com/fapi/v1/openInterest?symbol=' + fs).then(r => r.json());
+    if (j && j.openInterest) oi = parseFloat(j.openInterest);
+  } catch (e) {}
+  ETF.deriv[c.id] = { sym: fs, rate: f ? f.rate : null, mark: f ? f.mark : null, oi, oiUsd: (oi != null && f && f.mark) ? oi * f.mark : null };
+  etfRender();
+}
+// 최초 ETF 상장일 전후 가격 변화: 바이낸스 일봉 종가로 직접 계산 (D-1 종가 기준)
+async function etfLoadEffect(c) {
+  const dated = (c.etf.listed || []).filter(x => x.launch_date).sort((a, b) => a.launch_date.localeCompare(b.launch_date));
+  if (!dated.length) { ETF.effect[c.id] = { none: true }; return; }
+  const first = dated[0];
+  const t0 = Date.parse(first.launch_date + 'T00:00:00Z');
+  try {
+    const kl = await fetch(`https://api.binance.com/api/v3/klines?symbol=${c.symbol}USDT&interval=1d&startTime=${t0 - 31 * 864e5}&limit=75`).then(r => r.json());
+    if (!Array.isArray(kl) || kl.length < 3) throw new Error('no klines');
+    const idx = kl.findIndex(k => k[0] >= t0);
+    if (idx < 1) throw new Error('no launch day');
+    const close = i => parseFloat(kl[i][4]);
+    const base = close(idx - 1);
+    const pre = idx - 31 >= 0 ? base / close(idx - 31) - 1 : null;
+    const last = Math.min(idx + 30, kl.length - 1);
+    const post = last >= idx ? close(last) / base - 1 : null;
+    ETF.effect[c.id] = { ticker: first.ticker, date: first.launch_date, pre: pre == null ? null : pre * 100, post: post == null ? null : post * 100, days: last - idx + 1 };
+  } catch (e) { ETF.effect[c.id] = { none: true }; }
+  etfRender();
+}
+function etfSetFilter(f, btn) { ETF.filter = f; btn.parentElement.querySelectorAll('.cc-filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); etfRender(); }
+function etfSetSector(s) { ETF.sector = s; etfRender(); }
+function etfSetSort(s) { ETF.sort = s; etfRender(); }
+function etfSetQ(q) { ETF.q = q; etfRender(); }
+function etfToggle(id) {
+  ETF.open = ETF.open === id ? null : id;
+  if (ETF.open) {
+    const c = ETF.data.coins.find(x => x.id === id);
+    if (c) {
+      etfLoadDeriv(c);
+      if (c.etf.status === 'listed' && !ETF.effect[id]) etfLoadEffect(c);
+    }
+  }
+  etfRender();
+}
+function etfFiltered() {
+  if (!ETF.data) return [];
+  const q = ETF.q.trim().toLowerCase();
+  const m = id => ETF.market[id] || {};
+  const arr = ETF.data.coins.filter(c => {
+    if (ETF.filter !== 'all' && c.etf.status !== ETF.filter) return false;
+    if (ETF.sector !== 'all' && !(c.sector || []).includes(ETF.sector)) return false;
+    if (q && !`${c.symbol} ${c.name} ${c.name_ko}`.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const keys = {
+    mcap: c => -(m(c.id).market_cap || 0),
+    chg: c => -(m(c.id).price_change_percentage_24h != null ? m(c.id).price_change_percentage_24h : -1e9),
+    athdrop: c => (m(c.id).ath_change_percentage != null ? m(c.id).ath_change_percentage : 1e9),
+    etf: c => -((c.etf.listed || []).length * 100 + (c.etf.pending || []).length),
+    name: c => c.symbol,
+  };
+  const key = keys[ETF.sort] || keys.mcap;
+  arr.sort((a, b) => { const x = key(a), y = key(b); return typeof x === 'string' ? x.localeCompare(y) : x - y; });
+  return arr;
+}
+function etfKrBadges(c) {
+  const l = c.listings || {};
+  const b = (v, t) => `<span class="etf-badge ${v === true ? 'kr' : 'off'}">${t}${v == null ? '?' : ''}</span>`;   // ? = 미확인
+  return b(l.upbit, '업비트') + b(l.bithumb, '빗썸');
+}
+function etfDetail(c) {
+  const e = c.etf, l = c.listings || {}, mk = ETF.market[c.id] || {}, dv = ETF.deriv[c.id], ef = ETF.effect[c.id];
+  const prodRows = (e.listed || []).map(x => `<tr><td><b>${etfEsc(x.ticker)}</b></td><td>${etfEsc(x.issuer)}</td><td>${etfEsc(ETF_TYPE_KO[x.type] || x.type || '—')}</td><td>${etfEsc(x.launch_date || '—')}</td><td>${x.fee_pct != null ? etfEsc(x.fee_pct) + '%' : '—'}</td><td>${etfEsc(x.exchange || '')} ${etfLink(x.source)}</td></tr>`).join('');
+  const pendRows = (e.pending || []).map(x => `<tr><td colspan="2">${etfEsc(x.issuer)}</td><td>${etfEsc(ETF_TYPE_KO[x.type] || x.type || '—')}</td><td>${etfEsc(x.filed || '—')}</td><td colspan="2">${etfEsc(x.stage || '')} ${etfLink(x.source)}</td></tr>`).join('');
+  const prod = (prodRows ? `<table class="etf-prod"><tr><th>티커</th><th>운용사</th><th>유형</th><th>상장일</th><th>수수료</th><th>거래소·출처</th></tr>${prodRows}</table>` : '')
+    + (pendRows ? `<table class="etf-prod" style="margin-top:8px"><tr><th colspan="2">대기 중 운용사</th><th>유형</th><th>신청일</th><th colspan="2">단계·출처</th></tr>${pendRows}</table>` : '')
+    || '<span style="color:#4a5568">확인된 상품 없음</span>';
+  const list = (arr, fn) => (arr && arr.length ? arr.map(fn).join('') : '<span style="color:#4a5568">확인된 공개 정보 없음</span>');
+  const backers = list(c.backers, x => `<div><b>${etfEsc(x.name)}</b> <span class="etf-tag">${etfEsc(x.kind || '')}</span>${etfEsc(x.note || '')}</div>`);
+  const promos = list(c.promoters, x => `<div><b>${etfEsc(x.name)}</b> <span class="etf-tag">${etfEsc(x.role || '')}</span>${etfEsc(x.note || '')}</div>`);
+  const risks = list(c.risks, x => `<div><b>${etfEsc(x.date || '')}</b> ${etfEsc(x.text)} ${etfLink(x.source)}</div>`);
+  const lb = (v, t) => `<span class="etf-badge ${v === true ? 'kr' : 'off'}">${t}${v === true ? ' ✓' : (v === false ? ' ✗' : ' ?')}</span>`;
+  const listings = lb(l.upbit, '업비트') + lb(l.bithumb, '빗썸') + lb(l.binance_spot, '바이낸스') + lb(l.coinbase, '코인베이스');
+  const u = c.unlock || {};
+  const unlock = u.has_unlock === false ? '예정된 대규모 언락 없음' : (u.has_unlock == null && !u.note ? '<span style="color:#4a5568">확인된 정보 없음</span>' : `${u.next ? '<b>' + etfEsc(u.next) + '</b> ' : ''}${etfEsc(u.note || '')}`);
+  let deriv = '<span style="color:#4a5568">조회 중…</span>';
+  if (dv) {
+    deriv = (dv.rate == null && dv.oi == null) ? '<span style="color:#4a5568">바이낸스 선물 정보 없음</span>'
+      : `펀딩비 <b class="${etfCls(dv.rate)}">${dv.rate != null ? etfPct(dv.rate * 100, 4) : '—'}</b><br>미결제약정 <b>${dv.oiUsd != null ? etfBig(dv.oiUsd) : '—'}</b> <span style="color:#4a5568">(${etfEsc(dv.sym)})</span>`;
+  }
+  let eff = '';
+  if (e.status === 'listed') {
+    if (!ef) eff = '<span style="color:#4a5568">계산 중…</span>';
+    else if (ef.none) eff = '<span style="color:#4a5568">가격 데이터를 불러오지 못했거나 상장일 정보가 없음</span>';
+    else eff = `기준: ${etfEsc(ef.ticker)} 상장(${etfEsc(ef.date)}) 직전 종가<br>상장 전 30일 <b class="${etfCls(ef.pre)}">${etfPct(ef.pre)}</b> · 상장 후 ${ef.days}일 <b class="${etfCls(ef.post)}">${etfPct(ef.post)}</b>`;
+  }
+  const flowSlug = ETF_FLOW_SLUG[c.symbol];
+  const flowUrl = flowSlug ? `https://cryptoetf.today/en/${flowSlug}-etf-flows` : 'https://cryptoetf.today/en/crypto-etf-filings';
+  const srcs = (c.sources || []).map((s, i) => etfLink(s, '[' + (i + 1) + ']')).join(' ');
+  return `<tr class="etf-detail"><td colspan="11">
+    ${e.note ? `<div class="etf-note">${etfEsc(e.note)}</div>` : ''}
+    <div class="etf-detail-grid">
+      <div class="etf-box" style="grid-column:1/-1"><div class="etf-box-title">ETF 상품</div>${prod}<div style="margin-top:6px">${etfLink(flowUrl, e.status === 'listed' ? '일별 자금 흐름 ↗' : '대기 목록 ↗')}</div></div>
+      <div class="etf-box"><div class="etf-box-title">투자사 · 보유 기관</div>${backers}</div>
+      <div class="etf-box"><div class="etf-box-title">홍보 · 지지 주체</div>${promos}</div>
+      <div class="etf-box"><div class="etf-box-title">거래소 상장</div>${listings}</div>
+      <div class="etf-box"><div class="etf-box-title">파생 지표 (바이낸스 선물)</div>${deriv}</div>
+      ${e.status === 'listed' ? `<div class="etf-box"><div class="etf-box-title">ETF 상장 전후 가격</div>${eff}</div>` : ''}
+      <div class="etf-box"><div class="etf-box-title">토큰 언락</div>${unlock}</div>
+      <div class="etf-box"><div class="etf-box-title">리스크 이벤트</div>${risks}</div>
+      <div class="etf-box"><div class="etf-box-title">기타</div>합의: ${etfEsc(c.consensus || '—')} · 메인넷: ${etfEsc(c.mainnet || '—')}<br>7일 ${mk.price_change_percentage_7d_in_currency != null ? `<b class="${etfCls(mk.price_change_percentage_7d_in_currency)}">${etfPct(mk.price_change_percentage_7d_in_currency)}</b>` : '—'} · 24h 거래량 ${etfBig(mk.total_volume)}<br>유통량 ${mk.circulating_supply != null ? Math.round(mk.circulating_supply).toLocaleString('en-US') : '—'}${mk.max_supply ? ' / 최대 ' + Math.round(mk.max_supply).toLocaleString('en-US') : ''}</div>
+      ${srcs ? `<div class="etf-box" style="grid-column:1/-1"><div class="etf-box-title">출처</div>${srcs}</div>` : ''}
+    </div>
+  </td></tr>`;
+}
+function etfRender() {
+  const tb = document.getElementById('etf-tbody');
+  if (!tb) return;
+  const st = document.getElementById('etf-status');
+  if (ETF.loadErr || !ETF.data) {
+    tb.innerHTML = '<tr><td colspan="11" style="padding:20px;color:#ff4d6d;font-size:11px;text-align:center;">ETF 코인 데이터(etf-coins.json)를 불러오지 못했습니다.</td></tr>';
+    return;
+  }
+  const d = ETF.data;
+  const all = d.coins;
+  const nListed = all.filter(c => c.etf.status === 'listed').length;
+  const nProd = all.reduce((s, c) => s + (c.etf.listed || []).length, 0);
+  const nPend = all.reduce((s, c) => s + (c.etf.pending || []).length, 0);
+  document.getElementById('etf-summary').innerHTML =
+    `<div class="etf-stat">추적 코인<b>${all.length}</b></div><div class="etf-stat">ETF 상장 코인<b class="etf-up">${nListed}</b></div>` +
+    `<div class="etf-stat">대기 코인<b style="color:#f59e0b">${all.length - nListed}</b></div><div class="etf-stat">상장 ETF 상품<b>${nProd}</b></div><div class="etf-stat">대기 신청 건<b>${nPend}</b></div>`;
+  const rows = etfFiltered();
+  const out = [];
+  rows.forEach(c => {
+    const m = ETF.market[c.id] || {};
+    const nL = (c.etf.listed || []).length, nP = (c.etf.pending || []).length;
+    const fs = ETF_FUT_SYM[c.symbol] || c.symbol + 'USDT';
+    const f = ETF.fund[fs];
+    const open = ETF.open === c.id;
+    out.push(`<tr class="etf-row${open ? ' open' : ''}" onclick="etfToggle('${etfEsc(c.id)}')">
+      <td style="color:#4a5568">${m.market_cap_rank || '—'}</td>
+      <td><span class="etf-sym">${etfEsc(c.symbol)}</span><span class="etf-sub">${etfEsc(c.name_ko || c.name)}</span></td>
+      <td>${nL ? `<span class="etf-badge listed">상장 ${nL}</span>` : ''}${nP ? `<span class="etf-badge pending">대기 ${nP}</span>` : ''}${!nL && !nP ? '<span class="etf-badge off">—</span>' : ''}</td>
+      <td>${(c.sector || []).map(s => `<span class="etf-tag">${etfEsc(s)}</span>`).join('')}</td>
+      <td class="num">${etfPrice(m.current_price)}</td>
+      <td class="num ${etfCls(m.price_change_percentage_24h)}">${etfPct(m.price_change_percentage_24h)}</td>
+      <td class="num">${etfBig(m.market_cap)}</td>
+      <td class="num">${etfPrice(m.ath)}<span class="etf-sub">${etfDay(m.ath_date)} · <span class="${etfCls(m.ath_change_percentage)}">${etfPct(m.ath_change_percentage)}</span></span></td>
+      <td class="num">${etfPrice(m.atl)}<span class="etf-sub">${etfDay(m.atl_date)} · <span class="${etfCls(m.atl_change_percentage)}">${m.atl_change_percentage != null ? etfPct(m.atl_change_percentage, 0) : '—'}</span></span></td>
+      <td class="num ${f ? etfCls(f.rate) : ''}">${f ? etfPct(f.rate * 100, 4) : '—'}</td>
+      <td>${etfKrBadges(c)}</td></tr>`);
+    if (open) out.push(etfDetail(c));
+  });
+  tb.innerHTML = out.length ? out.join('') : '<tr><td colspan="11" style="padding:20px;color:#4a5568;font-size:11px;text-align:center;">조건에 맞는 코인이 없습니다.</td></tr>';
+  if (st) st.textContent = ETF.err ? '⚠ 시세 로딩 실패 (ETF 정보만 표시)' : (ETF.last ? '시세 ' + new Date(ETF.last).toLocaleTimeString('ko-KR') + ' 기준 · 60초 갱신' : '시세 로딩…');
+  const ft = document.getElementById('etf-foot');
+  if (ft) ft.innerHTML = `* 시세·시총·ATH/ATL: CoinGecko, 펀딩비·미결제약정: 바이낸스 선물 (실시간). ETF·투자사·홍보 주체·리스크는 공개 자료 기준 ${etfEsc((d.meta && d.meta.updated) || '')} 수동 조사 데이터이며 이후 변동될 수 있습니다.<br>* 비공개 계약·유료 홍보는 확인할 수 없고, 특정 코인의 매수·매도를 권유하지 않습니다.`;
+}
 
 // =============================================
 // 청산가 계산기
@@ -1656,6 +1966,7 @@ function calcLiq() {
 // =============================================
 window.addEventListener('load', () => {
   restoreNotifState();
+  etfInit();
   renderExcludedTags();
   buildTV('BINANCE:BTCUSDT');
   renderTraders();
@@ -1675,6 +1986,8 @@ window.addEventListener('load', () => {
   setInterval(fetchFunding, 14400000);
   setInterval(loadRsiScanner, 300000);
   setInterval(fetchUnlocks, 600000);
+  setInterval(() => { if (document.getElementById('page-etf').classList.contains('active')) etfLoadMarkets(); }, 60000);   // ETF 탭이 열려 있을 때만 시세 갱신
+  setInterval(() => { if (document.getElementById('page-etf').classList.contains('active')) etfLoadFunding(); }, 300000);
   setInterval(loadWatchlist, 300000);
   setInterval(scanManualAlerts, 300000);
   // setInterval(loadPumpScanner, 300000);  // 급등 후 눌림목 보류 중 (관심종목으로 교체됨)
