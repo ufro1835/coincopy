@@ -1,0 +1,2628 @@
+{
+ "meta": {
+  "updated": "2026-11-22",
+  "note": "ETF 상태·투자사·홍보 주체·리스크는 공개 자료 수동 조사. 시세·시총·ATH/ATL은 실시간 API.",
+  "etf_tracker": "https://cryptoetf.today/en/crypto-etf-filings"
+ },
+ "coins": [
+  {
+   "id": "solana",
+   "symbol": "SOL",
+   "name": "Solana",
+   "name_ko": "솔라나",
+   "sector": [
+    "L1",
+    "스마트컨트랙트"
+   ],
+   "consensus": "PoH+PoS",
+   "mainnet": "2020",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "BSOL",
+      "issuer": "Bitwise",
+      "type": "staking",
+      "launch_date": "2025-10-28",
+      "fee_pct": 0.2,
+      "exchange": null,
+      "source": "https://www.ledger.com/academy/topics/crypto/solana-etfs-guide"
+     },
+     {
+      "ticker": "GSOL",
+      "issuer": "Grayscale",
+      "type": "staking",
+      "launch_date": "2025-10-29",
+      "fee_pct": 0.19,
+      "exchange": "NYSE Arca",
+      "source": "https://www.nasdaq.com/press-release/grayscale-solana-trust-etf-ticker-gsol-launches-nyse-arca-staking-2025-10-29"
+     },
+     {
+      "ticker": "FSOL",
+      "issuer": "Fidelity",
+      "type": "staking",
+      "launch_date": null,
+      "fee_pct": 0.25,
+      "exchange": null,
+      "source": "https://cryptoetf.today/en/solana-etf-flows"
+     },
+     {
+      "ticker": "VSOL",
+      "issuer": "VanEck",
+      "type": "staking",
+      "launch_date": null,
+      "fee_pct": 0.3,
+      "exchange": null,
+      "source": "https://cryptoetf.today/en/solana-etf-flows"
+     },
+     {
+      "ticker": "TSOL",
+      "issuer": "21Shares",
+      "type": "staking",
+      "launch_date": null,
+      "fee_pct": 0.21,
+      "exchange": null,
+      "source": "https://cryptoetf.today/en/solana-etf-flows"
+     },
+     {
+      "ticker": "SOEZ",
+      "issuer": "Franklin Templeton",
+      "type": "staking",
+      "launch_date": null,
+      "fee_pct": 0.19,
+      "exchange": null,
+      "source": "https://cryptoetf.today/en/solana-etf-flows"
+     },
+     {
+      "ticker": "QSOL",
+      "issuer": "Invesco Galaxy",
+      "type": "staking",
+      "launch_date": null,
+      "fee_pct": 0.25,
+      "exchange": null,
+      "source": "https://cryptoetf.today/en/solana-etf-flows"
+     },
+     {
+      "ticker": "SOLC",
+      "issuer": "Canary Capital (Marinade)",
+      "type": "staking",
+      "launch_date": null,
+      "fee_pct": 0.5,
+      "exchange": null,
+      "source": "https://cryptoetf.today/en/solana-etf-flows"
+     },
+     {
+      "ticker": "MSOL",
+      "issuer": "Morgan Stanley",
+      "type": "staking",
+      "launch_date": "2026-07-28",
+      "fee_pct": 0.14,
+      "exchange": null,
+      "source": "https://tokentax.co/blog/solana-etf"
+     }
+    ],
+    "pending": [
+     {
+      "issuer": "VanEck",
+      "type": "JitoSOL 유동성 스테이킹 토큰 ETF",
+      "filed": null,
+      "stage": "2026-03 나스닥 규칙변경 신청 및 SEC 공고, 심사 중",
+      "source": "https://tokentax.co/blog/solana-etf"
+     }
+    ],
+    "note": "2025년 10월 말 이후 9개 이상의 미국 솔라나 스테이킹 현물 ETF가 거래 중이며, JitoSOL ETF는 심사 중."
+   },
+   "backers": [
+    {
+     "name": "Forward Industries",
+     "kind": "기업",
+     "note": "솔라나 트레저리 기업, 약 755만 SOL 보유 보도"
+    },
+    {
+     "name": "DeFi Development Corp",
+     "kind": "기업",
+     "note": "솔라나 트레저리 기업"
+    },
+    {
+     "name": "Upexi",
+     "kind": "기업",
+     "note": "솔라나 트레저리 기업"
+    },
+    {
+     "name": "Sharps Technology",
+     "kind": "기업",
+     "note": "솔라나 트레저리 기업"
+    },
+    {
+     "name": "미국 상장 SOL 트레저리 기업군",
+     "kind": "기업",
+     "note": "합계 약 1,200만 SOL(공급량 약 2%) 보유 보도"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Solana Foundation",
+     "role": "재단",
+     "note": "생태계 개발 지원 비영리 재단"
+    },
+    {
+     "name": "Solana Labs",
+     "role": "초기 개발사",
+     "note": "공동창업자 Anatoly Yakovenko가 설립"
+    },
+    {
+     "name": "Anatoly Yakovenko",
+     "role": "공동창업자",
+     "note": "PoH 개념 제안"
+    },
+    {
+     "name": "Bitwise",
+     "role": "ETF 발행사",
+     "note": "미국 최초급 솔라나 스테이킹 ETF 출시"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2026-01",
+     "text": "2026년 1월 솔라나 네트워크 장애 관련 보도(원인 및 영향 범위는 출처 참조)",
+     "source": "https://dropthe.org/coin/solana-outage-january-2026-what-broke-and-whats-next/"
+    },
+    {
+     "date": "2026-03",
+     "text": "미국 상장 솔라나 트레저리 기업들이 수십억 달러 규모 평가손실을 기록했다는 보도",
+     "source": "https://cointelegraph.com/news/solana-treasury-firms-unrealized-losses-equity-repricing"
+    }
+   ],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "고정 일정의 대규모 언락 확인하지 못함(인플레이션형 발행)"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://cryptoetf.today/en/solana-etf-flows",
+    "https://tokentax.co/blog/solana-etf",
+    "https://www.nasdaq.com/press-release/grayscale-solana-trust-etf-ticker-gsol-launches-nyse-arca-staking-2025-10-29",
+    "https://decrypt.co/339551/5-largest-publicly-traded-solana-treasury-firms"
+   ]
+  },
+  {
+   "id": "ripple",
+   "symbol": "XRP",
+   "name": "XRP",
+   "name_ko": "엑스알피(리플)",
+   "sector": [
+    "결제",
+    "L1"
+   ],
+   "consensus": "XRPL 합의 프로토콜(RPCA)",
+   "mainnet": "2012",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "XRPC",
+      "issuer": "Canary Capital",
+      "type": "spot",
+      "launch_date": "2025-11-13",
+      "fee_pct": 0.5,
+      "exchange": "Nasdaq",
+      "source": "https://cryptoetf.today/en/blog/best-xrp-etf"
+     },
+     {
+      "ticker": "XRP",
+      "issuer": "Bitwise",
+      "type": "spot",
+      "launch_date": "2025-11-20",
+      "fee_pct": 0.34,
+      "exchange": "NYSE Arca",
+      "source": "https://cryptoetf.today/en/blog/best-xrp-etf"
+     },
+     {
+      "ticker": "XRPZ",
+      "issuer": "Franklin Templeton",
+      "type": "spot",
+      "launch_date": "2025-11-24",
+      "fee_pct": 0.19,
+      "exchange": "NYSE Arca",
+      "source": "https://cryptoetf.today/en/blog/best-xrp-etf"
+     },
+     {
+      "ticker": "GXRP",
+      "issuer": "Grayscale",
+      "type": "spot",
+      "launch_date": "2025-11-24",
+      "fee_pct": 0.35,
+      "exchange": "NYSE Arca",
+      "source": "https://cryptoetf.today/en/blog/best-xrp-etf"
+     },
+     {
+      "ticker": "TOXR",
+      "issuer": "21Shares",
+      "type": "spot",
+      "launch_date": "2025-12-11",
+      "fee_pct": 0.3,
+      "exchange": "Cboe BZX",
+      "source": "https://cryptoetf.today/en/blog/best-xrp-etf"
+     }
+    ],
+    "pending": [],
+    "note": "2025년 11~12월 5개 현물 ETF 거래 중, 2026년 9월 기준 블랙록·피델리티 현물 XRP 펀드는 미출시."
+   },
+   "backers": [
+    {
+     "name": "Ripple Labs",
+     "kind": "기업",
+     "note": "대량의 XRP 보유 및 에스크로 운영"
+    },
+    {
+     "name": "Canary Capital",
+     "kind": "기관",
+     "note": "최초 현물 XRP ETF 발행"
+    },
+    {
+     "name": "Franklin Templeton",
+     "kind": "기관",
+     "note": "XRPZ 발행"
+    },
+    {
+     "name": "Grayscale",
+     "kind": "기관",
+     "note": "GXRP 발행"
+    },
+    {
+     "name": "Bitwise",
+     "kind": "기관",
+     "note": "XRP ETF 발행"
+    },
+    {
+     "name": "21Shares",
+     "kind": "기관",
+     "note": "TOXR 발행"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Ripple",
+     "role": "주요 기업 후원자",
+     "note": "XRP 생태계 및 RippleNet/결제 사업 운영"
+    },
+    {
+     "name": "Brad Garlinghouse",
+     "role": "Ripple CEO",
+     "note": "공개적 XRP 지지 발언"
+    },
+    {
+     "name": "David Schwartz",
+     "role": "XRPL 설계자/Ripple CTO 출신",
+     "note": "XRP Ledger 초기 설계자 중 1인"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2025-08",
+     "text": "SEC와 Ripple의 장기 소송이 양측 항소 취하로 종결, 1.25억 달러 벌금 유지",
+     "source": "https://www.pymnts.com/blockchain/2025/ripple-and-sec-end-legal-battle-by-dropping-appeals/"
+    }
+   ],
+   "unlock": {
+    "has_unlock": true,
+    "next": "2026-12-01",
+    "note": "Ripple 에스크로에서 매월 1일 최대 10억 XRP 해제, 미사용분은 재예치되는 구조(일반적으로 알려진 운영 방식, 이번 조사에서 재검증 안 함)"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://cryptoetf.today/en/blog/best-xrp-etf",
+    "https://cryptoetf.today/en/xrp-etf-flows",
+    "https://www.pymnts.com/blockchain/2025/ripple-and-sec-end-legal-battle-by-dropping-appeals/"
+   ]
+  },
+  {
+   "id": "dogecoin",
+   "symbol": "DOGE",
+   "name": "Dogecoin",
+   "name_ko": "도지코인",
+   "sector": [
+    "밈",
+    "결제"
+   ],
+   "consensus": "PoW (Scrypt)",
+   "mainnet": "2013",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "DOJE",
+      "issuer": "REX-Osprey",
+      "type": "40act",
+      "launch_date": "2025-09-18",
+      "fee_pct": 1.5,
+      "exchange": "Cboe BZX",
+      "source": "https://chainandticker.com/learn/us-dogecoin-etfs/"
+     },
+     {
+      "ticker": "GDOG",
+      "issuer": "Grayscale",
+      "type": "spot",
+      "launch_date": "2025-11-24",
+      "fee_pct": 0.35,
+      "exchange": "NYSE Arca",
+      "source": "https://chainandticker.com/learn/us-dogecoin-etfs/"
+     },
+     {
+      "ticker": "TDOG",
+      "issuer": "21Shares",
+      "type": "spot",
+      "launch_date": "2026-01-22",
+      "fee_pct": 0.5,
+      "exchange": "Nasdaq",
+      "source": "https://www.finder.com/stock-trading/dogecoin-etf"
+     }
+    ],
+    "pending": [],
+    "note": "DOJE(REX-Osprey), GDOG, TDOG 거래 중이며 Bitwise BWOW는 2026-10-14 마지막 거래 후 청산, 신규 신청 없음."
+   },
+   "backers": [
+    {
+     "name": "Grayscale",
+     "kind": "기관",
+     "note": "GDOG 발행"
+    },
+    {
+     "name": "21Shares",
+     "kind": "기관",
+     "note": "TDOG 발행, 도지코인 재단 협력 보도"
+    },
+    {
+     "name": "REX-Osprey",
+     "kind": "기관",
+     "note": "DOJE 발행"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Dogecoin Foundation",
+     "role": "재단",
+     "note": "오픈소스 개발 및 생태계 지원 비영리 조직"
+    },
+    {
+     "name": "Billy Markus",
+     "role": "공동창시자",
+     "note": "2013년 도지코인 공동 창시"
+    },
+    {
+     "name": "Jackson Palmer",
+     "role": "공동창시자",
+     "note": "2013년 도지코인 공동 창시, 이후 프로젝트에서 이탈"
+    },
+    {
+     "name": "Elon Musk",
+     "role": "공개 지지자",
+     "note": "SNS를 통한 공개적 언급으로 알려짐"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2026-09",
+     "text": "Bitwise가 도지코인 ETF(BWOW) 청산을 발표, 2026-10-14 마지막 거래일",
+     "source": "https://chainandticker.com/learn/us-dogecoin-etfs/"
+    }
+   ],
+   "unlock": {
+    "has_unlock": false,
+    "next": null,
+    "note": "무제한 인플레이션형 발행(연 약 50억 DOGE 고정 발행), 락업/언락 없음"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://chainandticker.com/learn/us-dogecoin-etfs/",
+    "https://www.finder.com/stock-trading/dogecoin-etf"
+   ]
+  },
+  {
+   "id": "litecoin",
+   "symbol": "LTC",
+   "name": "Litecoin",
+   "name_ko": "라이트코인",
+   "sector": [
+    "결제",
+    "L1"
+   ],
+   "consensus": "PoW (Scrypt)",
+   "mainnet": "2011",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "LTCC",
+      "issuer": "Canary Capital",
+      "type": "spot",
+      "launch_date": "2025-10-28",
+      "fee_pct": 0.95,
+      "exchange": "Nasdaq",
+      "source": "https://cryptoetf.today/en/blog/litecoin-etf-explained"
+     }
+    ],
+    "pending": [
+     {
+      "issuer": "Grayscale",
+      "type": "LTCN 신탁의 ETF 전환",
+      "filed": "2026-09-11",
+      "stage": "S-3 수정본 제출(ETF 전환 및 설정·환매 추가), 전환 미완료; NYSE Arca 19b-4는 2025-01-24 제출",
+      "source": "https://cryptoetf.today/en/blog/litecoin-etf-explained"
+     }
+    ],
+    "note": "미국 현물 라이트코인 ETF는 Canary LTCC 1개만 거래 중, Grayscale LTCN은 OTC 신탁 상태."
+   },
+   "backers": [
+    {
+     "name": "Canary Capital",
+     "kind": "기관",
+     "note": "LTCC 발행"
+    },
+    {
+     "name": "Grayscale",
+     "kind": "기관",
+     "note": "Litecoin Trust 운용"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Charlie Lee",
+     "role": "창시자",
+     "note": "2011년 라이트코인 창시, 구글 출신 개발자"
+    },
+    {
+     "name": "Litecoin Foundation",
+     "role": "재단",
+     "note": "개발·홍보 지원 비영리 재단"
+    }
+   ],
+   "listings": {
+    "upbit": null,
+    "bithumb": null,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2022-06",
+     "text": "MWEB(프라이버시 기능) 업그레이드 후 한국 주요 거래소가 LTC 상장폐지 결정(현재 상장 여부는 미확인)",
+     "source": "https://cointelegraph.com/news/major-south-korean-crypto-exchanges-delist-litecoin"
+    }
+   ],
+   "unlock": {
+    "has_unlock": false,
+    "next": null,
+    "note": "최대 발행량 8,400만 개 PoW, 락업 없음"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://cryptoetf.today/en/blog/litecoin-etf-explained",
+    "https://cointelegraph.com/news/major-south-korean-crypto-exchanges-delist-litecoin"
+   ]
+  },
+  {
+   "id": "hedera-hashgraph",
+   "symbol": "HBAR",
+   "name": "Hedera",
+   "name_ko": "헤데라",
+   "sector": [
+    "L1",
+    "엔터프라이즈"
+   ],
+   "consensus": "Hashgraph(aBFT)+PoS",
+   "mainnet": "2019",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "HBR",
+      "issuer": "Canary Capital",
+      "type": "spot",
+      "launch_date": "2025-10-28",
+      "fee_pct": 0.95,
+      "exchange": "Nasdaq",
+      "source": "https://cryptoetf.today/en/hedera-etf-flows"
+     }
+    ],
+    "pending": [],
+    "note": "Canary HBR 1개 거래 중, Grayscale HBAR ETF는 2026-08-07 SEC 등록 철회."
+   },
+   "backers": [
+    {
+     "name": "Canary Capital",
+     "kind": "기관",
+     "note": "HBR ETF 발행"
+    },
+    {
+     "name": "Hedera Governing Council",
+     "kind": "기업",
+     "note": "대기업·기관으로 구성된 거버넌스 위원회(구성원은 공식 사이트 참조)"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Hedera Hashgraph LLC",
+     "role": "개발사",
+     "note": "네트워크 개발"
+    },
+    {
+     "name": "HBAR Foundation",
+     "role": "재단",
+     "note": "생태계 지원"
+    },
+    {
+     "name": "Leemon Baird",
+     "role": "공동창업자/해시그래프 발명자",
+     "note": "해시그래프 합의 알고리즘 고안"
+    },
+    {
+     "name": "Mance Harmon",
+     "role": "공동창업자",
+     "note": "Hedera 공동창업"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2023-03",
+     "text": "스마트컨트랙트 서비스 취약점 공격으로 메인넷 일부 서비스가 일시 중단됨",
+     "source": "https://hedera.com/blog/analysis-remediation-of-the-precompile-attack-on-the-hedera-network"
+    },
+    {
+     "date": "2026-08",
+     "text": "Grayscale이 HBAR·ADA·DOT ETF 등록신청서 철회(사유 비공개)",
+     "source": "https://www.coindesk.com/business/2026/08/10/grayscale-quietly-drops-cardano-polkadot-and-hedera-etf-plans"
+    }
+   ],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "재단·재무 보유분의 단계적 해제 일정 있음(구체 일정 미확인)"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://cryptoetf.today/en/hedera-etf-flows",
+    "https://www.coindesk.com/business/2026/08/10/grayscale-quietly-drops-cardano-polkadot-and-hedera-etf-plans",
+    "https://hedera.com/blog/analysis-remediation-of-the-precompile-attack-on-the-hedera-network"
+   ]
+  },
+  {
+   "id": "chainlink",
+   "symbol": "LINK",
+   "name": "Chainlink",
+   "name_ko": "체인링크",
+   "sector": [
+    "오라클",
+    "인프라"
+   ],
+   "consensus": null,
+   "mainnet": "2019",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "GLNK",
+      "issuer": "Grayscale",
+      "type": "spot",
+      "launch_date": "2025-12-02",
+      "fee_pct": 0.35,
+      "exchange": "NYSE Arca",
+      "source": "https://thedefiant.io/chainlink-s-link-jumps-13-as-grayscale-etf-goes-live"
+     },
+     {
+      "ticker": "CLNK",
+      "issuer": "Bitwise",
+      "type": "spot",
+      "launch_date": "2026-01-14",
+      "fee_pct": 0.34,
+      "exchange": "NYSE Arca",
+      "source": "https://decrypt.co/354569/link-monthly-high-bitwise-chainlink-etf-nyse"
+     }
+    ],
+    "pending": [],
+    "note": "Grayscale GLNK와 Bitwise CLNK 2개 현물 ETF 거래 중."
+   },
+   "backers": [
+    {
+     "name": "Grayscale",
+     "kind": "기관",
+     "note": "GLNK 발행"
+    },
+    {
+     "name": "Bitwise",
+     "kind": "기관",
+     "note": "CLNK 발행"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Chainlink Labs",
+     "role": "개발사",
+     "note": "오라클 네트워크 개발"
+    },
+    {
+     "name": "Sergey Nazarov",
+     "role": "공동창업자",
+     "note": "Chainlink 공동창업자 겸 공개 대변인"
+    },
+    {
+     "name": "Steve Ellis",
+     "role": "공동창업자",
+     "note": "Chainlink 공동창업"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "토큰 일부 Chainlink Labs·노드 보상용 보유(구체 일정 미확인)"
+   },
+   "etf_effect": {
+    "launch_date": "2025-12-02",
+    "note": "Grayscale GLNK 출시 시점에 LINK가 약 13% 상승했다고 The Defiant가 보도. Bitwise CLNK 출시일(2026-01-14)에는 LINK가 약 14.25달러로 한 달 내 최고치, 전일 대비 약 5% 상승(Decrypt)."
+   },
+   "sources": [
+    "https://cryptoetf.today/en/chainlink-etf-flows",
+    "https://decrypt.co/354569/link-monthly-high-bitwise-chainlink-etf-nyse",
+    "https://thedefiant.io/chainlink-s-link-jumps-13-as-grayscale-etf-goes-live"
+   ]
+  },
+  {
+   "id": "avalanche-2",
+   "symbol": "AVAX",
+   "name": "Avalanche",
+   "name_ko": "아발란체",
+   "sector": [
+    "L1",
+    "스마트컨트랙트"
+   ],
+   "consensus": "Snowman(Avalanche 합의)+PoS",
+   "mainnet": "2020",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "VAVX",
+      "issuer": "VanEck",
+      "type": "staking",
+      "launch_date": null,
+      "fee_pct": 0.2,
+      "exchange": "Nasdaq",
+      "source": "https://cryptoetf.today/en/avalanche-etf-flows"
+     },
+     {
+      "ticker": "GAVA",
+      "issuer": "Grayscale",
+      "type": "staking",
+      "launch_date": null,
+      "fee_pct": 0.35,
+      "exchange": "Nasdaq",
+      "source": "https://cryptoetf.today/en/avalanche-etf-flows"
+     },
+     {
+      "ticker": "BAVA",
+      "issuer": "Bitwise",
+      "type": "staking",
+      "launch_date": null,
+      "fee_pct": 0.34,
+      "exchange": "NYSE",
+      "source": "https://cryptoetf.today/en/avalanche-etf-flows"
+     }
+    ],
+    "pending": [],
+    "note": "VanEck, Grayscale, Bitwise 3개 AVAX ETF 거래 중(VAVX·GAVA 수수료는 출처 간 불일치)."
+   },
+   "backers": [
+    {
+     "name": "Avalanche Treasury Co.(AVAT)",
+     "kind": "기업",
+     "note": "6.75억 달러 SPAC 합병 트레저리 기업, 재단 지원"
+    },
+    {
+     "name": "Avalanche Foundation",
+     "kind": "재단",
+     "note": "트레저리 기업 설립 지원"
+    },
+    {
+     "name": "Dragonfly",
+     "kind": "VC",
+     "note": "AVAT 투자 참여 보도"
+    },
+    {
+     "name": "ParaFi",
+     "kind": "VC",
+     "note": "AVAT 투자 참여 보도"
+    },
+    {
+     "name": "Pantera",
+     "kind": "VC",
+     "note": "AVAT 투자 참여 보도"
+    },
+    {
+     "name": "VanEck",
+     "kind": "기관",
+     "note": "VAVX 발행"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Ava Labs",
+     "role": "개발사",
+     "note": "Avalanche 개발"
+    },
+    {
+     "name": "Avalanche Foundation",
+     "role": "재단",
+     "note": "생태계 지원"
+    },
+    {
+     "name": "Emin Gün Sirer",
+     "role": "창업자",
+     "note": "Ava Labs 설립자"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2026-01",
+     "text": "Avalanche Treasury 주가가 나스닥 데뷔 후 급락(데뷔 대비 약 73% 하락 보도, 시점은 출처 참조)",
+     "source": "https://www.theblock.co/post/406990/avalanche-treasury-stock-plunge"
+    }
+   ],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "토큰 베스팅 일정 존재 가능성(구체 일정 미확인)"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://cryptoetf.today/en/avalanche-etf-flows",
+    "https://decrypt.co/342697/avalanche-treasury-coming-foundation-support-675-million-spac-deal",
+    "https://fortune.com/crypto/2025/10/01/avalanche-treasury-co-susquehanna-ceo-bart-smith-dragonfly-parafi-pantera/"
+   ]
+  },
+  {
+   "id": "polkadot",
+   "symbol": "DOT",
+   "name": "Polkadot",
+   "name_ko": "폴카닷",
+   "sector": [
+    "L1",
+    "인터체인"
+   ],
+   "consensus": "NPoS",
+   "mainnet": "2020",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "TDOT",
+      "issuer": "21Shares",
+      "type": "staking",
+      "launch_date": "2026-03-06",
+      "fee_pct": 0.3,
+      "exchange": "Nasdaq",
+      "source": "https://cryptoetf.today/en/polkadot-etf-flows"
+     }
+    ],
+    "pending": [],
+    "note": "21Shares TDOT 1개 거래 중, Grayscale DOT ETF는 2026-08-07 등록 철회."
+   },
+   "backers": [
+    {
+     "name": "21Shares",
+     "kind": "기관",
+     "note": "TDOT 발행"
+    },
+    {
+     "name": "Web3 Foundation",
+     "kind": "재단",
+     "note": "Polkadot 지원 재단"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Web3 Foundation",
+     "role": "재단",
+     "note": "프로토콜 연구·지원"
+    },
+    {
+     "name": "Parity Technologies",
+     "role": "개발사",
+     "note": "Polkadot 클라이언트 개발"
+    },
+    {
+     "name": "Gavin Wood",
+     "role": "창업자",
+     "note": "Polkadot 및 Parity 창립, 이더리움 공동창업자"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2026-04",
+     "text": "Polkadot 기반 Hyperbridge 게이트웨이 취약점으로 이더리움상 브릿지 DOT 약 10억 개 불법 발행, 실제 손실은 약 250만 달러로 상향 수정",
+     "source": "https://www.theblock.co/news/defi/2026-04-16-polkadot-hyperbridge-exploit-losses-2-5-million-ten-times-initial-estimate-397773"
+    },
+    {
+     "date": "2026-08",
+     "text": "Grayscale이 Polkadot ETF 등록신청서 철회",
+     "source": "https://www.coindesk.com/business/2026/08/10/grayscale-quietly-drops-cardano-polkadot-and-hedera-etf-plans"
+    }
+   ],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "인플레이션형 발행, 고정 언락 일정 미확인"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://cryptoetf.today/en/polkadot-etf-flows",
+    "https://www.theblock.co/news/defi/2026-04-16-polkadot-hyperbridge-exploit-losses-2-5-million-ten-times-initial-estimate-397773",
+    "https://www.coindesk.com/business/2026/08/10/grayscale-quietly-drops-cardano-polkadot-and-hedera-etf-plans"
+   ]
+  },
+  {
+   "id": "near",
+   "symbol": "NEAR",
+   "name": "NEAR Protocol",
+   "name_ko": "니어 프로토콜",
+   "sector": [
+    "L1",
+    "AI"
+   ],
+   "consensus": "Nightshade 샤딩+PoS",
+   "mainnet": "2020",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "NRR",
+      "issuer": "Bitwise",
+      "type": "staking",
+      "launch_date": "2026-09-29",
+      "fee_pct": 0.75,
+      "exchange": "NYSE Arca",
+      "source": "https://www.prnewswire.com/news-releases/the-bitwise-near-etf-nrr-launches-as-first-spot-near-etp-in-the-us-providing-investors-exposure-to-the-future-of-ai-money-302892203.html"
+     }
+    ],
+    "pending": [],
+    "note": "2026-09-29 Bitwise NRR가 최초 미국 현물 NEAR ETF로 출시, 자체 스테이킹."
+   },
+   "backers": [
+    {
+     "name": "Bitwise",
+     "kind": "기관",
+     "note": "NRR 발행"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "NEAR Foundation",
+     "role": "재단",
+     "note": "생태계 지원"
+    },
+    {
+     "name": "Illia Polosukhin",
+     "role": "공동창업자",
+     "note": "'Attention Is All You Need' 공동저자, NEAR 공동창업"
+    },
+    {
+     "name": "Alexander Skidanov",
+     "role": "공동창업자",
+     "note": "NEAR 공동창업"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "인플레이션형 발행, 고정 언락 일정 미확인"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.prnewswire.com/news-releases/the-bitwise-near-etf-nrr-launches-as-first-spot-near-etp-in-the-us-providing-investors-exposure-to-the-future-of-ai-money-302892203.html",
+    "https://cryptoetf.today/en/near-etf-flows"
+   ]
+  },
+  {
+   "id": "tron",
+   "symbol": "TRX",
+   "name": "TRON",
+   "name_ko": "트론",
+   "sector": [
+    "L1",
+    "스테이블코인 결제"
+   ],
+   "consensus": "DPoS",
+   "mainnet": "2018",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "TRXS",
+      "issuer": "Canary Capital",
+      "type": "staking",
+      "launch_date": "2026-09-09",
+      "fee_pct": 1.1,
+      "exchange": "Cboe BZX",
+      "source": "https://www.cryptotimes.io/2026/09/08/canary-staked-trx-etf-trxs-to-debut-on-cboe-september-9/"
+     }
+    ],
+    "pending": [],
+    "note": "Canary 스테이킹 TRX ETF(TRXS)가 2026-09-09 Cboe 상장, 보수 1.10%."
+   },
+   "backers": [
+    {
+     "name": "Justin Sun (Tron Foundation/Rainberry)",
+     "kind": "재단",
+     "note": "창립자이자 최대 영향력 보유자"
+    },
+    {
+     "name": "Tron DAO",
+     "kind": "재단",
+     "note": "생태계 운영·재원 관리"
+    },
+    {
+     "name": "Binance",
+     "kind": "거래소",
+     "note": "2018 초기 상장·생태계 협력"
+    },
+    {
+     "name": "Tether",
+     "kind": "기업",
+     "note": "USDT 최대 발행망 중 하나로 TRON 활용"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Justin Sun",
+     "role": "창립자",
+     "note": "SNS·행사를 통한 공개 홍보, 거래소/기관 협력 주도"
+    },
+    {
+     "name": "Tron DAO",
+     "role": "재단",
+     "note": "개발자 지원·생태계 프로그램"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": false
+   },
+   "risks": [
+    {
+     "date": "2026-03",
+     "text": "SEC가 Justin Sun/Rainberry 소송을 약 1천만 달러 합의로 종결(법적 불확실성 해소). 다만 창립자 의존도는 지속",
+     "source": "https://www.coindesk.com/policy/2026/03/05/sec-justin-sun-reach-settlement-over-tron-lawsuit"
+    }
+   ],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "확인된 정기 언락 일정 없음(미검증)"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.cryptotimes.io/2026/09/08/canary-staked-trx-etf-trxs-to-debut-on-cboe-september-9/",
+    "https://www.coindesk.com/policy/2026/03/05/sec-justin-sun-reach-settlement-over-tron-lawsuit",
+    "https://www.coinbase.com/price/tron"
+   ]
+  },
+  {
+   "id": "hyperliquid",
+   "symbol": "HYPE",
+   "name": "Hyperliquid",
+   "name_ko": "하이퍼리퀴드",
+   "sector": [
+    "L1",
+    "DeFi",
+    "퍼프 DEX"
+   ],
+   "consensus": "HyperBFT",
+   "mainnet": "2023",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "THYP",
+      "issuer": "21Shares",
+      "type": "spot",
+      "launch_date": "2026-05-12",
+      "fee_pct": 0.3,
+      "exchange": "Nasdaq",
+      "source": "https://cryptoetf.today/en/blog/hyperliquid-etf-explained"
+     },
+     {
+      "ticker": "BHYP",
+      "issuer": "Bitwise",
+      "type": "spot",
+      "launch_date": "2026-05-15",
+      "fee_pct": 0.34,
+      "exchange": "NYSE",
+      "source": "https://cryptoetf.today/en/blog/hyperliquid-etf-explained"
+     },
+     {
+      "ticker": "HYPG",
+      "issuer": "Grayscale",
+      "type": "spot",
+      "launch_date": "2026-06-03",
+      "fee_pct": 0.29,
+      "exchange": "Nasdaq",
+      "source": "https://cryptoetf.today/en/blog/hyperliquid-etf-explained"
+     }
+    ],
+    "pending": [],
+    "note": "2026-05~06 사이 21Shares·Bitwise·Grayscale 3개 현물 ETF 상장."
+   },
+   "backers": [
+    {
+     "name": "Hyper Foundation",
+     "kind": "재단",
+     "note": "HYPE 토큰 생태계 재단"
+    },
+    {
+     "name": "Hyperliquid Labs",
+     "kind": "기업",
+     "note": "개발 주체(외부 VC 투자 없이 자체 운영으로 알려짐)"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Jeff Yan",
+     "role": "창립자",
+     "note": "Hyperliquid Labs 공동 설립자·개발 총괄"
+    },
+    {
+     "name": "Iliensinc",
+     "role": "공동 설립자",
+     "note": "초기 개발 참여"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2026-09",
+     "text": "Binance 현물 상장 시 Seed Tag(고위험 표시) 부여",
+     "source": "https://beincrypto.com/binance-lists-hyperliquid-hype-seed-tag/"
+    },
+    {
+     "date": "2026-11",
+     "text": "업비트·빗썸 원화마켓 상장(2026-11-10) 이후에도 주간 하락 흐름 보도",
+     "source": "https://247wallst.com/investing/cryptocurrency/2026/11/10/hyperliquid-listed-on-upbit-and-bithumb-why-is-hype-still-down-14-in-a-week/"
+    }
+   ],
+   "unlock": {
+    "has_unlock": true,
+    "next": null,
+    "note": "핵심 기여자 물량이 매월 6일 해제(11월 6일 일정 확인, 12월은 월간 패턴 기준 추정) [다음 일정은 확인 전이라 날짜 비움]"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://cryptoetf.today/en/blog/hyperliquid-etf-explained",
+    "https://cryptoetf.today/en/blog/what-is-hyperliquid-and-hype",
+    "https://cryptoticker.io/en/hyperliquid-team-unlock-180000-hype/",
+    "https://cryptobriefing.com/upbit-lists-hyperliquid-hype-token/",
+    "https://beincrypto.com/binance-lists-hyperliquid-hype-seed-tag/"
+   ]
+  },
+  {
+   "id": "sui",
+   "symbol": "SUI",
+   "name": "Sui",
+   "name_ko": "수이",
+   "sector": [
+    "L1"
+   ],
+   "consensus": "DPoS (Mysticeti)",
+   "mainnet": "2023",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "SUIS",
+      "issuer": "Canary Capital",
+      "type": "staking",
+      "launch_date": "2026-02-18",
+      "fee_pct": 0.75,
+      "exchange": "Nasdaq",
+      "source": "https://www.theblock.co/post/390271/first-spot-sui-etf-goes-live-as-canary-capital-launches-suis-fund-with-staking"
+     },
+     {
+      "ticker": "GSUI",
+      "issuer": "Grayscale",
+      "type": "staking",
+      "launch_date": "2026-02-18",
+      "fee_pct": 0.35,
+      "exchange": "NYSE Arca",
+      "source": "https://www.theblock.co/post/390271/first-spot-sui-etf-goes-live-as-canary-capital-launches-suis-fund-with-staking"
+     },
+     {
+      "ticker": "TSUI",
+      "issuer": "21Shares",
+      "type": "spot",
+      "launch_date": "2026-02-24",
+      "fee_pct": 0.3,
+      "exchange": "Nasdaq",
+      "source": "https://coingape.com/third-spot-sui-etf-goes-live-as-21shares-fund-launches-on-nasdaq/"
+     }
+    ],
+    "pending": [
+     {
+      "issuer": "Bitwise",
+      "type": "spot",
+      "filed": "2025-12-18",
+      "stage": "S-1 제출, 상장 미확인",
+      "source": "https://www.theblock.co/news/regulation/2025-12-18-bitwise-joins-race-to-launch-sui-etf-with-latest-sec-filing-383207"
+     }
+    ],
+    "note": "2026-02 SUIS·GSUI·TSUI 상장, Bitwise ETF는 대기."
+   },
+   "backers": [
+    {
+     "name": "Mysten Labs",
+     "kind": "기업",
+     "note": "개발사, 전 Meta Diem 팀 출신"
+    },
+    {
+     "name": "a16z crypto",
+     "kind": "VC",
+     "note": "Mysten Labs 투자"
+    },
+    {
+     "name": "Coinbase Ventures",
+     "kind": "VC",
+     "note": "Mysten Labs 투자"
+    },
+    {
+     "name": "Binance Labs",
+     "kind": "VC",
+     "note": "Mysten Labs 투자"
+    },
+    {
+     "name": "Jump Crypto",
+     "kind": "VC",
+     "note": "Mysten Labs 투자"
+    },
+    {
+     "name": "FTX Ventures",
+     "kind": "VC",
+     "note": "과거 투자자(FTX 파산 이전)"
+    },
+    {
+     "name": "Sui Foundation",
+     "kind": "재단",
+     "note": "생태계 지원·커뮤니티 리저브 관리"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Evan Cheng",
+     "role": "공동 설립자/CEO",
+     "note": "Mysten Labs CEO"
+    },
+    {
+     "name": "Adeniyi Abiodun",
+     "role": "공동 설립자/CPO",
+     "note": "Mysten Labs 공동 설립자"
+    },
+    {
+     "name": "Sui Foundation",
+     "role": "재단",
+     "note": "개발자 보조금·마케팅"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2026-05",
+     "text": "v1.72 업그레이드 버그로 48시간 내 네트워크 중단 반복, 2026년 두 번째 이상 대형 장애",
+     "source": "https://www.coindesk.com/tech/2026/05/28/sui-blockchain-suffers-another-network-outage-as-transactions-grind-to-a-halt"
+    }
+   ],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "3년 VC·팀 베스팅은 2026-05 기준 종료 보도. 스테이크 보조금·커뮤니티 리저브 방출은 지속(일정 불명확)"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.theblock.co/post/390271/first-spot-sui-etf-goes-live-as-canary-capital-launches-suis-fund-with-staking",
+    "https://coingape.com/third-spot-sui-etf-goes-live-as-21shares-fund-launches-on-nasdaq/",
+    "https://www.kucoin.com/blog/sui-three-year-unlock-ends-inflation-pressure-eases-in-2026",
+    "https://www.coindesk.com/tech/2026/05/28/sui-blockchain-suffers-another-network-outage-as-transactions-grind-to-a-halt"
+   ]
+  },
+  {
+   "id": "binancecoin",
+   "symbol": "BNB",
+   "name": "BNB",
+   "name_ko": "비앤비",
+   "sector": [
+    "L1",
+    "거래소 토큰"
+   ],
+   "consensus": "PoSA",
+   "mainnet": "2020",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "VBNB",
+      "issuer": "VanEck",
+      "type": "spot",
+      "launch_date": "2026-05-28",
+      "fee_pct": 0.39,
+      "exchange": "Nasdaq",
+      "source": "https://www.nasdaqtrader.com/content/newsalerts/2026/infocircular/VBNB_Circular_NQ.pdf"
+     }
+    ],
+    "pending": [
+     {
+      "issuer": "Grayscale",
+      "type": "spot",
+      "filed": "2026-01-23",
+      "stage": "S-1/A 3차 수정 제출(2026-06 전후)",
+      "source": "https://www.sec.gov/Archives/edgar/data/0002106762/000119312526254665/bnb_s-1_amendment_3.htm"
+     }
+    ],
+    "note": "VanEck BNB ETF(VBNB) 상장, Grayscale BNB ETF는 대기."
+   },
+   "backers": [
+    {
+     "name": "Binance",
+     "kind": "거래소",
+     "note": "BNB 최초 발행·BNB Chain 운영 주체"
+    },
+    {
+     "name": "BNB Chain 재단/생태계 펀드",
+     "kind": "재단",
+     "note": "개발 지원 프로그램"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Changpeng Zhao (CZ)",
+     "role": "Binance 창립자",
+     "note": "BNB 생태계 공개 지지"
+    },
+    {
+     "name": "Richard Teng",
+     "role": "Binance CEO",
+     "note": "거래소 운영 총괄"
+    },
+    {
+     "name": "VanEck",
+     "role": "자산운용사",
+     "note": "BNB ETF 발행 및 홍보"
+    }
+   ],
+   "listings": {
+    "upbit": null,
+    "bithumb": null,
+    "binance_spot": true,
+    "coinbase": null
+   },
+   "risks": [
+    {
+     "date": "2026-10",
+     "text": "Binance 보안 사고(DevOps 노트북 침해, 영향 추정 약 63억 달러). 당시 BNB 24시간 8% 이상 하락",
+     "source": "https://coinpedia.org/price-analysis/why-is-bnb-price-falling-binances-6-3b-security-incident-triggers-sell-off/"
+    }
+   ],
+   "unlock": {
+    "has_unlock": false,
+    "next": null,
+    "note": "별도 베스팅 언락 없음(분기 소각 방식, 미검증)"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.nasdaqtrader.com/content/newsalerts/2026/infocircular/VBNB_Circular_NQ.pdf",
+    "https://www.vaneck.com/us/en/investments/bnb-etf-vbnb/",
+    "https://www.sec.gov/Archives/edgar/data/0002106762/000119312526254665/bnb_s-1_amendment_3.htm",
+    "https://coinpedia.org/price-analysis/why-is-bnb-price-falling-binances-6-3b-security-incident-triggers-sell-off/"
+   ]
+  },
+  {
+   "id": "zcash",
+   "symbol": "ZEC",
+   "name": "Zcash",
+   "name_ko": "지캐시",
+   "sector": [
+    "프라이버시",
+    "L1"
+   ],
+   "consensus": "PoW (Equihash)",
+   "mainnet": "2016",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "ZCSH",
+      "issuer": "Grayscale",
+      "type": "spot",
+      "launch_date": "2026-08-25",
+      "fee_pct": 2.5,
+      "exchange": "NYSE Arca",
+      "source": "https://startupfortune.com/grayscales-zcash-etf-begins-trading-on-nyse-arca-as-zec-surges-past-800/"
+     }
+    ],
+    "pending": [
+     {
+      "issuer": "Winklevoss",
+      "type": "spot",
+      "filed": "2026-10-06",
+      "stage": "S-1 제출, 수수료 0.25% 보도",
+      "source": "https://cryptobriefing.com/winklevoss-files-spot-zcash-etf-sec/"
+     },
+     {
+      "issuer": "Bitwise",
+      "type": "spot",
+      "filed": null,
+      "stage": "SEC 신청서 제출 보도",
+      "source": "https://www.kucoin.com/news/flash/bitwise-submits-zcash-etf-application-to-sec"
+     }
+    ],
+    "note": "Grayscale ZCSH가 2026-08-25 NYSE Arca 상장(보수 2.5%), 경쟁 ETF 대기."
+   },
+   "backers": [
+    {
+     "name": "Electric Coin Company",
+     "kind": "기업",
+     "note": "초기 개발사"
+    },
+    {
+     "name": "Zcash Foundation",
+     "kind": "재단",
+     "note": "비영리 재단, 생태계 지원"
+    },
+    {
+     "name": "Grayscale",
+     "kind": "기관",
+     "note": "Zcash Trust 운용 및 ETF 전환"
+    },
+    {
+     "name": "Digital Currency Group",
+     "kind": "VC",
+     "note": "Grayscale 모회사, 초기 투자자"
+    },
+    {
+     "name": "Winklevoss Capital",
+     "kind": "VC",
+     "note": "초기 투자 및 ETF 신청"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Zooko Wilcox-O'Hearn",
+     "role": "창립자",
+     "note": "Zcash 공동 설립자·공개 발언 활발"
+    },
+    {
+     "name": "Grayscale",
+     "role": "자산운용사",
+     "note": "ZCSH ETF 발행"
+    }
+   ],
+   "listings": {
+    "upbit": null,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2026",
+     "text": "일부 대형 거래소가 인도·UAE 사용자에게 ZEC 제공 중단",
+     "source": "https://www.kucoin.com/news/flash/zcash-zec-in-2026-privacy-risks-and-regulatory-outlook"
+    },
+    {
+     "date": "2027-07",
+     "text": "EU 암호자산 규정(2027-07-10 시행)이 프라이버시 코인을 겨냥한다는 분석",
+     "source": "https://www.kucoin.com/news/flash/zcash-zec-in-2026-privacy-risks-and-regulatory-outlook"
+    }
+   ],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "확인된 정기 언락 일정 없음(미검증)"
+   },
+   "etf_effect": {
+    "launch_date": "2026-08-25",
+    "note": "보도 종가 기준 ZEC는 8/20 $568.97, 8/25 $768.01, 상장 약 2주 후 처음 $1,000 돌파(해당 기사의 헤드라인 상승률과 종가가 불일치하므로 참고용)."
+   },
+   "sources": [
+    "https://startupfortune.com/grayscales-zcash-etf-begins-trading-on-nyse-arca-as-zec-surges-past-800/",
+    "https://247wallst.com/investing/cryptocurrency/2026/09/08/zcash-crossed-1000-two-weeks-after-grayscales-etf-launched-is-privacy-the-new-institutional-trade/",
+    "https://cryptobriefing.com/winklevoss-files-spot-zcash-etf-sec/",
+    "https://www.kucoin.com/news/flash/zcash-zec-in-2026-privacy-risks-and-regulatory-outlook"
+   ]
+  },
+  {
+   "id": "injective-protocol",
+   "symbol": "INJ",
+   "name": "Injective",
+   "name_ko": "인젝티브",
+   "sector": [
+    "L1",
+    "DeFi"
+   ],
+   "consensus": "PoS (Tendermint)",
+   "mainnet": "2021",
+   "etf": {
+    "status": "listed",
+    "listed": [
+     {
+      "ticker": "INJC",
+      "issuer": "Canary Capital",
+      "type": "staking",
+      "launch_date": "2026-11-05",
+      "fee_pct": 1.1,
+      "exchange": "Nasdaq",
+      "source": "https://www.theblock.co/news/markets/2026-11-05-canary-staked-inj-etf-launches-nasdaq-injc-435115"
+     }
+    ],
+    "pending": [
+     {
+      "issuer": "21Shares",
+      "type": "spot",
+      "filed": "2025-10-20",
+      "stage": "S-1/A 수정 제출",
+      "source": "https://www.sec.gov/Archives/edgar/data/0002061622/000121390026101489/ea0304701-s1a1_21shares.htm"
+     }
+    ],
+    "note": "Canary 스테이킹 INJ ETF(INJC)가 2026-11-05 Nasdaq 상장, 21Shares ETF는 대기."
+   },
+   "backers": [
+    {
+     "name": "Pantera Capital",
+     "kind": "VC",
+     "note": "초기 투자"
+    },
+    {
+     "name": "Jump Crypto",
+     "kind": "VC",
+     "note": "초기 투자"
+    },
+    {
+     "name": "Binance Labs",
+     "kind": "VC",
+     "note": "초기 투자 및 인큐베이션"
+    },
+    {
+     "name": "Mark Cuban",
+     "kind": "기업",
+     "note": "개인 투자자로 알려짐"
+    },
+    {
+     "name": "Injective Labs",
+     "kind": "기업",
+     "note": "개발사"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Eric Chen",
+     "role": "공동 설립자/CEO",
+     "note": "Injective Labs"
+    },
+    {
+     "name": "Albert Chon",
+     "role": "공동 설립자/CTO",
+     "note": "Injective Labs"
+    },
+    {
+     "name": "Canary Capital",
+     "role": "자산운용사",
+     "note": "INJC ETF 발행"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": null
+   },
+   "risks": [
+    {
+     "date": "2026-09",
+     "text": "8월 말 바이너리옵션 앱 익스플로잇(약 490만 달러) 및 블록 생성 중단, 업비트 투자유의 지정·입출금 중단",
+     "source": "https://coinmarketcap.com/top-stories/6a973de4f2b8186f115c0ca0/"
+    },
+    {
+     "date": "2026-11",
+     "text": "11월 9일 블록 생성 재중단, 업비트·빗썸 입출금 중단, 빗썸 스테이킹 동결",
+     "source": "https://www.cryptopolitan.com/injective-halts-block-production-again/"
+    }
+   ],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "확인된 정기 언락 일정 없음(미검증)"
+   },
+   "etf_effect": {
+    "launch_date": "2026-11-05",
+    "note": "The Block 보도: 상장일 INJ가 5% 이상 상승."
+   },
+   "sources": [
+    "https://www.theblock.co/news/markets/2026-11-05-canary-staked-inj-etf-launches-nasdaq-injc-435115",
+    "https://www.sec.gov/Archives/edgar/data/0002073616/000199937126024476/inj-424b3_110426.htm",
+    "https://www.sec.gov/Archives/edgar/data/0002061622/000121390026101489/ea0304701-s1a1_21shares.htm",
+    "https://www.cryptopolitan.com/injective-halts-block-production-again/"
+   ]
+  },
+  {
+   "id": "sei-network",
+   "symbol": "SEI",
+   "name": "Sei",
+   "name_ko": "세이",
+   "sector": [
+    "L1"
+   ],
+   "consensus": "PoS (Tendermint 기반)",
+   "mainnet": "2023",
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "Canary Capital (Staked SEI)",
+      "type": "staking",
+      "filed": "2025-04-30",
+      "stage": "S-1/A 2차 수정(2026-09), 스테이킹 90% 계획",
+      "source": "https://www.sec.gov/Archives/edgar/data/0002066353/000199937126020568/sei-s1a_091526.htm"
+     },
+     {
+      "issuer": "21Shares",
+      "type": "spot",
+      "filed": "2025-08-28",
+      "stage": "대기",
+      "source": "https://www.tradingview.com/news/cointelegraph:93a87aeaf094b:0-21shares-files-to-launch-sei-etf-joining-race-with-canary-capital/"
+     }
+    ],
+    "note": "Canary·21Shares ETF 모두 SEC 대기 중, 상장된 ETP 없음."
+   },
+   "backers": [
+    {
+     "name": "Multicoin Capital",
+     "kind": "VC",
+     "note": "시드·전략 투자"
+    },
+    {
+     "name": "Jump Crypto",
+     "kind": "VC",
+     "note": "투자"
+    },
+    {
+     "name": "Sei Development Foundation",
+     "kind": "재단",
+     "note": "생태계 운영"
+    },
+    {
+     "name": "Coinbase Ventures",
+     "kind": "VC",
+     "note": "투자자로 알려짐"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Jay Jog",
+     "role": "공동 설립자",
+     "note": "Sei Labs"
+    },
+    {
+     "name": "Jeff Feng",
+     "role": "공동 설립자",
+     "note": "Sei Labs"
+    },
+    {
+     "name": "Canary Capital",
+     "role": "자산운용사",
+     "note": "SEI ETF 신청"
+    }
+   ],
+   "listings": {
+    "upbit": null,
+    "bithumb": null,
+    "binance_spot": true,
+    "coinbase": null
+   },
+   "risks": [
+    {
+     "date": "2026-03",
+     "text": "Circle 상태페이지에 SEI 메인넷 성능 저하 사고 기록",
+     "source": "https://isdown.app/status/circle/incidents/558508-sei-mainnet-performance-degradation"
+    }
+   ],
+   "unlock": {
+    "has_unlock": true,
+    "next": "2026-12-15",
+    "note": "매월 15일 베스팅 해제(10~12월 일정 표기)"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.sec.gov/Archives/edgar/data/0002066353/000199937126020568/sei-s1a_091526.htm",
+    "https://www.tradingview.com/news/cointelegraph:93a87aeaf094b:0-21shares-files-to-launch-sei-etf-joining-race-with-canary-capital/",
+    "https://www.bitrue.com/blog/sei-token-unlock",
+    "https://blockchain.news/news/upbit-announces-listing-of-layer-1-blockchain-sei"
+   ]
+  },
+  {
+   "id": "aave",
+   "symbol": "AAVE",
+   "name": "Aave",
+   "name_ko": "에이브",
+   "sector": [
+    "DeFi",
+    "렌딩"
+   ],
+   "consensus": null,
+   "mainnet": "2020",
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "Grayscale",
+      "type": "spot",
+      "filed": "2026-02-13",
+      "stage": "S-1 제출, NYSE Arca 전환(티커 GAVE) 신청",
+      "source": "https://www.sec.gov/Archives/edgar/data/2040120/000119312526051643/aave-20260213.htm"
+     }
+    ],
+    "note": "Grayscale Aave Trust ETF 전환 신청 대기 중, 상장 ETP 없음."
+   },
+   "backers": [
+    {
+     "name": "Aave Labs",
+     "kind": "기업",
+     "note": "프로토콜 개발사"
+    },
+    {
+     "name": "Aave DAO",
+     "kind": "재단",
+     "note": "거버넌스 및 재무 운영"
+    },
+    {
+     "name": "a16z crypto",
+     "kind": "VC",
+     "note": "투자자"
+    },
+    {
+     "name": "Framework Ventures",
+     "kind": "VC",
+     "note": "투자자"
+    },
+    {
+     "name": "Three Arrows Capital",
+     "kind": "VC",
+     "note": "과거 투자자(파산)"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Stani Kulechov",
+     "role": "창립자/CEO",
+     "note": "Aave Labs"
+    },
+    {
+     "name": "Grayscale",
+     "role": "자산운용사",
+     "note": "AAVE ETF 신청"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": null,
+    "binance_spot": true,
+    "coinbase": null
+   },
+   "risks": [
+    {
+     "date": "2026-03",
+     "text": "Aave 거버넌스 분쟁 심화, 주요 거버넌스 그룹(ACI) 이탈",
+     "source": "https://www.coindesk.com/web3/2026/03/03/aave-governance-rift-deepens-as-major-governance-group-exits-usd26-billion-defi-protocol"
+    },
+    {
+     "date": "2026-04",
+     "text": "Chaos Labs(주요 리스크 관리자) 거버넌스 분쟁 중 이탈",
+     "source": "https://www.theblock.co/news/defi/2026-04-06-top-aave-risk-manager-chaos-labs-exits-amid-governance-dispute-396458"
+    },
+    {
+     "date": "2026-04",
+     "text": "Kelp DAO rsETH 브리지 익스플로잇으로 약 1.2억~2.3억 달러 부실채권 가능성",
+     "source": "https://www.coindesk.com/tech/2026/04/20/aave-could-face-up-to-usd230-million-in-losses-after-kelp-dao-bridge-exploit-triggers-defi-chaos"
+    }
+   ],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "확인된 정기 언락 일정 없음(미검증)"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.sec.gov/Archives/edgar/data/2040120/000119312526051643/aave-20260213.htm",
+    "https://www.coindesk.com/tech/2026/04/20/aave-could-face-up-to-usd230-million-in-losses-after-kelp-dao-bridge-exploit-triggers-defi-chaos",
+    "https://fxstreet.com/cryptocurrencies/news/aave-price-and-on-chain-activity-explodes-after-upbit-listing-202110271532"
+   ]
+  },
+  {
+   "id": "bittensor",
+   "symbol": "TAO",
+   "name": "Bittensor",
+   "name_ko": "비트텐서",
+   "sector": [
+    "AI",
+    "L1"
+   ],
+   "consensus": "Yuma Consensus (PoS 유사)",
+   "mainnet": "2021",
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "Grayscale (Bittensor Trust, GTAO)",
+      "type": "spot",
+      "filed": "2026-10-23",
+      "stage": "S-1/A 2차 수정 제출, 트러스트는 비상장 사모 발행 중",
+      "source": "https://www.sec.gov/Archives/edgar/data/0002029297/000119312526430543/gtao_s-1_amendment_2.htm"
+     }
+    ],
+    "note": "Grayscale Bittensor Trust(GTAO)의 ETP 전환 대기, 거래소 상장 ETP는 확인되지 않음."
+   },
+   "backers": [
+    {
+     "name": "Opentensor Foundation",
+     "kind": "재단",
+     "note": "프로토콜 개발 지원"
+    },
+    {
+     "name": "Grayscale",
+     "kind": "기관",
+     "note": "Bittensor Trust 운용"
+    },
+    {
+     "name": "DCG",
+     "kind": "VC",
+     "note": "Grayscale 모회사"
+    },
+    {
+     "name": "Polychain Capital",
+     "kind": "VC",
+     "note": "주요 보유자로 알려짐"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Jacob Steeves",
+     "role": "공동 설립자",
+     "note": "Opentensor Foundation"
+    },
+    {
+     "name": "Ala Shaabana",
+     "role": "공동 설립자",
+     "note": "Opentensor Foundation"
+    },
+    {
+     "name": "Grayscale",
+     "role": "자산운용사",
+     "note": "GTAO 트러스트 및 ETP 신청"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": null,
+    "binance_spot": true,
+    "coinbase": null
+   },
+   "risks": [
+    {
+     "date": "2026-04",
+     "text": "Templar(Covenant AI) 서브넷 이탈 발표로 TAO 20% 이상 급락, 중앙화 논란",
+     "source": "https://www.bitget.com/news/detail/12560605355217"
+    }
+   ],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "블록 보상 발행 방식(베스팅 언락 일정은 미검증)"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.sec.gov/Archives/edgar/data/0002029297/000119312526430543/gtao_s-1_amendment_2.htm",
+    "https://www.sec.gov/Archives/edgar/data/0002029297/000119312526467090/gtao-20261113.htm",
+    "https://www.kucoin.com/news/flash/upbit-lists-bittensor-tao-for-krw-btc-and-usdt-trading-on-february-16",
+    "https://www.bitget.com/news/detail/12560605355217"
+   ]
+  },
+  {
+   "id": "pepe",
+   "symbol": "PEPE",
+   "name": "Pepe",
+   "name_ko": "페페",
+   "sector": [
+    "밈"
+   ],
+   "consensus": "이더리움 ERC-20 토큰",
+   "mainnet": "2023",
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "Canary Capital",
+      "type": "spot",
+      "filed": "2026-04-08",
+      "stage": "S-1 제출 후 2026-10-02 Pre-Effective 수정안(No.1) 제출, 미효력·미상장 (Cboe BZX 상장 예정, 티커·수수료 공란)",
+      "source": "https://www.sec.gov/Archives/edgar/data/0002109686/000199937126022017/canarypepe-s1a_100226.htm"
+     }
+    ],
+    "note": "Canary 현물 PEPE ETF S-1이 2026-10-02 수정되었으나 아직 효력 발생 전이며 거래 중인 PEPE ETF는 확인되지 않음."
+   },
+   "backers": [],
+   "promoters": [
+    {
+     "name": "Canary Capital",
+     "role": "현물 ETF 신청 운용사",
+     "note": "2026년 S-1 제출, Cboe BZX 상장 추진"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": null
+   },
+   "risks": [
+    {
+     "date": "2026-01",
+     "text": "상위 10개 지갑이 유통량의 약 41% 보유(S-1/A 기재). 개발팀·VC 없는 순수 밈 토큰으로 펀더멘털 근거 부재.",
+     "source": "https://www.sec.gov/Archives/edgar/data/0002109686/000199937126022017/canarypepe-s1a_100226.htm"
+    },
+    {
+     "date": "2026-10",
+     "text": "ETF 수정 S-1에도 티커·수수료·효력일 미정으로 상장 시점 불확실.",
+     "source": "https://www.sec.gov/Archives/edgar/data/0002109686/000199937126022017/canarypepe-s1a_100226.htm"
+    }
+   ],
+   "unlock": {
+    "has_unlock": false,
+    "next": null,
+    "note": "S-1 기준 언락·베스팅 일정 없음, 대부분 이미 유통 중."
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.sec.gov/Archives/edgar/data/0002109686/000199937126022017/canarypepe-s1a_100226.htm",
+    "https://www.etoday.co.kr/news/view/2250282",
+    "https://coinranking.com/exchange/kKbFzL8Tp70u+upbit/coins"
+   ]
+  },
+  {
+   "id": "worldcoin-wld",
+   "symbol": "WLD",
+   "name": "Worldcoin",
+   "name_ko": "월드코인",
+   "sector": [
+    "AI",
+    "신원인증"
+   ],
+   "consensus": "OP Stack 기반 롤업(World Chain, 중앙화 시퀀서)",
+   "mainnet": "2023",
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "Grayscale",
+      "type": "spot",
+      "filed": "2026-07-20",
+      "stage": "S-1 제출(Grayscale Worldcoin ETF, 예정 티커 GWLD, Nasdaq 상장 예정), 수수료 공란, 미상장",
+      "source": "https://www.sec.gov/Archives/edgar/data/2145351/000119312526308957/ck0002145351-20260720.htm"
+     }
+    ],
+    "note": "Grayscale Worldcoin ETF(GWLD) S-1이 2026-07-20 제출되었고 거래 개시 확인 안 됨."
+   },
+   "backers": [
+    {
+     "name": "Andreessen Horowitz (a16z)",
+     "kind": "VC",
+     "note": "Tools for Humanity 투자 라운드 주도(공개 보도)"
+    },
+    {
+     "name": "Bain Capital Crypto",
+     "kind": "VC",
+     "note": "투자자"
+    },
+    {
+     "name": "Khosla Ventures",
+     "kind": "VC",
+     "note": "2025년 약 2.4억 달러 투자 보도"
+    },
+    {
+     "name": "Tools for Humanity",
+     "kind": "기업",
+     "note": "네트워크 개발사, 공동창업자 Sam Altman·Alex Blania"
+    },
+    {
+     "name": "World Foundation",
+     "kind": "재단",
+     "note": "케이맨 재단회사, 네트워크 관리"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Sam Altman",
+     "role": "Tools for Humanity 공동창업자",
+     "note": "OpenAI CEO와 동일인, 프로젝트 공개 홍보"
+    },
+    {
+     "name": "Alex Blania",
+     "role": "Tools for Humanity 공동창업자·CEO",
+     "note": "운영 총괄"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2025-11",
+     "text": "태국 개인정보보호위원회(PDPC)가 홍채 스캔 중단 및 약 120만 명 생체정보 삭제 명령.",
+     "source": "https://forklog.com/en/thai-data-regulator-orders-world-to-stop-iris-scanning-service/"
+    },
+    {
+     "date": "2026-07",
+     "text": "S-1 위험요인: 홍채 생체정보 관련 다수 관할 규제·소송, 중앙화 시퀀서, 규제 불확실성.",
+     "source": "https://www.sec.gov/Archives/edgar/data/2145351/000119312526308957/ck0002145351-20260720.htm"
+    }
+   ],
+   "unlock": {
+    "has_unlock": true,
+    "next": null,
+    "note": "일 단위 선형 언락 지속, 2026-07-24부터 일 언락량 약 43% 감소(커뮤니티 160만·투자자/팀 130만 WLD/일), 최종 물량은 출시 15년 시점."
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.sec.gov/Archives/edgar/data/2145351/000119312526308957/ck0002145351-20260720.htm",
+    "https://www.theblock.co/post/397069/world-decreasing-wld-token-unlock-rate-by-over-40-starting-in-july",
+    "https://forklog.com/en/thai-data-regulator-orders-world-to-stop-iris-scanning-service/",
+    "https://coinranking.com/exchange/OBlX6VUtD+bithumb/markets"
+   ]
+  },
+  {
+   "id": "canton-network",
+   "symbol": "CC",
+   "name": "Canton Coin",
+   "name_ko": "캔톤 코인",
+   "sector": [
+    "기관금융",
+    "RWA",
+    "레이어1"
+   ],
+   "consensus": "Canton 글로벌 싱크로나이저(슈퍼 밸리데이터 BFT)",
+   "mainnet": null,
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "Grayscale",
+      "type": "spot",
+      "filed": "2026-06-05",
+      "stage": "S-1 제출(Grayscale Canton ETF, 델라웨어 트러스트 2026-05-29 설립, NYSE Arca 예정), 티커·수수료 미공개, 미상장",
+      "source": "https://www.sec.gov/Archives/edgar/data/2138284/000213828426000003/ck0002138284-20260605.htm"
+     }
+    ],
+    "note": "Grayscale Canton ETF S-1(2026-06-05) 이후 수정·상장 소식은 확인되지 않음."
+   },
+   "backers": [
+    {
+     "name": "Digital Asset Holdings",
+     "kind": "기업",
+     "note": "Canton 기반 소프트웨어 개발사"
+    },
+    {
+     "name": "Goldman Sachs",
+     "kind": "기관",
+     "note": "네트워크 참여 기관(보도)"
+    },
+    {
+     "name": "Citadel Securities",
+     "kind": "기관",
+     "note": "네트워크 참여 기관(보도)"
+    },
+    {
+     "name": "Visa",
+     "kind": "기업",
+     "note": "네트워크 참여 기업(보도)"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Grayscale",
+     "role": "현물 ETF 신청 운용사",
+     "note": "2026-06 S-1 제출"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": null,
+    "binance_spot": null,
+    "coinbase": null
+   },
+   "risks": [
+    {
+     "date": "2026-06",
+     "text": "S-1 기재: 상위 100개 지갑이 유통량의 약 89% 보유(보도 인용), 대량 매도 시 가격 영향.",
+     "source": "https://www.tradingview.com/news/stocktwits:108cd7392094b:0-grayscale-files-for-canton-etf-targeting-a-token-where-100-wallets-hold-89-of-supply/"
+    },
+    {
+     "date": "2025-11",
+     "text": "주요 거래소 상장 직후 24시간 내 30% 이상 급락 보도.",
+     "source": "https://crypto.news/canton-network-price-down-30-after-major-exchange-listings/"
+    }
+   ],
+   "unlock": {
+    "has_unlock": true,
+    "next": null,
+    "note": "사전 락업이 아닌 일 단위 채굴(민팅) 보상 방식으로 지속 발행, 다음 감축은 2029년 예정(DefiLlama 기준)."
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.sec.gov/Archives/edgar/data/2138284/000213828426000003/ck0002138284-20260605.htm",
+    "https://www.theblock.co/etfs/other/grayscale-canton-etf",
+    "https://v.daum.net/v/20260505063218865?x_trkm=t",
+    "https://defillama.com/unlocks/canton"
+   ]
+  },
+  {
+   "id": "crypto-com-chain",
+   "symbol": "CRO",
+   "name": "Cronos",
+   "name_ko": "크로노스",
+   "sector": [
+    "거래소 토큰",
+    "레이어1"
+   ],
+   "consensus": "Tendermint 기반 PoS(Cronos EVM·Crypto.org Chain)",
+   "mainnet": "2021",
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "Canary Capital",
+      "type": "staking",
+      "filed": "2025-05-30",
+      "stage": "Staked CRO ETF S-1 제출, 미상장",
+      "source": "https://crypto.news/canary-capital-files-s-1-with-u-s-sec-for-staked-cronos-etf/"
+     },
+     {
+      "issuer": "21Shares",
+      "type": "spot",
+      "filed": "2026-03-13",
+      "stage": "Cronos ETF 신청(트래커 기준), 미상장",
+      "source": "https://cryptonews.net/news/altcoins/32591918/"
+     },
+     {
+      "issuer": "Trump Media (Truth Social Cronos Yield Maximizer ETF)",
+      "type": "staking",
+      "filed": "2026-02-13",
+      "stage": "등록서 제출 보도, 제안 보수 0.95%, SEC 일정 미공개. 비-현물 구조 가능성",
+      "source": "https://yellow.com/news/trumps-truth-social-files-two-new-crypto-etfs-including-one-for-cryptocoms-cro-token"
+     }
+    ],
+    "note": "상장·거래 중인 미국 CRO ETF는 확인되지 못함. Canary·21Shares·Truth Social 3건 모두 심사 대기."
+   },
+   "backers": [
+    {
+     "name": "Crypto.com",
+     "kind": "거래소",
+     "note": "CRO 발행·생태계 운영 주체"
+    },
+    {
+     "name": "Cronos Labs",
+     "kind": "재단",
+     "note": "Cronos 체인 개발·생태계 지원"
+    },
+    {
+     "name": "Trump Media & Technology Group",
+     "kind": "기업",
+     "note": "2025-08 CRO 트레저리 계획 발표, 2026-08-07 종료"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Kris Marszalek",
+     "role": "Crypto.com CEO",
+     "note": "CRO 생태계 대표"
+    },
+    {
+     "name": "Trump Media & Technology Group",
+     "role": "전 트레저리 파트너",
+     "note": "CRO Strategy 계획 후 철회"
+    }
+   ],
+   "listings": {
+    "upbit": null,
+    "bithumb": true,
+    "binance_spot": null,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2026-08",
+     "text": "Trump Media와 Crypto.com·Yorkville가 CRO 트레저리 전략(CRO 10억 달러 등) 계획 철회.",
+     "source": "https://cryptonews.net/news/analytics/33275356/"
+    },
+    {
+     "date": "2026-02",
+     "text": "Truth Social 연계 CRO ETF 신청 등 정치 연계성에 따른 이해충돌 논란.",
+     "source": "https://www.pbs.org/newshour/politics/how-a-trump-business-deal-with-a-crypto-firm-exposes-potential-conflicts-of-interest"
+    }
+   ],
+   "unlock": {
+    "has_unlock": null,
+    "next": null,
+    "note": "검증된 언락 일정 확인 못함."
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://crypto.news/canary-capital-files-s-1-with-u-s-sec-for-staked-cronos-etf/",
+    "https://cryptonews.net/news/altcoins/32591918/",
+    "https://yellow.com/news/trumps-truth-social-files-two-new-crypto-etfs-including-one-for-cryptocoms-cro-token",
+    "https://coinranking.com/coin/65PHZTpmE55b+cronos-cro/markets",
+    "https://coinmarketcap.com/top-stories/6a79942da24887465db16918/"
+   ]
+  },
+  {
+   "id": "official-trump",
+   "symbol": "TRUMP",
+   "name": "Official Trump",
+   "name_ko": "오피셜 트럼프",
+   "sector": [
+    "밈",
+    "정치"
+   ],
+   "consensus": "솔라나 SPL 토큰",
+   "mainnet": "2025",
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "Canary Capital",
+      "type": "spot",
+      "filed": "2025-08-26",
+      "stage": "1933법 S-1 제출, 미상장",
+      "source": "https://www.coindesk.com/business/2025/08/26/canary-proposes-first-political-meme-coin-etf-for-trump-token-in-bold-sec-filing"
+     }
+    ],
+    "note": "Canary 현물 TRUMP ETF(1933법) 미상장. REX-Osprey는 1940법 구조로 현물 ETP와 구분."
+   },
+   "backers": [
+    {
+     "name": "Fight Fight Fight LLC",
+     "kind": "기업",
+     "note": "토큰 발행 관련 법인(공개 보도)"
+    },
+    {
+     "name": "CIC Digital LLC",
+     "kind": "기업",
+     "note": "트럼프 오가니제이션 계열로 보도된 토큰 보유·베스팅 주체"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Donald Trump",
+     "role": "토큰 브랜드 명의자 및 공개 홍보",
+     "note": "2025-01 토큰 출시 공지, 보유자 대상 만찬 개최"
+    },
+    {
+     "name": "Bill Zanker",
+     "role": "Fight Fight Fight 관련 인물",
+     "note": "프로젝트 운영 관련 보도"
+    },
+    {
+     "name": "Justin Sun",
+     "role": "대형 매수자",
+     "note": "공개 보도된 주요 투자자"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2026-11",
+     "text": "토큰 보유자 대상 세 번째 만찬 개최, 참가 보유자 감소 보도.",
+     "source": "https://cryptonews.net/news/altcoins/33784951/"
+    },
+    {
+     "date": "2025-05",
+     "text": "미 상원 민주당 의원들이 토큰 연계 만찬 관련 조사·답변 요구(공개 서한).",
+     "source": "https://www.banking.senate.gov/newsroom/minority/warren-schiff-and-blumenthal-investigate-trump-mar-a-lago-memecoin-conference"
+    },
+    {
+     "date": "2026-01",
+     "text": "내부자·관련 법인 물량이 지속 베스팅되며 지분 집중도 높음(내부자 약 74.5%, DefiLlama).",
+     "source": "https://defillama.com/unlocks/official-trump"
+    }
+   ],
+   "unlock": {
+    "has_unlock": true,
+    "next": null,
+    "note": "주 약 633만 TRUMP 연속 언락 진행 중, 2026-11-13 기준 예정된 일시 대규모 언락은 없음."
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.coindesk.com/business/2025/08/26/canary-proposes-first-political-meme-coin-etf-for-trump-token-in-bold-sec-filing",
+    "https://defillama.com/unlocks/official-trump",
+    "https://cryptopotato.com/trump-popcat-and-pengu-skyrocket-after-securing-major-exchange-listings/",
+    "https://crypto.news/south-koreas-bithumb-to-launch-trump-trading-for-53k-won/"
+   ]
+  },
+  {
+   "id": "ondo-finance",
+   "symbol": "ONDO",
+   "name": "Ondo",
+   "name_ko": "온도 파이낸스",
+   "sector": [
+    "RWA",
+    "DeFi"
+   ],
+   "consensus": "이더리움 ERC-20 토큰",
+   "mainnet": "2023",
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "21Shares",
+      "type": "spot",
+      "filed": "2025-07-22",
+      "stage": "S-1 제출 후 2026-02-06 S-1/A 수정(Nasdaq 지정), 미상장",
+      "source": "https://www.theblock.co/etfs/other/21shares-ondo-etf"
+     }
+    ],
+    "note": "21Shares 현물 ONDO ETF는 2026-02 수정 S-1 이후 상장 확인 안 됨."
+   },
+   "backers": [
+    {
+     "name": "Pantera Capital",
+     "kind": "VC",
+     "note": "Ondo Finance 투자자(공개 보도)"
+    },
+    {
+     "name": "Founders Fund",
+     "kind": "VC",
+     "note": "투자자(공개 보도)"
+    },
+    {
+     "name": "Coinbase Ventures",
+     "kind": "VC",
+     "note": "투자자(공개 보도)"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "21Shares",
+     "role": "현물 ETF 신청 운용사",
+     "note": "2025-07 신청"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2026-01",
+     "text": "2026-01-17 세 번째 대규모 언락(약 7.4억 달러 상당) 진행.",
+     "source": "https://www.kucoin.com/news/flash/ondo-finance-to-unlock-737m-in-ondo-tokens-on-january-17"
+    }
+   ],
+   "unlock": {
+    "has_unlock": true,
+    "next": null,
+    "note": "다음 라운드는 2027년 1월 예정(보도), 정확한 일자 미확인."
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.theblock.co/etfs/other/21shares-ondo-etf",
+    "https://www.kucoin.com/news/flash/ondo-finance-to-unlock-737m-in-ondo-tokens-on-january-17",
+    "https://coinranking.com/exchange/OBlX6VUtD+bithumb/markets"
+   ]
+  },
+  {
+   "id": "uniswap",
+   "symbol": "UNI",
+   "name": "Uniswap",
+   "name_ko": "유니스왑",
+   "sector": [
+    "DeFi",
+    "DEX"
+   ],
+   "consensus": "이더리움 ERC-20 거버넌스 토큰",
+   "mainnet": "2020",
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "Bitwise",
+      "type": "spot",
+      "filed": "2026-02-05",
+      "stage": "S-1 제출(커스터디언 Coinbase Custody, 초기 스테이킹 없음), 미상장",
+      "source": "https://www.theblock.co/news/defi/2026-02-05-uniswap-etf-enters-the-chat-bitwise-files-a-registration-statement-with-the-sec-388746"
+     }
+    ],
+    "note": "Bitwise 현물 UNI ETF(2026-02-05) 미상장, 상장 소식 확인 안 됨."
+   },
+   "backers": [
+    {
+     "name": "Paradigm",
+     "kind": "VC",
+     "note": "Uniswap Labs 투자자"
+    },
+    {
+     "name": "Andreessen Horowitz (a16z)",
+     "kind": "VC",
+     "note": "Uniswap Labs 투자자"
+    },
+    {
+     "name": "Union Square Ventures",
+     "kind": "VC",
+     "note": "Uniswap Labs 투자자"
+    },
+    {
+     "name": "Uniswap Foundation",
+     "kind": "재단",
+     "note": "생태계 지원 재단"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Hayden Adams",
+     "role": "Uniswap Labs 창업자·CEO",
+     "note": "프로토콜 창시자"
+    },
+    {
+     "name": "Bitwise",
+     "role": "현물 ETF 신청 운용사",
+     "note": "2026-02 S-1 제출"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [],
+   "unlock": {
+    "has_unlock": false,
+    "next": null,
+    "note": "초기 4년 베스팅은 종료된 것으로 알려짐(일반 지식, 이번 조사에서 별도 검증 못함)."
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.theblock.co/news/defi/2026-02-05-uniswap-etf-enters-the-chat-bitwise-files-a-registration-statement-with-the-sec-388746",
+    "https://www.coindesk.com/policy/2026/03/03/scam-token-case-against-uniswap-dismissed-with-prejudice-by-u-s-district-judge-in-nyc",
+    "https://coinranking.com/exchange/OBlX6VUtD+bithumb/markets"
+   ]
+  },
+  {
+   "id": "aptos",
+   "symbol": "APT",
+   "name": "Aptos",
+   "name_ko": "앱토스",
+   "sector": [
+    "레이어1",
+    "무브(Move)"
+   ],
+   "consensus": "AptosBFT(PoS)",
+   "mainnet": "2022",
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "Bitwise",
+      "type": "spot",
+      "filed": "2025-03-05",
+      "stage": "S-1 제출 후 2025년 S-1/A 수정 2회, 미상장",
+      "source": "https://www.sec.gov/Archives/edgar/data/2059135/000121390025077277/ea0253240-s1a2_bitwise.htm"
+     }
+    ],
+    "note": "Bitwise 현물 APT ETF는 2025년 2회 수정 후 2026년 상장 확인 안 됨."
+   },
+   "backers": [
+    {
+     "name": "Andreessen Horowitz (a16z)",
+     "kind": "VC",
+     "note": "Aptos Labs 투자 주도(공개 보도)"
+    },
+    {
+     "name": "Multicoin Capital",
+     "kind": "VC",
+     "note": "투자 주도(공개 보도)"
+    },
+    {
+     "name": "Aptos Foundation",
+     "kind": "재단",
+     "note": "생태계·물량 관리"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Bitwise",
+     "role": "현물 ETF 신청 운용사",
+     "note": "2025-03 S-1 제출"
+    },
+    {
+     "name": "Avery Ching",
+     "role": "Aptos Labs 공동창업자·CEO",
+     "note": "프로젝트 대표"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [],
+   "unlock": {
+    "has_unlock": true,
+    "next": null,
+    "note": "4년 코어/투자자 언락 종료(2026-10 보도), 커뮤니티·재단 풀은 매월 1/120씩 2032년까지 방출. 다음 일자는 매월 12일 패턴 기반 추정. [다음 일정은 확인 전이라 날짜 비움]"
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://www.sec.gov/Archives/edgar/data/2059135/000121390025077277/ea0253240-s1a2_bitwise.htm",
+    "https://www.thestreet.com/crypto/markets/aptos-ends-four-year-token-unlocks-as-monthly-releases-drop-60",
+    "https://coinranking.com/exchange/kKbFzL8Tp70u+upbit/coins"
+   ]
+  },
+  {
+   "id": "pudgy-penguins",
+   "symbol": "PENGU",
+   "name": "Pudgy Penguins",
+   "name_ko": "퍼지 펭귄",
+   "sector": [
+    "밈",
+    "NFT",
+    "IP"
+   ],
+   "consensus": "솔라나 SPL 토큰",
+   "mainnet": "2024",
+   "etf": {
+    "status": "pending",
+    "listed": [],
+    "pending": [
+     {
+      "issuer": "Canary Capital",
+      "type": "spot",
+      "filed": "2025-03-20",
+      "stage": "S-1 제출, SEC 결정 연기 보도, 미상장",
+      "source": "https://coingape.com/canary-pengu-etf-approval-delayed-by-us-sec/"
+     }
+    ],
+    "note": "Canary 현물 PENGU ETF는 2025-03 신청 이후 상장 확인 안 됨."
+   },
+   "backers": [
+    {
+     "name": "Igloo Inc.",
+     "kind": "기업",
+     "note": "Pudgy Penguins 운영 모회사(공개 보도)"
+    }
+   ],
+   "promoters": [
+    {
+     "name": "Luca Netz",
+     "role": "Pudgy Penguins CEO",
+     "note": "브랜드·IP 사업 총괄"
+    },
+    {
+     "name": "Canary Capital",
+     "role": "현물 ETF 신청 운용사",
+     "note": "2025-03 S-1 제출"
+    }
+   ],
+   "listings": {
+    "upbit": true,
+    "bithumb": true,
+    "binance_spot": true,
+    "coinbase": true
+   },
+   "risks": [
+    {
+     "date": "2026-07",
+     "text": "2026-07 약 7.1억 PENGU 팀·회사 물량 언락(최대공급의 약 0.8%), 월별 언락 지속.",
+     "source": "https://www.bitrue.com/blog/pengu-token-unlock"
+    }
+   ],
+   "unlock": {
+    "has_unlock": true,
+    "next": null,
+    "note": "월 단위 팀·회사 물량 언락 지속 보도, 정확한 다음 일자와 종료 시점 미확인."
+   },
+   "etf_effect": null,
+   "sources": [
+    "https://coingape.com/canary-pengu-etf-approval-delayed-by-us-sec/",
+    "https://www.bitrue.com/blog/pengu-token-unlock",
+    "https://cryptopotato.com/trump-popcat-and-pengu-skyrocket-after-securing-major-exchange-listings/",
+    "https://coinranking.com/exchange/OBlX6VUtD+bithumb/markets"
+   ]
+  }
+ ]
+}
